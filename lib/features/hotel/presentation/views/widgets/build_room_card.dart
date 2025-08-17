@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/hotel_about/presentaiton/view/hotel_about_view_body.dart';
+import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 
 class BuildRoomCard extends StatelessWidget {
   final String roomName;

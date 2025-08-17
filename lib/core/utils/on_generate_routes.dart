@@ -3,7 +3,8 @@ import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
-import 'package:safarni/features/hotel_about/presentaiton/view/hotel_about_view_body.dart';
+import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {

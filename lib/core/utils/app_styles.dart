@@ -70,4 +70,9 @@ abstract class TextStyles {
     color: AppColors.darkBlack,
     height: 1.4,
   );
+    static TextStyle font20DarkBlueNormal = TextStyle(
+    fontSize: 20.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: AppColors.darkBlue,
+  );
 }
