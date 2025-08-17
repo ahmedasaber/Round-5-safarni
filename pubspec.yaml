@@ -19,13 +19,13 @@ dependencies:
   shared_preferences: ^2.2.0
   flutter_bloc: ^9.1.1
   flutter_svg: ^2.2.0
+  convex_bottom_bar: ^3.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.4
-  flutter_assets: ^0.0.6
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -35,7 +35,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-    - assets/
 
   # example:
   fonts:
@@ -58,7 +57,7 @@ flutter_launcher_icons:
   image_path: "assets/images/app-icon.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
 
-  flutter_assets:
-    assets_path: assets/
-    output_path: lib/core/utils/
-    filename: app_assets.dart
+#  flutter_assets:
+#    assets_path: assets/
+#    output_path: lib/core/utils/
+#    filename: app_assets.dart

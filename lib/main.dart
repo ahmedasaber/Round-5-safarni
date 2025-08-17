@@ -22,6 +22,10 @@ class SafarniApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins',
         scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          scrolledUnderElevation: 0,
+          color: Colors.white
+        ),
       ),
     );
   }
