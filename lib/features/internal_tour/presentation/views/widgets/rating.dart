@@ -1,7 +1,6 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Rating extends StatelessWidget {
   const Rating({super.key});
@@ -10,7 +9,6 @@ class Rating extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 100.w),
         SvgPicture.asset("assets/svgs/star.svg"),
         SvgPicture.asset("assets/svgs/star.svg"),
         SvgPicture.asset("assets/svgs/star.svg"),

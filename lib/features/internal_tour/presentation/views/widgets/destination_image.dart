@@ -30,7 +30,7 @@ class DestinationImage extends StatelessWidget {
         ),
         SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 80.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
