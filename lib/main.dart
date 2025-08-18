@@ -4,7 +4,8 @@ import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'features/home/presentation/views/pages/home_view.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ Future<void> main() async {
 class SafarniApp extends StatelessWidget {
   const SafarniApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -27,14 +29,18 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          // initialRoute: HomeView.routeName,
+          initialRoute: HomeView.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',
             scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              scrolledUnderElevation: 0,
+              color: Colors.white
+              ),
           ),
         );
-      },
+      }
     );
   }
 }

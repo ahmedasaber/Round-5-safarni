@@ -187,4 +187,20 @@ abstract class TextStyles {
     color: AppColors.darkBlue,
 >>>>>>> 296de0e1da378c200631a2009c892649eaa5068c
   );
+  static const TextStyle medium12= TextStyle(fontSize: 12, fontWeight: FontWeight.w500);
+  static const TextStyle medium13= TextStyle(fontSize: 13, fontWeight: FontWeight.w500);
+  static const TextStyle medium14= TextStyle(fontSize: 14, fontWeight: FontWeight.w500);
+  static const TextStyle medium16= TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+  static const TextStyle medium17= TextStyle(fontSize: 17, fontWeight: FontWeight.w500);
+  static const TextStyle regular12= TextStyle(fontSize: 12, fontWeight: FontWeight.w400);
+  static const TextStyle regular13= TextStyle(fontSize: 13, fontWeight: FontWeight.w400);
+  static const TextStyle regular14= TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
+  static const TextStyle regular15= TextStyle(fontSize: 15, fontWeight: FontWeight.w400);
+  static const TextStyle regular18= TextStyle(fontSize: 18, fontWeight: FontWeight.w400);
+  static const TextStyle semiBold12= TextStyle(fontSize: 12, fontWeight: FontWeight.w600);
+  static const TextStyle semiBold15= TextStyle(fontSize: 15, fontWeight: FontWeight.w600);
+  static const TextStyle semiBold16= TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
+  static const TextStyle semiBold17= TextStyle(fontSize: 17, fontWeight: FontWeight.w600);
+  static const TextStyle semiBold20= TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+  static const TextStyle bold14= TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
 }
