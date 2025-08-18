@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Ensure ScreenUtil is initialized
+  await ScreenUtil.ensureScreenSize();
   Bloc.observer = BlocObserverService();
   runApp(const SafarniApp());
 }

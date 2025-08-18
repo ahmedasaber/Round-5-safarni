@@ -35,7 +35,9 @@ class DestinationImage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 24.r,
