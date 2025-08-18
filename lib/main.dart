@@ -1,18 +1,32 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-
-import 'features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // Add error handling
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      try {
+        await ScreenUtil.ensureScreenSize();
+      } catch (e) {
+        debugPrint('ScreenUtil initialization failed: $e');
+      }
 
-  // Ensure ScreenUtil is initialized
-  await ScreenUtil.ensureScreenSize();
-  Bloc.observer = BlocObserverService();
-  runApp(const SafarniApp());
+      Bloc.observer = BlocObserverService();
+      runApp(const SafarniApp());
+    },
+    (error, stack) {
+      debugPrint('App Error: $error');
+      debugPrint('Stack: $stack');
+    },
+  );
 }
 
 class SafarniApp extends StatelessWidget {
@@ -28,7 +42,7 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: HomeView.routeName,
+          initialRoute: ProfileScreen.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',

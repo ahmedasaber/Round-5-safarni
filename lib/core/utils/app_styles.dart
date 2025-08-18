@@ -59,22 +59,35 @@ abstract class TextStyles {
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlue,
   );
-    static TextStyle font18DarkBlackNormal = TextStyle(
+  static TextStyle font18DarkBlackNormal = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlack,
   );
-      static TextStyle font16DarkBlackNormal = TextStyle(
+  static TextStyle font16DarkBlackNormal = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlack,
     height: 1.4,
   );
-    static TextStyle font20DarkBlueNormal = TextStyle(
+  static TextStyle font20DarkBlueNormal = TextStyle(
+
     fontSize: 20.sp,
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlue,
   );
+  static TextStyle font16GrayLighterSemiBold = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: AppColors.darkBlue,
+  );
+  static TextStyle font14DarkBlackNormal = TextStyle(
+    fontSize: 14.sp,
+    fontWeight: FontWeightHelper.medium,
+    color: AppColors.darkBlack,
+  );
+}
+
   static const TextStyle medium12= TextStyle(fontSize: 12, fontWeight: FontWeight.w500);
   static const TextStyle medium13= TextStyle(fontSize: 13, fontWeight: FontWeight.w500);
   static const TextStyle medium14= TextStyle(fontSize: 14, fontWeight: FontWeight.w500);
