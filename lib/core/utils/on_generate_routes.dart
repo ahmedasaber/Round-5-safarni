@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_assets.dart';
+import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 
+import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
+import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 
-Route<dynamic> onGenerateRoute(RouteSettings settings) {
-  switch (settings.name) {
+Route<dynamic> onGenerateRoute(RouteSettings settings){
+  switch(settings.name){
     case HomeView.routeName:
       return MaterialPageRoute(builder: (_) => const HomeView());
 
@@ -30,6 +33,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         ),
       );
 
+    case SearchView.routeName:
+      return MaterialPageRoute(builder: (_) => const SearchView());
+     case ResultView.routeName:
+      return MaterialPageRoute(builder: (_) => const ResultView());
+    case FilterView.routeName:
+      return MaterialPageRoute(builder: (_) => const FilterView());
     default:
       return MaterialPageRoute(
         builder: (_) => Scaffold(
