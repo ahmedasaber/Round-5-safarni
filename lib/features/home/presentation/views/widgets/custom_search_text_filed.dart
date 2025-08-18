@@ -5,20 +5,36 @@ import 'package:safarni/core/utils/app_styles.dart';
 
 class CustomSearchTextFiled extends StatelessWidget {
   const CustomSearchTextFiled({
-    super.key, this.onTap, this.readOnly = false, this.onChange,
+    super.key,
+    this.onTap,
+    this.readOnly = false,
+    this.onChange,
   });
+
   final VoidCallback? onTap;
   final ValueChanged? onChange;
   final bool readOnly;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: readOnly
+            ? BorderRadius.circular(10)
+            : BorderRadius.circular(16),
         border: Border.all(
-          color: Color(0xffE5E7EB),
-        )
+          color: readOnly ? Color(0xffE5E7EB) : Color(0xff3f83f8),
+        ),
+        boxShadow: [
+          !readOnly
+              ? BoxShadow(
+                  color: Color(0xffd9dcf0),
+                  blurRadius: 2,
+                  spreadRadius: 3,
+                )
+              : BoxShadow(),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 16),
@@ -28,8 +44,12 @@ class CustomSearchTextFiled extends StatelessWidget {
           readOnly: readOnly,
           decoration: InputDecoration(
             hintText: 'Search ...',
-            hintStyle: TextStyles.regular15.copyWith(color: AppColors.grayColor),
-            icon: SvgPicture.asset('assets/icons/search-normal.svg'),
+            hintStyle: readOnly
+                ? TextStyles.regular15.copyWith(color: AppColors.grayColor)
+                : TextStyles.regular15.copyWith(color: Color(0xff3f83f8)),
+            icon: readOnly
+                ? SvgPicture.asset('assets/icons/search-normal.svg')
+                : SvgPicture.asset('assets/icons/search-normal-blue.svg'),
             border: InputBorder.none,
           ),
         ),

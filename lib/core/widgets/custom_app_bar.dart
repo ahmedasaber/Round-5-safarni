@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{
   const CustomAppBar({
-    super.key, required this.title, this.automaticallyImplyLeading = true,
+    super.key, this.title, this.automaticallyImplyLeading = true, this.actionsList
   });
-  final String title;
+  final String? title;
   final bool automaticallyImplyLeading;
-
+  final List<Widget>? actionsList;
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title),
+      title: title!=null? Text(title!) : null,
       centerTitle: true,
       automaticallyImplyLeading: automaticallyImplyLeading,
+      actions: actionsList,
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
 import 'package:safarni/features/home/presentation/views/widgets/available_tours_card.dart';
 import 'package:safarni/features/home/presentation/views/widgets/card_recommendation_item.dart';
 import 'package:safarni/features/home/presentation/views/widgets/cusrom_category_item.dart';
@@ -7,6 +9,7 @@ import 'package:safarni/features/home/presentation/views/widgets/custom_filter_b
 import 'package:safarni/features/home/presentation/views/widgets/custom_search_text_filed.dart';
 import 'package:safarni/features/home/presentation/views/widgets/home_app_bar.dart';
 import 'package:safarni/features/home/presentation/views/widgets/list_of_recommendations.dart';
+import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 
 class HomeViewBody extends StatelessWidget {
    HomeViewBody({super.key});
@@ -39,7 +42,7 @@ class HomeViewBody extends StatelessWidget {
                   Expanded(
                     child: CustomSearchTextFiled(
                       onTap: (){
-
+                        context.pushNamed(SearchView.routeName);
                       },
                       readOnly: true,
                     )
@@ -47,7 +50,7 @@ class HomeViewBody extends StatelessWidget {
                   SizedBox(width: 16),
                   CustomFilterBt(
                     onTap: () {
-
+                      context.pushNamed(FilterView.routeName);
                     },
                   )
                 ],
