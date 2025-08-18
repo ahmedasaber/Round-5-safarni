@@ -15,20 +15,40 @@ class DestinationPage extends StatelessWidget {
         children: [
           DestinationImage(),
 
+          SizedBox(height: 8.h),
           Padding(
-            padding: EdgeInsets.only(left: 24.w),
-            child: Rating(),
+            padding: const EdgeInsets.only(left: 24, top: 18),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "City breaks",
+                      style: TextStyles.font12DarkGreySemiBold,
+                    ),
+                    Text("Eiffel tower", style: TextStyles.font16BlackSemiBold),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "7 days and 6 nights",
+                      style: TextStyles.font14DarkGreyMedium,
+                    ),
+                    SizedBox(height: 2.h),
+                    Text("Paris,France", style: TextStyles.font12GreyMedium),
+                    SizedBox(height: 12.h),
+                    Text("Top Activates", style: TextStyles.font17BlackMedium),
+                    SizedBox(height: 8.h),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 100, left: 50),
+                  child: Rating(),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 8.h),
-          Text("Eiffel tower", style: TextStyles.font16BlackSemiBold),
-          SizedBox(height: 4.h),
-          Text("7 days and 6 nights", style: TextStyles.font14DarkGreyMedium),
-          SizedBox(height: 2.h),
-          Text("Paris,France", style: TextStyles.font12GreyMedium),
-          SizedBox(height: 12.h),
-          Text("Top Activates", style: TextStyles.font17BlackMedium),
-          SizedBox(height: 8.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -36,11 +56,16 @@ class DestinationPage extends StatelessWidget {
                     width: 100.w,
                     height: 100.h,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.r),
+                      borderRadius: BorderRadius.circular(16.r), // More rounded
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.r),
-                      child: Image.asset("assets/images/activate1.jpg"),
+                      borderRadius: BorderRadius.circular(
+                        16.r,
+                      ), // Match container
+                      child: Image.asset(
+                        "assets/images/activate1.jpg",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(height: 6.h),
@@ -58,7 +83,10 @@ class DestinationPage extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16.r),
-                      child: Image.asset("assets/images/activate2.jpg"),
+                      child: Image.asset(
+                        "assets/images/activate2.jpg",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(height: 6.h),

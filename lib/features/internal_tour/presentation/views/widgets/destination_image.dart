@@ -41,7 +41,11 @@ class DestinationImage extends StatelessWidget {
                     radius: 24.r,
                     child: Padding(
                       padding: EdgeInsets.only(left: 5.w),
-                      child: Icon(Icons.arrow_back_ios, size: 24.sp),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 18.sp,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),

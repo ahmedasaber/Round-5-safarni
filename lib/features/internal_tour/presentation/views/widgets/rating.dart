@@ -10,7 +10,6 @@ class Rating extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text("City breaks", style: TextStyles.font12DarkGreySemiBold),
         SizedBox(width: 100.w),
         SvgPicture.asset("assets/svgs/star.svg"),
         SvgPicture.asset("assets/svgs/star.svg"),
