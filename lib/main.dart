@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: HotelItemView.routeName,
+          initialRoute: WelcomeScreen.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',
