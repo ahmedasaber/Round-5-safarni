@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/core/widgets/custom_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BookingNavBar extends StatelessWidget {
@@ -43,22 +44,10 @@ class BookingNavBar extends StatelessWidget {
                 ],
               ),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 28,
-                  vertical: 14,
-                ),
-              ),
-              onPressed: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text("Book Now", style: TextStyles.font16WhiteSemiBold),
-              ),
+            CustomButton(
+              color: AppColors.blue,
+              text: "Book Now",
+              textStyle: TextStyles.font16WhiteSemiBold,
             ),
           ],
         ),

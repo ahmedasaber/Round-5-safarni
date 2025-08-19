@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/widgets/custom_app_bar.dart';
-import 'package:safarni/features/home/presentation/views/widgets/custom_search_text_filed.dart';
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
 import 'package:safarni/features/search/presentation/view/widgets/locatio_item.dart';
+import 'package:safarni/features/home/presentation/views/widgets/custom_search_text_field.dart';
+
+
 
 class SearchViewBody extends StatelessWidget {
    SearchViewBody({super.key});
@@ -34,7 +36,7 @@ class SearchViewBody extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 24,),
-              CustomSearchTextFiled(),
+              CustomSearchTextField(),
               SizedBox(height: 24,),
               ListView.builder(
                 itemCount: list.length,
