@@ -3,10 +3,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:safarni/core/utils/routes.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:safarni/features/internal_tour/data/models/destination.dart';
 
 class ToursListViewItem extends StatelessWidget {
-  const ToursListViewItem({super.key});
-
+  const ToursListViewItem({super.key, required this.destination});
+  final Destination destination;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -28,7 +29,7 @@ class ToursListViewItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
                 child: Image(
                   fit: BoxFit.fill,
-                  image: AssetImage("assets/images/paris.jpg"),
+                  image: AssetImage(destination.image),
                 ),
               ),
             ),
@@ -39,7 +40,7 @@ class ToursListViewItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text("Full Day tour", style: TextStyles.font12GreySemibold),
+                    Text(destination.tourType, style: TextStyles.font12GreySemibold),
                     SizedBox(width: 100.w),
                     SvgPicture.asset(
                       "assets/svgs/star.svg",
@@ -47,11 +48,11 @@ class ToursListViewItem extends StatelessWidget {
                       height: 16.h,
                     ),
                     SizedBox(width: 5.w),
-                    Text("4.5", style: TextStyles.font12DarkGreySemiBold),
+                    Text(destination.rate, style: TextStyles.font12DarkGreySemiBold),
                   ],
                 ),
                 SizedBox(height: 4.h),
-                Text("Eiffel tower", style: TextStyles.font16BlackMedium),
+                Text(destination.name, style: TextStyles.font16BlackMedium),
                 SizedBox(height: 4.h),
                 RichText(
                   text: TextSpan(
@@ -61,7 +62,7 @@ class ToursListViewItem extends StatelessWidget {
                         style: TextStyles.font14GreyBold,
                       ),
                       TextSpan(
-                        text: "230\$",
+                        text: destination.price,
                         style: TextStyles.font14GreyBold.copyWith(
                           color: Color(0xff1C64F2),
                         ),

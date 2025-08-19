@@ -187,12 +187,10 @@ abstract class TextStyles {
     color: AppColors.darkBlue,
   );
   static TextStyle font18DarkBlackNormal = TextStyle(
-  static TextStyle font18DarkBlackNormal = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlack,
   );
-  static TextStyle font16DarkBlackNormal = TextStyle(
   static TextStyle font16DarkBlackNormal = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeightHelper.medium,
@@ -200,8 +198,6 @@ abstract class TextStyles {
     height: 1.4,
   );
   static TextStyle font20DarkBlueNormal = TextStyle(
-  static TextStyle font20DarkBlueNormal = TextStyle(
-
     fontSize: 20.sp,
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlue,
@@ -282,5 +278,3 @@ abstract class TextStyles {
     fontWeight: FontWeight.w700,
   );
 }
-
-
