@@ -6,8 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
 import 'features/home/presentation/views/pages/home_view.dart';
-
-
 import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
