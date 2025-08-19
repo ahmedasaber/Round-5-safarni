@@ -30,7 +30,7 @@ abstract class TextStyles{
   static const double fontSizeXs = 14.0;
   static const double fontSizeSm = 16.0;
   static const double fontSizeMd = 18.0;
-  static const double fontSizeLg = 20.0;
+  static const double fontSizeLg = 18.0;
 
   //Grid veiw spacing
   static const gridViewSpacing = 10.0;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
@@ -25,8 +24,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
       return MaterialPageRoute(builder: (_) => const SelectFlightView());
      case ChooseSeatView.routeName:
       return MaterialPageRoute(builder: (_) => const ChooseSeatView());
-    case BoardingPassView.routeName:
-      return MaterialPageRoute(builder: (_) => const BoardingPassView());
     default:
       return MaterialPageRoute(
         builder: (_) => Scaffold(

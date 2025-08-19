@@ -23,7 +23,7 @@ class SafarniApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: SelectFlightView.routeName,
+      initialRoute: PaymentMethodView.routeName,
       onGenerateRoute: onGenerateRoute,
       theme: ThemeData(
         fontFamily: 'Poppins',

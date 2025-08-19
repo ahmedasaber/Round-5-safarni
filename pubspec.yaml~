@@ -37,7 +37,6 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/
-    - assets/images/gallery/
 
   # example:
   fonts:

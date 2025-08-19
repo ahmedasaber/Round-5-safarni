@@ -1,0 +1,49 @@
+import 'package:flutter/cupertino.dart';
+import 'package:safarni/core/utils/app_styles.dart';
+
+class TopActivates extends StatelessWidget {
+  const TopActivates({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: TextStyles.defaultSpace, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Top Activates', style: TextStyle(fontSize: TextStyles.fontSizeMd, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildActivityCard('assets/images/bike1.png', 'Sunset Bike Ride'),
+                const SizedBox(width: 15),
+                _buildActivityCard('assets/images/bike2.png', 'Sunset Bike Ride'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+Widget _buildActivityCard(String imagePath, String title) {
+  return Column(
+    children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(TextStyles.borderRadiusLg + 3),
+        child: Image.asset(
+          imagePath,
+          width: 150,
+          height: 100,
+          fit: BoxFit.cover,
+        ),
+      ),
+      SizedBox(height: 5),
+      Text(title),
+    ],
+  );
+}
