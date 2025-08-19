@@ -33,8 +33,6 @@ import '../../features/payment/presentation/views/pages/success_payment_view.dar
 
 Route<dynamic> onGenerateRoute(RouteSettings settings){
   switch(settings.name){
-Route<dynamic> onGenerateRoute(RouteSettings settings) {
-  switch (settings.name) {
     case Routes.internalTourPage:
       return MaterialPageRoute(builder: (_) => const InternalTourPage());
     case Routes.destinationPage:
