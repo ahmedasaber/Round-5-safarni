@@ -86,7 +86,6 @@ abstract class TextStyles {
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlack,
   );
-}
 
   static const TextStyle medium12= TextStyle(fontSize: 12, fontWeight: FontWeight.w500);
   static const TextStyle medium13= TextStyle(fontSize: 13, fontWeight: FontWeight.w500);
