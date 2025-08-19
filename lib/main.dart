@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
-import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 
 Future<void> main() async {
   // Add error handling
@@ -42,7 +41,7 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: ProfileScreen.routeName,
+          initialRoute: HomeView.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',
