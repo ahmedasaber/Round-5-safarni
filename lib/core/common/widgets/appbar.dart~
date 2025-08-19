@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import '../../utils/app_assets.dart';
 import '../../utils/app_styles.dart';
 
 class CustomizedAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -31,6 +29,7 @@ class CustomizedAppBar extends StatelessWidget implements PreferredSizeWidget {
         vertical: TextStyles.sm,
       ),
       child: AppBar(
+        backgroundColor: Colors.white,
         centerTitle: centerTitle,
         automaticallyImplyLeading: false,
         leading:
