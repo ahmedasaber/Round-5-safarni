@@ -1,7 +1,45 @@
+abstract class AppAssets {
+  static const String logo = 'assets/images/logo.png';
+  static const String destinationImageSlider1 = 'assets/images/destination_image_slider1.jpg';
+  static const String destinationImageSlider2 = 'assets/images/destination_image_slider2.png';
+  static const String flightImage = 'assets/images/flight.jpg';
+
+  // gallery
+  static const String gallery1 = 'assets/images/gallery1.png';
+  static const String gallery2 = 'assets/images/gallery2.png';
+  static const String gallery3 = 'assets/images/gallery3.png';
+  static const String gallery4 = 'assets/images/gallery4.png';
+
+  // user images
+  static const String user1 = "assets/images/user_img1.png";
+  static const String user2 = "assets/images/user_img2.png";
+
+  // payment methods
+  static const String visa = "assets/images/visa.png";
+  static const String mastercard = "assets/images/mastercard.png";
+  static const String basicMastercard = "assets/icons/basic_mastercard.png";
+  static const String paypal = "assets/images/paypal.png";
+  static const String applePay = "assets/icons/apple_pay.png";
+  static const String googlePay = "assets/icons/google_pay.png";
+
+
+  // icons
+  static const String chip = "assets/icons/chip.png";
+  static const String touch = "assets/icons/touch.png";
+  static const String contactless = "assets/icons/contactless.png";
+
+
+  static const String canada = "assets/images/canada.png";
+  static const String qrCode = "assets/images/qr.png";
+  static const String rectangularLine = "assets/images/rectangular_line.png";
+  static const String userUnsplashImage = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop';
+
+
 // ignore_for_file: prefer_single_quotes
+}
 class Assets {
   Assets._();
-  
+
   /// Assets for assetsFontsPoppinsPoppinsBold
   /// assets/fonts/poppins/Poppins-Bold.ttf
   static const String assetsFontsPoppinsPoppinsBold = "assets/fonts/poppins/Poppins-Bold.ttf";
@@ -30,6 +68,10 @@ class Assets {
   /// assets/images/app-icon.png
   static const String assetsImagesAppIcon = "assets/images/app-icon.png";
 
+  /// Assets for assetsImagesAvatar
+  /// assets/images/Avatar.png
+  static const String assetsImagesAvatar = "assets/images/Avatar.png";
+
   /// Assets for assetsImagesBath
   /// assets/images/bath.png
   static const String assetsImagesBath = "assets/images/bath.png";
@@ -38,9 +80,17 @@ class Assets {
   /// assets/images/bed.png
   static const String assetsImagesBed = "assets/images/bed.png";
 
+  /// Assets for assetsImagesBooking
+  /// assets/images/booking.png
+  static const String assetsImagesBooking = "assets/images/booking.png";
+
   /// Assets for assetsImagesCamera
   /// assets/images/camera.png
   static const String assetsImagesCamera = "assets/images/camera.png";
+
+  /// Assets for assetsImagesCameraProfile
+  /// assets/images/camera_profile.png
+  static const String assetsImagesCameraProfile = "assets/images/camera_profile.png";
 
   /// Assets for assetsImagesHotel1
   /// assets/images/hotel_1.png
@@ -58,9 +108,25 @@ class Assets {
   /// assets/images/icon_review.png
   static const String assetsImagesIconReview = "assets/images/icon_review.png";
 
+  /// Assets for assetsImagesLanguage
+  /// assets/images/language.png
+  static const String assetsImagesLanguage = "assets/images/language.png";
+
   /// Assets for assetsImagesLocation
   /// assets/images/Location.png
   static const String assetsImagesLocation = "assets/images/Location.png";
+
+  /// Assets for assetsImagesLocationInput
+  /// assets/images/Location_input.png
+  static const String assetsImagesLocationInput = "assets/images/Location_input.png";
+
+  /// Assets for assetsImagesLogout
+  /// assets/images/logout.png
+  static const String assetsImagesLogout = "assets/images/logout.png";
+
+  /// Assets for assetsImagesMessage
+  /// assets/images/message.png
+  static const String assetsImagesMessage = "assets/images/message.png";
 
   /// Assets for assetsImagesNearbyHotel1
   /// assets/images/nearby_hotel_1.png
@@ -69,6 +135,10 @@ class Assets {
   /// Assets for assetsImagesNearbyHotel2
   /// assets/images/nearby_hotel_2.png
   static const String assetsImagesNearbyHotel2 = "assets/images/nearby_hotel_2.png";
+
+  /// Assets for assetsImagesPhone
+  /// assets/images/phone.png
+  static const String assetsImagesPhone = "assets/images/phone.png";
 
   /// Assets for assetsImagesRoom1
   /// assets/images/room_1.png
@@ -94,6 +164,10 @@ class Assets {
   /// assets/images/search-normal.png
   static const String assetsImagesSearchNormal = "assets/images/search-normal.png";
 
+  /// Assets for assetsImagesSecurity
+  /// assets/images/security.png
+  static const String assetsImagesSecurity = "assets/images/security.png";
+
   /// Assets for assetsImagesSqrt
   /// assets/images/sqrt.png
   static const String assetsImagesSqrt = "assets/images/sqrt.png";
@@ -101,5 +175,12 @@ class Assets {
   /// Assets for assetsImagesStar
   /// assets/images/star.png
   static const String assetsImagesStar = "assets/images/star.png";
-}
 
+  /// Assets for assetsImagesUser
+  /// assets/images/user.png
+  static const String assetsImagesUser = "assets/images/user.png";
+
+  /// Assets for assetsImagesUserInput
+  /// assets/images/user_input.png
+  static const String assetsImagesUserInput = "assets/images/user_input.png";
+}

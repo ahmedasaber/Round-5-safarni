@@ -1,23 +1,44 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
-import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
+import 'features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+
+import 'features/booking_flight/presentation/view/select_flight_view.dart';
+
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      try {
+        await ScreenUtil.ensureScreenSize();
+      } catch (e) {
+        debugPrint('ScreenUtil initialization failed: $e');
+      }
 
-  // Ensure ScreenUtil is initialized
-  await ScreenUtil.ensureScreenSize();
-  Bloc.observer = BlocObserverService();
-  runApp(const SafarniApp());
+      Bloc.observer = BlocObserverService();
+      runApp(const SafarniApp());
+    },
+    (error, stack) {
+      debugPrint('App Error: $error');
+      debugPrint('Stack: $stack');
+    },
+  );
 }
 
 class SafarniApp extends StatelessWidget {
   const SafarniApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -27,14 +48,30 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: WelcomeScreen.routeName,
+          initialRoute: HomeView.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',
             scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              scrolledUnderElevation: 0,
+              color: Colors.white,
+            ),
           ),
         );
       },
     );
   }
 }
+
+
+
+// return MaterialApp(
+// debugShowCheckedModeBanner: false,
+// initialRoute: SelectFlightView.routeName,
+// onGenerateRoute: onGenerateRoute,
+// theme: ThemeData(
+// fontFamily: 'Poppins',
+// scaffoldBackgroundColor: Colors.white,
+// ),
+// );
