@@ -1,0 +1,224 @@
+import 'package:flutter/material.dart';
+import 'package:safarni/core/common/widgets/elevated_button.dart';
+import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/booking_flight/presentation/view/widgets/top_section.dart';
+import '../../../../core/utils/app_colors.dart';
+
+class SelectFlightView extends StatefulWidget {
+  const SelectFlightView({super.key});
+
+  static const routeName = "/flight_select";
+
+  @override
+  State<SelectFlightView> createState() => _SelectFlightViewState();
+}
+
+class _SelectFlightViewState extends State<SelectFlightView> {
+  DateTime? departureDate = DateTime(2025, 12, 16);
+  DateTime? returnDate = DateTime(2025, 1, 6);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          // Header image
+          const TopSection(),
+
+          // Date buttons
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildDateButton(
+                    "Dec 16th, 2025",
+                    icon: Icons.calendar_today,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildDateButton(
+                    "Jan 6th, 2025",
+                    icon: Icons.person_outline,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Flight list
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                _buildFlightCard(
+                  departureTime: "7:05 AM",
+                  arrivalTime: "8:05 PM",
+                  departureAirportCode: "YUL",
+                  arrivalAirportCode: "YUL",
+                  duration: "13:00",
+                  airline: "Air Canada",
+                  price: "\$1,400",
+                ),
+                _buildFlightCard(
+                  departureTime: "9:05 AM",
+                  arrivalTime: "4:55 PM",
+                  departureAirportCode: "YUL",
+                  arrivalAirportCode: "YYZ",
+                  duration: "18:55",
+                  airline: "Scoot",
+                  price: "\$1,300",
+                ),
+                _buildFlightCard(
+                  departureTime: "9:05 AM",
+                  arrivalTime: "4:55 PM",
+                  departureAirportCode: "YUL",
+                  arrivalAirportCode: "YYZ",
+                  duration: "18:55",
+                  airline: "Scoot",
+                  price: "\$1,300",
+                ),
+                _buildFlightCard(
+                  departureTime: "10:00 AM",
+                  arrivalTime: "11:00 PM",
+                  departureAirportCode: "YUL",
+                  arrivalAirportCode: "YUL",
+                  duration: "13:00",
+                  airline: "Air Canada",
+                  price: "\$1,400",
+                ),
+              ],
+            ),
+          ),
+
+          // Continue button
+          Padding(
+            padding: const EdgeInsets.all(TextStyles.defaultSpace - 8),
+            child: AppElevatedButton(
+              buttonTitle: 'Continue',
+              primaryButton: true,
+              onPressed: () => Navigator.of(context).pushReplacementNamed(SelectFlightView.routeName),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateButton(String text, {required IconData icon}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(TextStyles.borderRadiusLg),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Colors.black),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: TextStyles.fontSizeSm,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFlightCard({
+    required String departureTime,
+    required String arrivalTime,
+    required String departureAirportCode,
+    required String arrivalAirportCode,
+    required String duration,
+    required String airline,
+    required String price,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(TextStyles.defaultSpace - 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(TextStyles.borderRadiusLg + 4),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          // First row: Times, duration, and airport codes
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    departureTime,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    departureAirportCode,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  const Icon(Icons.flight, size: 24, color: Colors.black),
+                  Text(
+                    duration,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    arrivalTime,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    arrivalAirportCode,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // Second row: Airline and price
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                airline,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              Text(
+                price,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

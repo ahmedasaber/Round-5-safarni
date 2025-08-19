@@ -4,6 +4,42 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/font_weight_helper.dart';
 
 abstract class TextStyles {
+  //padding and margin sizes
+  static const double xs = 4.0;
+  static const double sm = 8.0;
+  static const double md = 16.0;
+  static const double lg = 24.0;
+  static const double xl = 32.0;
+
+  //Icon sizes
+  static const double iconXs = 12.0;
+  static const double iconSm = 16.0;
+  static const double iconMd = 24.0;
+  static const double iconLg = 32.0;
+
+  //Default spacing between sections
+  static const double defaultSpace = 24.0;
+  static const double spaceBtwItems = 16.0;
+  static const double spaceBtwSections = 32.0;
+
+  // border radius
+  static const double borderRadiusSm = 4.0;
+  static const double borderRadiusMd = 8.0;
+  static const double borderRadiusLg = 12.0;
+  static const double borderRadiusXlg = 30.0;
+
+  //appBar height
+  static const double appBarHeight = 56.0;
+
+  // Font Sizes
+  static const double fontSizeXs = 14.0;
+  static const double fontSizeSm = 16.0;
+  static const double fontSizeMd = 18.0;
+  static const double fontSizeLg = 20.0;
+
+  //Grid veiw spacing
+  static const gridViewSpacing = 10.0;
+
   static TextStyle font12GreySemibold = TextStyle(
     fontSize: 12,
     color: AppColors.grey,
@@ -198,6 +234,7 @@ abstract class TextStyles {
     height: 1.4,
   );
   static TextStyle font20DarkBlueNormal = TextStyle(
+
     fontSize: 20.sp,
     fontWeight: FontWeightHelper.medium,
     color: AppColors.darkBlue,
@@ -276,5 +313,10 @@ abstract class TextStyles {
   static const TextStyle bold14 = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w700,
+  );
+  static TextStyle font15DarkBlueSemiBold = TextStyle(
+    fontSize: 15.sp,
+    fontWeight: FontWeightHelper.semiBold,
+    color: AppColors.darkBlue,
   );
 }

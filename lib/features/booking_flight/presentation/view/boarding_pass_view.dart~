@@ -1,0 +1,226 @@
+import 'package:flutter/material.dart';
+import 'package:safarni/core/utils/app_assets.dart';
+import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+
+import '../../../../core/utils/app_colors.dart';
+
+class BoardingPassView extends StatelessWidget {
+  const BoardingPassView({super.key});
+
+  static const routeName = "/boarding_pass";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          'Boarding Pass',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(TextStyles.defaultSpace - 8),
+          child: Column(
+            children: [
+              // The grey line has been added here
+              SizedBox(
+                height: 9,
+                child: Stack(
+                  children: [
+                    Positioned(top: 0,left: 0,right: 0,child: Image.asset(AppAssets.rectangularLine)),
+                  ],
+                ),
+              ),
+              Card(
+                color: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(TextStyles.borderRadiusLg + 4),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(TextStyles.defaultSpace - 8),
+                  child: Column(
+                    children: [
+                      _buildTicketHeader(),
+                      _buildFlightInfo(),
+                      _buildDetailsSection(),
+                      const SizedBox(height: 20),
+                      _buildUserSection(),
+                      const SizedBox(height: 20),
+                      Image.asset(
+                        AppAssets.qrCode,
+                        height: 200,
+                        width: 200,
+                        fit: BoxFit.contain,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {() => Navigator.of(context).pushReplacementNamed(PaymentMethodView.routeName);},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Checkout',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTicketHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Image.asset(
+              AppAssets.canada,
+              height: 30,
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Air Canada',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+          ],
+        ),
+        const Text(
+          'December 16h, 2022',
+          style: TextStyle(color: AppColors.softGrey,fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFlightInfo() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildTimeColumn('07h05', 'YUL'),
+          const Column(
+            children: [
+              Icon(Icons.flight, color: Colors.black),
+              SizedBox(height: 4),
+              Text(
+                '13h00',
+                style: TextStyle(color: Colors.black54),
+              ),
+            ],
+          ),
+          _buildTimeColumn('20h05', 'NRT'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeColumn(String time, String code) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          time,
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+        ),
+        Text(
+          code,
+          style: TextStyle(color: Colors.black54),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailsSection() {
+    return Column(
+      children: [
+        Divider(color: Colors.grey[300], height: 20),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildDetailColumn('8', 'Gate'),
+            _buildDetailColumn('6', 'Seat'),
+            _buildDetailColumn('3', 'Terminal'),
+            _buildDetailColumn('AC006', 'Flight'),
+          ],
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget _buildDetailColumn(String value, String label) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.black54),
+        ),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserSection() {
+    return Row(
+      children: [
+        const CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(AppAssets.userUnsplashImage),
+        ),
+        const SizedBox(width: 16),
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Catherine Dion',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+            Text(
+              '24 years, Female',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
+        ),
+        const Spacer(),
+        const Icon(Icons.chair_outlined, color: AppColors.primaryColor),
+        const SizedBox(width: 8),
+        const Text(
+          '29A',
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black54),
+        ),
+      ],
+    );
+  }
+}
