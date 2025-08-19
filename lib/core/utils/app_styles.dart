@@ -104,3 +104,4 @@ abstract class TextStyles {
   static const TextStyle semiBold20= TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
   static const TextStyle bold14= TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
 }
+

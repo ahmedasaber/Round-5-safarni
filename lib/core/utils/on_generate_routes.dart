@@ -6,6 +6,10 @@ import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
+import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+
 
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
