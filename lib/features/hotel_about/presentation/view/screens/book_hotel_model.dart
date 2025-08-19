@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/hotel_about/presentation/view/screens/guest_selection.dart';
 
 // Booking Modal Widget
 class BookHotelModal extends StatefulWidget {
@@ -51,7 +52,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
   }
 
   void _continueBooking() {
-    // Handle booking logic here
+    showGuestSelectionModal(context);
     Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -199,9 +200,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
                         );
                       }).toList(),
                     ),
-
                     verticalSpace(24),
-
                     // Check Out Section
                     Text(
                       'Check Out',
@@ -211,7 +210,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
                         color: Colors.black87,
                       ),
                     ),
-
                     verticalSpace(12),
 
                     // Check Out Options
@@ -335,8 +333,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
     );
   }
 }
-
-
 void showBookHotelModal(
   BuildContext context, {
   required String hotelName,
