@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Add this import for SystemNavigator
+import 'package:safarni/core/utils/app_assets.dart';
+import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
 import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
+import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
+import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+
+
+import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+
+
+import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
+import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 
 import '../../features/payment/presentation/views/pages/payment_method_view.dart';
 import '../../features/payment/presentation/views/pages/success_payment_view.dart';
@@ -13,6 +30,38 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
   switch(settings.name){
     case HomeView.routeName:
       return MaterialPageRoute(builder: (_) => const HomeView());
+
+    case HotelItemView.routeName:
+      return MaterialPageRoute(builder: (_) => const HotelItemView());
+
+    case AvailableRoomsScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const AvailableRoomsScreen());
+
+    case HotelAboutPage.routeName:
+      final args = settings.arguments as Map<String, dynamic>?;
+      return MaterialPageRoute(
+        builder: (_) => HotelAboutPage(
+          roomName: args?['roomName'] ?? 'Default Room Name',
+          price: args?['price'] ?? '100',
+          imageUrl: args?['imageUrl'] ?? Assets.assetsImagesHotel1,
+          address: args?['address'] ?? '1012 Ocean Avenue, New York, USA',
+          rating: args?['rating']?.toDouble() ?? 4.5,
+          reviewsCount: args?['reviewsCount'] ?? 356,
+        ),
+      );
+    case ProfileScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const ProfileScreen());
+    case PersonalInformationScreen.routeName:
+      return MaterialPageRoute(
+        builder: (_) =>  PersonalInformationScreen(),
+      );
+
+    case SearchView.routeName:
+      return MaterialPageRoute(builder: (_) => const SearchView());
+     case ResultView.routeName:
+      return MaterialPageRoute(builder: (_) => const ResultView());
+    case FilterView.routeName:
+      return MaterialPageRoute(builder: (_) => const FilterView());
     case DestinationView.routeName:
       return MaterialPageRoute(builder: (_) => const DestinationView());
     case PaymentMethodView.routeName:
@@ -30,8 +79,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
     default:
       return MaterialPageRoute(
         builder: (_) => Scaffold(
-          appBar: AppBar(title: Text('Unknown Route')),
-          body: Center(child: Text('No route defined for ${settings.name}')),
+          appBar: AppBar(title: Text('Page Not Found')),
+          body: Center(child: Text('Route not found: ${settings.name}')),
         ),
       );
   }
