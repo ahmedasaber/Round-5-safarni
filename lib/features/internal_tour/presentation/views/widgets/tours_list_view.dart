@@ -15,10 +15,9 @@ class ToursListView extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is DestinationSuccess) {
             return ListView.builder(
-              itemCount: state.destinations.length,
+              itemCount: 10,
               itemBuilder: (context, index) {
-                final destination = state.destinations[index];
-                return ToursListViewItem(destination: destination);
+                return ToursListViewItem();
               },
             );
           } else if (state is DestinationFailure) {
