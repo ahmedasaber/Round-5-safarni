@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/utils/routes.dart';
+import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
+import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 import 'package:safarni/features/home/presentation/views/widgets/home_app_bar.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
@@ -70,32 +74,29 @@ class HomeViewBody extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
                   Expanded(
-                      child: CustomSearchTextField(
-                    onTap: () {
-                      context.pushNamed(SearchView.routeName);
-                    },
-                    readOnly: true,
-                  )),
+                    child: CustomSearchTextField(
+                      onTap: () {
+                        context.pushNamed(SearchView.routeName);
+                      },
+                      readOnly: true,
+                    ),
+                  ),
                   SizedBox(width: 16),
                   CustomFilterBt(
                     onTap: () {
                       context.pushNamed(FilterView.routeName);
                     },
-                  )
+                  ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            SizedBox(height: 24),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16),
               height: 221,
@@ -108,46 +109,57 @@ class HomeViewBody extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 24,
-            ),
+            SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Categories',
-                style: TextStyles.medium17,
-              ),
+              child: Text('Categories', style: TextStyles.medium17),
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomCategoryItem(
-                    categoryImage: 'assets/images/flight-category.jpg',
-                    categoryTitle: 'Flight',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, FlightBookingView.routeName);
+                    },
+                    child: CustomCategoryItem(
+                      categoryImage: 'assets/images/flight-category.jpg',
+                      categoryTitle: 'Flight',
+                    ),
                   ),
-                  CustomCategoryItem(
-                    categoryImage: 'assets/images/car-category.jpg',
-                    categoryTitle: 'Cars',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.carBookingPage);
+                    },
+                    child: CustomCategoryItem(
+                      categoryImage: 'assets/images/car-category.jpg',
+                      categoryTitle: 'Cars',
+                    ),
                   ),
-                  CustomCategoryItem(
-                    categoryImage: 'assets/images/tours-category.jpg',
-                    categoryTitle: 'Tours',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.internalTourPage);
+                    },
+                    child: CustomCategoryItem(
+                      categoryImage: 'assets/images/tours-category.jpg',
+                      categoryTitle: 'Tours',
+                    ),
                   ),
-                  CustomCategoryItem(
-                    categoryImage: 'assets/images/hotel-category.jpg',
-                    categoryTitle: 'Hotels',
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, HotelItemView.routeName);
+                    },
+                    child: CustomCategoryItem(
+                      categoryImage: 'assets/images/hotel-category.jpg',
+                      categoryTitle: 'Hotels',
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 16,
-            ),
+            SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -189,12 +201,13 @@ class HomeViewBody extends StatelessWidget {
               ),
             ),
             ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: toursList.length,
-                itemBuilder: (context, i) {
-                  return toursList[i];
-                }),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: toursList.length,
+              itemBuilder: (context, i) {
+                return toursList[i];
+              },
+            ),
           ],
         ),
       ),
