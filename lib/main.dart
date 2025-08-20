@@ -1,14 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
+import 'features/home/presentation/views/pages/home_view.dart';
 
 Future<void> main() async {
-  // Add error handling
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -41,18 +41,18 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: HomeView.routeName,
+          initialRoute: WelcomeScreen.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',
             scaffoldBackgroundColor: Colors.white,
             appBarTheme: AppBarTheme(
               scrolledUnderElevation: 0,
-              color: Colors.white
-              ),
+              color: Colors.white,
+            ),
           ),
         );
-      }
+      },
     );
   }
 }
