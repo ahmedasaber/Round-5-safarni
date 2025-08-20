@@ -11,6 +11,7 @@ import 'package:safarni/features/home/presentation/views/widgets/list_of_recomme
 import 'package:safarni/features/home/presentation/views/widgets/card_recommendation_item.dart';
 import 'package:safarni/features/home/presentation/views/widgets/custom_search_text_field.dart';
 
+// ignore: must_be_immutable
 class HomeViewBody extends StatelessWidget {
   HomeViewBody({super.key});
 

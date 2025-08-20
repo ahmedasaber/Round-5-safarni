@@ -3,7 +3,7 @@ import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
-
+import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import 'package:safarni/features/profile/presentation/views/widgets/build_menu_item.dart';
 import 'package:safarni/features/profile/presentation/views/widgets/profile_photo_widget.dart';
@@ -66,7 +66,9 @@ class ProfileScreen extends StatelessWidget {
                     BuildMenuItem(
                       image: Assets.assetsImagesBooking,
                       title: 'My Booking',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, MyBookingScreen.routeName);
+                      },
                       showArrow: true,
                     ),
                     BuildMenuItem(

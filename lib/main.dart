@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
 import 'features/home/presentation/views/pages/home_view.dart';
-
-
-
 
 Future<void> main() async {
   runZonedGuarded(
@@ -58,15 +56,3 @@ class SafarniApp extends StatelessWidget {
     );
   }
 }
-
-
-
-// return MaterialApp(
-// debugShowCheckedModeBanner: false,
-// initialRoute: SelectFlightView.routeName,
-// onGenerateRoute: onGenerateRoute,
-// theme: ThemeData(
-// fontFamily: 'Poppins',
-// scaffoldBackgroundColor: Colors.white,
-// ),
-// );

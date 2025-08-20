@@ -5,6 +5,7 @@ import 'package:safarni/features/destination/presentation/views/pages/detination
 import 'package:safarni/features/home/presentation/views/widgets/favorite-item.dart';
 import 'package:safarni/features/internal_tour/presentation/views/pages/destination_page.dart';
 
+// ignore: must_be_immutable
 class FavoriteViewBody extends StatelessWidget {
    FavoriteViewBody({
     super.key,
