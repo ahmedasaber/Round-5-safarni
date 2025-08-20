@@ -10,6 +10,8 @@ import 'package:safarni/features/destination/presentation/views/pages/detination
 import 'package:flutter/services.dart'; // Add this import for SystemNavigator
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
@@ -22,9 +24,9 @@ import 'package:safarni/features/internal_tour/presentation/views/pages/destinat
 import 'package:safarni/features/internal_tour/presentation/views/pages/internal_tour_page.dart';
 import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
-
 import '../../features/auth/presentaion/pages/Password Reset Success.dart';
 import '../../features/auth/presentaion/pages/Reset Password.dart';
 import '../../features/auth/presentaion/pages/Verify Code.dart';
@@ -36,10 +38,14 @@ import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/splash/presentaion/pages/splash_page.dart';
 
 
+import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
+import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+
+import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
+import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 
 
-import '../../features/payment/presentation/views/pages/payment_method_view.dart';
-import '../../features/payment/presentation/views/pages/success_payment_view.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings settings){
   switch(settings.name){
@@ -101,16 +107,18 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
     case ProfileScreen.routeName:
       return MaterialPageRoute(builder: (_) => const ProfileScreen());
     case PersonalInformationScreen.routeName:
-      return MaterialPageRoute(
-        builder: (_) =>  PersonalInformationScreen(),
-      );
+      return MaterialPageRoute(builder: (_) => PersonalInformationScreen());
 
     case SearchView.routeName:
       return MaterialPageRoute(builder: (_) => const SearchView());
-     case ResultView.routeName:
+    case ResultView.routeName:
       return MaterialPageRoute(builder: (_) => const ResultView());
     case FilterView.routeName:
       return MaterialPageRoute(builder: (_) => const FilterView());
+    case AccountSecurityScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const AccountSecurityScreen());
+    case MyBookingScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const MyBookingScreen());
     case DestinationView.routeName:
       return MaterialPageRoute(builder: (_) => const DestinationView());
     case PaymentMethodView.routeName:

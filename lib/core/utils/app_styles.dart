@@ -320,3 +320,4 @@ abstract class TextStyles {
     color: AppColors.darkBlue,
   );
 }
+

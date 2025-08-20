@@ -10,7 +10,7 @@ class AccountSecurityScreen extends StatefulWidget {
   const AccountSecurityScreen({super.key});
 
   @override
-  _AccountSecurityScreenState createState() => _AccountSecurityScreenState();
+  State<AccountSecurityScreen> createState() => _AccountSecurityScreenState();
 }
 
 class _AccountSecurityScreenState extends State<AccountSecurityScreen> {
