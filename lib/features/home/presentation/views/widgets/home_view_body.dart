@@ -4,7 +4,7 @@ import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/utils/routes.dart';
 import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
-import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/hotel_item_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 import 'package:safarni/features/home/presentation/views/widgets/home_app_bar.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';

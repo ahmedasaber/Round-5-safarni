@@ -49,12 +49,7 @@ class BuildRoomCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  child: Image.asset(
-                    imageUrl,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  child: _buildImage(),
                 ),
               ),
             ),
@@ -68,7 +63,12 @@ class BuildRoomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(roomName, style: TextStyles.font13LightBlackNormal),
+                    Text(
+                      roomName,
+                      style: TextStyles.font13LightBlackNormal,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Row(
                       children: [
                         Text('From ', style: TextStyles.font12DarkGrayNormal),
@@ -87,5 +87,52 @@ class BuildRoomCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImage() {
+    // Check if imageUrl is a network URL or asset path
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return Image.network(
+        imageUrl,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.grey[300],
+            child: const Icon(Icons.error, color: Colors.grey, size: 40),
+          );
+        },
+      );
+    } else {
+      // Use Image.asset for local assets
+      return Image.asset(
+        imageUrl,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.grey[300],
+            child: const Icon(Icons.error, color: Colors.grey, size: 40),
+          );
+        },
+      );
+    }
   }
 }

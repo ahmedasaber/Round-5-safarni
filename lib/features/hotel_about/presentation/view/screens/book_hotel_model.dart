@@ -53,7 +53,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
 
   void _continueBooking() {
     showGuestSelectionModal(context);
-    Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -333,6 +332,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
     );
   }
 }
+
 void showBookHotelModal(
   BuildContext context, {
   required String hotelName,
