@@ -10,6 +10,8 @@ import 'package:safarni/features/destination/presentation/views/pages/detination
 import 'package:flutter/services.dart'; // Add this import for SystemNavigator
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
