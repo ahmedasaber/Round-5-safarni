@@ -3,7 +3,6 @@ import 'package:safarni/core/common/widgets/elevated_button.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/widgets/top_section.dart';
-import '../../../../core/utils/app_colors.dart';
 
 class SelectFlightView extends StatefulWidget {
   const SelectFlightView({super.key});

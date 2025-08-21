@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/core/common/widgets/elevated_button.dart';
 import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
 import '../../../../core/utils/app_colors.dart';
 

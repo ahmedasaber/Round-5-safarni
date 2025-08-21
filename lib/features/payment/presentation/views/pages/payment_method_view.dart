@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
 
 import '../../../../../core/common/widgets/appbar.dart';
 import '../../../../../core/common/widgets/elevated_button.dart';
 import '../../../../../core/common/widgets/payment_chip.dart';
 import '../../../../../core/utils/app_assets.dart';
-import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_styles.dart';
 import '../widgets/payment_header_container.dart';
 

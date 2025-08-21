@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+
+import '../../data/datasource/destination_remote_data_source.dart';
+import '../../data/repositories/destination_repository_impl.dart';
+import '../../domain/usecases/get_destination_details.dart';
+import '../../domain/entities/destination.dart';
+import '../cubit/destination_cubit.dart';
 
 import '../widgets/best_time_to_visit.dart';
 import '../widgets/botton_bar.dart';
@@ -8,35 +16,48 @@ import '../widgets/reviews.dart';
 import '../widgets/top_activates.dart';
 import '../widgets/trip_details.dart';
 
-class DetinationPage extends StatelessWidget {
-  const DetinationPage({super.key});
+class DestinationView extends StatelessWidget {
+  const DestinationView({super.key});
+  static const routeName = '/destination';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // The image and app bar at the top
-            BuildTopSection(),
-            // The main trip details (City Breaks, title, etc.)
-            TripDetails(),
-            // The "Top Activates" section
-            TopActivates(),
-            // The "Best Time to Visit" section
-            BestTimeToVisit(),
-            // The "Gallery" section
-            Gallery(),
-            // The "Reviews" section
-            Reviews(),
-            // Spacer to separate the content from the bottom button
-            SizedBox(height: 100),
-          ],
+    return BlocProvider(
+      create: (_) {
+        final dataSource = DestinationRemoteDataSourceImpl(http.Client());
+        final repository = DestinationRepositoryImpl(dataSource);
+        final usecase = GetDestinationDetails(repository);
+        return DestinationCubit(usecase)..fetchDestination("1");
+      },
+      child: Scaffold(
+        body: BlocBuilder<DestinationCubit, DestinationState>(
+          builder: (context, state) {
+            if (state is DestinationLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is DestinationError) {
+              return Center(child: Text(state.message));
+            } else if (state is DestinationLoaded) {
+              final destination = state.destination;
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    BuildTopSection(imageUrl: destination.images.first),
+                    TripDetails(destination: destination),
+                    TopActivates(activities: destination.topActivities),
+                    BestTimeToVisit(text: destination.bestTimeToVisit),
+                    Gallery(images: destination.images),
+                    Reviews(), // هنا تقدر تخليها dynamic لو جاي من الـ API
+                    const SizedBox(height: 100),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox();
+          },
         ),
+        bottomNavigationBar: const BottomBar(),
       ),
-      // The fixed bottom bar with price and button
-      bottomNavigationBar: BottomBar(),
     );
   }
 }

@@ -5,16 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'features/home/presentation/views/pages/home_view.dart';
 
 
 import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
-import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
 
-import 'features/booking_flight/presentation/view/select_flight_view.dart';
 
 
 Future<void> main() async {
