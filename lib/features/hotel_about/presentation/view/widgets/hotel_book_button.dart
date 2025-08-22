@@ -3,26 +3,40 @@ import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/book_hotel_model.dart';
 
 class HotelBookButton extends StatelessWidget {
-    final String price;
+  final String price;
   final String? hotelName;
   final String? address;
   final double? rating;
   final int? reviewsCount;
-  const HotelBookButton({super.key, required this.price, this.hotelName, this.address, this.rating, this.reviewsCount});
+  final int? roomId;
+
+  const HotelBookButton({
+    super.key,
+    required this.price,
+    this.hotelName,
+    this.address,
+    this.rating,
+    this.reviewsCount,
+    this.roomId,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Print room ID for debugging
+    print('🔘 HotelBookButton - Room ID: $roomId');
+    
     return ElevatedButton(
       onPressed: () {
-              showBookHotelModal(
-                context,
-                hotelName: hotelName ?? 'HarborHaven Hideaway',
-                address: address ?? '1012 Ocean Avenue, New York, USA',
-                rating: rating ?? 4.5,
-                reviewsCount: reviewsCount ?? 356,
-                price: price,
-              );
-            },
+        showBookHotelModal(
+          context,
+          hotelName: hotelName ?? 'HarborHaven Hideaway',
+          address: address ?? '1012 Ocean Avenue, New York, USA',
+          rating: rating ?? 4.5,
+          reviewsCount: reviewsCount ?? 356,
+          price: price,
+          roomId: roomId, // مرر الـ room ID
+        );
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.darkBlue,
         padding: EdgeInsets.symmetric(horizontal: 70, vertical: 16),

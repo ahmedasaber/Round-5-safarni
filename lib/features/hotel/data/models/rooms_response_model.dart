@@ -1,7 +1,7 @@
 import 'package:safarni/features/hotel/data/models/room_model.dart';
 
 class RoomsResponseModel {
-  final String status;
+  final int status; 
   final String message;
   final List<RoomModel> data;
 
@@ -13,9 +13,12 @@ class RoomsResponseModel {
 
   factory RoomsResponseModel.fromJson(Map<String, dynamic> json) {
     return RoomsResponseModel(
-      status: json['status'] ?? '',
-      message: json['message'] ?? '',
-      data: (json['data'] as List<dynamic>?)
+      status: json['status'] is String
+          ? int.tryParse(json['status']) ?? 0
+          : json['status'] ?? 0,
+      message: json['message']?.toString() ?? '',
+      data:
+          (json['data'] as List<dynamic>?)
               ?.map((item) => RoomModel.fromJson(item as Map<String, dynamic>))
               .toList() ??
           [],

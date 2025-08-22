@@ -1,18 +1,25 @@
 import 'package:safarni/core/services/hotel_api_services.dart';
 import 'package:safarni/features/hotel/data/models/hotels_response_model.dart';
 import 'package:safarni/features/hotel/data/models/rooms_response_model.dart';
+import 'package:safarni/features/hotel_about/data/model/room_detail_model.dart';
 
 abstract class HotelRepository {
   Future<HotelsResponseModel> getAllHotels();
   Future<HotelsResponseModel> getNearbyHotels();
   Future<HotelsResponseModel> getRecommendedHotels();
   Future<RoomsResponseModel> getAvailableRooms();
+  Future<RoomDetailResponse> getRoomDetails(int roomId);
+  Future<HotelsResponseModel> searchHotels(String query);
 }
 
 class HotelRepositoryImpl implements HotelRepository {
   final HotelApiService _hotelApiService;
 
   HotelRepositoryImpl(this._hotelApiService);
+  @override
+  Future<HotelsResponseModel> searchHotels(String query) async {
+    return await _hotelApiService.searchHotels(query);
+  }
 
   @override
   Future<HotelsResponseModel> getAllHotels() async {
@@ -32,5 +39,10 @@ class HotelRepositoryImpl implements HotelRepository {
   @override
   Future<RoomsResponseModel> getAvailableRooms() async {
     return await _hotelApiService.getAvailableRooms();
+  }
+
+  @override
+  Future<RoomDetailResponse> getRoomDetails(int roomId) async {
+    return await _hotelApiService.getRoomDetails(roomId);
   }
 }

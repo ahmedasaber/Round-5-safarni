@@ -12,14 +12,20 @@ class HotelsResponseModel {
   });
 
   factory HotelsResponseModel.fromJson(Map<String, dynamic> json) {
-    return HotelsResponseModel(
-      status: json['status'] ?? '',
-      message: json['message'] ?? '',
-      data:
-          (json['data'] as List<dynamic>?)
-              ?.map((item) => HotelModel.fromJson(item as Map<String, dynamic>))
-              .toList() ??
-          [],
-    );
+    try {
+      return HotelsResponseModel(
+        status: json['status']?.toString() ?? '',
+        message: json['message']?.toString() ?? '',
+        data:
+            (json['data'] as List<dynamic>?)
+                ?.map(
+                  (item) => HotelModel.fromJson(item as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+      );
+    } catch (e) {
+      throw Exception('Failed to parse HotelsResponseModel: $e');
+    }
   }
 }

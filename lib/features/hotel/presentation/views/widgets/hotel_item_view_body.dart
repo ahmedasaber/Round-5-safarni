@@ -5,7 +5,6 @@ import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_cubit.dart';
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_state.dart';
 import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
-import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_nearby_hotel_card.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_recommendation_card.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/search_bar_widget.dart';
@@ -43,6 +42,29 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
           if (state is HotelLoading) {
             return const Center(child: CircularProgressIndicator());
           }
+
+          if (state is HotelSearchLoading) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SearchBarWidget(),
+                  verticalSpace(18),
+                  const Center(
+                    child: Column(
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text('Searching hotels...'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
           if (state is HotelError) {
             return Center(
               child: Column(
@@ -64,6 +86,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
               ),
             );
           }
+
           if (state is HotelSuccess) {
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -72,93 +95,174 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                 children: [
                   const SearchBarWidget(),
                   verticalSpace(18),
-                  // Recommendation Section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Recommendation',
-                        style: TextStyles.font17LightBlackNormal,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AvailableRoomsScreen.routeName,
-                          );
-                        },
-                        child: Text(
-                          'View all',
-                          style: TextStyles.font15DarkBlueNormal,
+
+                  // ✨ Show search results if in search mode
+                  if (state.isSearchMode && state.searchResults != null) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Search Results (${state.searchResults!.length})',
+                          style: TextStyles.font17LightBlackNormal,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 270,
-                    child: state.recommendedHotels.isEmpty
-                        ? const Center(
-                            child: Text('No recommended hotels available'),
-                          )
-                        : ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: state.recommendedHotels.length,
-                            separatorBuilder: (context, index) =>
-                                horizontalSpace(16),
-                            itemBuilder: (context, index) {
-                              final hotel = state.recommendedHotels[index];
-                              return BuildRecommendationCard(
-                                name: hotel.name,
-                                location: hotel.location,
-                                discount:
-                                    '10%Off', // You might want to add this to your model
-                                rating: hotel.averageRating,
-                                imageUrl: hotel.image,
-                              );
-                            },
+                        TextButton(
+                          onPressed: () {
+                            context.read<HotelCubit>().clearSearch();
+                          },
+                          child: Text(
+                            'Clear',
+                            style: TextStyles.font15DarkBlueNormal,
                           ),
-                  ),
-                  verticalSpace(16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Nearby Hotel',
-                        style: TextStyles.font17LightBlackNormal,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            AvailableRoomsScreen.routeName,
-                          );
-                        },
-                        child: Text(
-                          'View all',
-                          style: TextStyles.font15DarkBlueNormal,
                         ),
-                      ),
-                    ],
-                  ),
-                  verticalSpace(16),
-                  if (state.nearbyHotels.isEmpty)
-                    const Center(child: Text('No nearby hotels available'))
-                  else
-                    Column(
-                      children: state.nearbyHotels.map((hotel) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: BuildNearbyHotelCard(
-                            name: hotel.name,
-                            location: hotel.location,
-                            discount:
-                                '10%Off',
-                            rating: hotel.averageRating,
-                            imageUrl: hotel.image,
-                          ),
-                        );
-                      }).toList(),
+                      ],
                     ),
+                    if (state.searchQuery != null) ...[
+                      verticalSpace(8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'Showing results for: "${state.searchQuery}"',
+                          style: TextStyles.font12DarkBlueNormal,
+                        ),
+                      ),
+                    ],
+                    verticalSpace(16),
+                    if (state.searchResults!.isEmpty)
+                      Center(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                            verticalSpace(16),
+                            Text(
+                              'No hotels found for "${state.searchQuery}"',
+                              style: TextStyles.font16LightBlackNormal,
+                              textAlign: TextAlign.center,
+                            ),
+                            verticalSpace(16),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<HotelCubit>().clearSearch();
+                              },
+                              child: const Text('Show All Hotels'),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      Column(
+                        children: state.searchResults!.map((hotel) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: BuildNearbyHotelCard(
+                              name: hotel.name,
+                              location: hotel.location,
+                              discount: '10%Off',
+                              rating: hotel.averageRating,
+                              imageUrl: hotel.image,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                  ]
+                  // ✨ Show normal content if not in search mode
+                  else ...[
+                    // Recommendation Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Recommendation',
+                          style: TextStyles.font17LightBlackNormal,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              AvailableRoomsScreen.routeName,
+                            );
+                          },
+                          child: Text(
+                            'View all',
+                            style: TextStyles.font15DarkBlueNormal,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 270,
+                      child: state.recommendedHotels.isEmpty
+                          ? const Center(
+                              child: Text('No recommended hotels available'),
+                            )
+                          : ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.recommendedHotels.length,
+                              separatorBuilder: (context, index) =>
+                                  horizontalSpace(16),
+                              itemBuilder: (context, index) {
+                                final hotel = state.recommendedHotels[index];
+                                return BuildRecommendationCard(
+                                  name: hotel.name,
+                                  location: hotel.location,
+                                  discount: '10%Off',
+                                  rating: hotel.averageRating,
+                                  imageUrl: hotel.image,
+                                );
+                              },
+                            ),
+                    ),
+                    verticalSpace(16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Nearby Hotel',
+                          style: TextStyles.font17LightBlackNormal,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              AvailableRoomsScreen.routeName,
+                            );
+                          },
+                          child: Text(
+                            'View all',
+                            style: TextStyles.font15DarkBlueNormal,
+                          ),
+                        ),
+                      ],
+                    ),
+                    verticalSpace(16),
+                    if (state.nearbyHotels.isEmpty)
+                      const Center(child: Text('No nearby hotels available'))
+                    else
+                      Column(
+                        children: state.nearbyHotels.map((hotel) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: BuildNearbyHotelCard(
+                              name: hotel.name,
+                              location: hotel.location,
+                              discount: '10%Off',
+                              rating: hotel.averageRating,
+                              imageUrl: hotel.image,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                  ],
                 ],
               ),
             );

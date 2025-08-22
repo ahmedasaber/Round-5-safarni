@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/hotel_about/data/model/booking_data_model.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/guest_selection.dart';
 
-// Booking Modal Widget
 class BookHotelModal extends StatefulWidget {
   final String hotelName;
   final String address;
   final double rating;
   final int reviewsCount;
   final String price;
+  final int? roomId;
 
   const BookHotelModal({
     super.key,
@@ -19,6 +20,7 @@ class BookHotelModal extends StatefulWidget {
     required this.rating,
     required this.reviewsCount,
     required this.price,
+    this.roomId,
   });
 
   @override
@@ -28,22 +30,29 @@ class BookHotelModal extends StatefulWidget {
 class _BookHotelModalState extends State<BookHotelModal> {
   final TextEditingController _noteController = TextEditingController();
   String selectedCheckInDay = 'Today';
-  String selectedCheckInDate = '4 Oct';
-
   String selectedCheckOutDay = 'Sun';
-  String selectedCheckOutDate = '3 Nov';
 
   final List<Map<String, String>> checkInOptions = [
-    {'day': 'Today', 'date': '4 Oct'},
-    {'day': 'Tue', 'date': '5 Oct'},
-    {'day': 'Wed', 'date': '6 Oct'},
+    {'day': 'Today', 'date': '2025-08-23'},
+    {'day': 'Tue', 'date': '2025-08-24'},
+    {'day': 'Wed', 'date': '2025-08-25'},
   ];
 
   final List<Map<String, String>> checkOutOptions = [
-    {'day': 'Sun', 'date': '3 Nov'},
-    {'day': 'Mon', 'date': '4 Nov'},
-    {'day': 'Wed', 'date': '5 Nov'},
+    {'day': 'Sun', 'date': '2025-08-30'},
+    {'day': 'Mon', 'date': '2025-08-31'},
+    {'day': 'Wed', 'date': '2025-09-01'},
   ];
+
+  String _selectedCheckInDate = '2025-08-23';
+  String _selectedCheckOutDate = '2025-08-30';
+
+  @override
+  void initState() {
+    super.initState();
+    // Print room ID for debugging
+    print('📝 BookHotelModal initialized with Room ID: ${widget.roomId}');
+  }
 
   @override
   void dispose() {
@@ -52,15 +61,55 @@ class _BookHotelModalState extends State<BookHotelModal> {
   }
 
   void _continueBooking() {
-    showGuestSelectionModal(context);
+    // Validate room ID
+    if (widget.roomId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Room information is missing. Please try again.'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Booking request submitted successfully!'),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
-      ),
+    // Create booking data with room ID
+    final bookingData = BookingData(
+      roomId: widget.roomId!, // تأكد من تمرير الـ room ID
+      checkInDate: _selectedCheckInDate,
+      checkOutDate: _selectedCheckOutDate,
+      note: _noteController.text.trim().isEmpty
+          ? null
+          : _noteController.text.trim(),
     );
+
+    // Print booking data for debugging
+    print('🚀 BookHotelModal - Creating BookingData:');
+    print('  - Room ID: ${bookingData.roomId}');
+    print('  - Check In: ${bookingData.checkInDate}');
+    print('  - Check Out: ${bookingData.checkOutDate}');
+    print('  - Note: ${bookingData.note ?? 'No note'}');
+
+    // Navigate to guest selection with booking data
+    Navigator.pop(context); // Close current modal
+    showGuestSelectionModal(context, bookingData);
+  }
+
+  String _getDisplayDate(String day) {
+    switch (day) {
+      case 'Today':
+        return '4 Oct';
+      case 'Tue':
+        return '5 Oct';
+      case 'Wed':
+        return '6 Oct';
+      case 'Sun':
+        return '3 Nov';
+      case 'Mon':
+        return '4 Nov';
+      default:
+        return '5 Nov';
+    }
   }
 
   @override
@@ -73,7 +122,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
       ),
       child: Column(
         children: [
-          // Handle bar
           Container(
             width: 40,
             height: 4,
@@ -91,7 +139,37 @@ class _BookHotelModalState extends State<BookHotelModal> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     verticalSpace(20),
-                    // Hotel Info
+
+                    // Debug info (remove in production)
+                    if (widget.roomId != null)
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        margin: EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.green[50],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.green[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              color: Colors.green[700],
+                              size: 16,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Room ID: ${widget.roomId}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.green[700],
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
                     Row(
                       children: [
                         Container(
@@ -118,13 +196,11 @@ class _BookHotelModalState extends State<BookHotelModal> {
                       ],
                     ),
                     verticalSpace(12),
-                    // Hotel name
                     Text(
                       widget.hotelName,
                       style: TextStyles.font20LightBlackNormal,
                     ),
                     verticalSpace(4),
-                    // Address
                     Text(
                       widget.address,
                       style: TextStyles.font12DarkGrayNormal,
@@ -139,10 +215,8 @@ class _BookHotelModalState extends State<BookHotelModal> {
                       ),
                     ),
                     verticalSpace(24),
-                    // Check In Section
                     Text('Check In', style: TextStyles.font16LightBlackNormal),
                     verticalSpace(12),
-                    // Check In Options
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: checkInOptions.map((option) {
@@ -151,7 +225,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
                           onTap: () {
                             setState(() {
                               selectedCheckInDay = option['day']!;
-                              selectedCheckInDate = option['date']!;
+                              _selectedCheckInDate = option['date']!;
                             });
                           },
                           child: Container(
@@ -184,7 +258,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
                                 ),
                                 verticalSpace(4),
                                 Text(
-                                  option['date']!,
+                                  _getDisplayDate(option['day']!),
                                   style: TextStyle(
                                     color: isSelected
                                         ? AppColors.darkBlue
@@ -210,8 +284,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
                       ),
                     ),
                     verticalSpace(12),
-
-                    // Check Out Options
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: checkOutOptions.map((option) {
@@ -220,7 +292,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
                           onTap: () {
                             setState(() {
                               selectedCheckOutDay = option['day']!;
-                              selectedCheckOutDate = option['date']!;
+                              _selectedCheckOutDate = option['date']!;
                             });
                           },
                           child: Container(
@@ -253,7 +325,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
                                 ),
                                 verticalSpace(4),
                                 Text(
-                                  option['date']!,
+                                  _getDisplayDate(option['day']!),
                                   style: TextStyle(
                                     color: isSelected
                                         ? AppColors.darkBlue
@@ -340,7 +412,11 @@ void showBookHotelModal(
   required double rating,
   required int reviewsCount,
   required String price,
+  int? roomId,
 }) {
+  // Print room ID for debugging
+  print('🏨 showBookHotelModal called with Room ID: $roomId');
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -351,6 +427,7 @@ void showBookHotelModal(
       rating: rating,
       reviewsCount: reviewsCount,
       price: price,
+      roomId: roomId, // مرر الـ room ID
     ),
   );
 }
