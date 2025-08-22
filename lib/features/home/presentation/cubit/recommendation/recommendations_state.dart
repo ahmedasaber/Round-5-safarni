@@ -6,7 +6,7 @@ sealed class RecommendationsState {}
 final class RecommendationsInitial extends RecommendationsState {}
 final class RecommendationsLoading extends RecommendationsState {}
 final class RecommendationsSuccess extends RecommendationsState {
-  final List<RecommendationEntity> recommendations;
+  final List<ToursEntity> recommendations;
 
   RecommendationsSuccess({required this.recommendations});
 }

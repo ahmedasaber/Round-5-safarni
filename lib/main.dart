@@ -5,7 +5,7 @@ import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
+import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 
 Future<void> main() async {
   runZonedGuarded(
@@ -41,7 +41,7 @@ class SafarniApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: WelcomeScreen.routeName,
+          initialRoute: HomeView.routeName,
           onGenerateRoute: onGenerateRoute,
           theme: ThemeData(
             fontFamily: 'Poppins',

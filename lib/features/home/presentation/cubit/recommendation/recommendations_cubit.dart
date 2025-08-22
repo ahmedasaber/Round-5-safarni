@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:safarni/features/home/domain/entities/recommendation_entity.dart';
+import 'package:safarni/features/home/domain/entities/available_tours_entity.dart';
 import 'package:safarni/features/home/domain/repositories/recommendation_repo.dart';
 
 part 'recommendations_state.dart';

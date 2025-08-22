@@ -32,11 +32,19 @@ class AvailableToursCardItem extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
-                child: Image.asset(
+                child: Image.network(
                  image,
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace){
+                    return Image.asset(
+                      'assets/images/placeholder.png',
+                      fit: BoxFit.cover,
+                      width: 80,
+                      height: 80,
+                    );
+                  },
                 ),
               ),
               const SizedBox(width: 8.0),
@@ -62,7 +70,7 @@ class AvailableToursCardItem extends StatelessWidget {
                     const SizedBox(height: 4.0),
                     Text.rich(
                       TextSpan(
-                        style: TextStyles.bold14,
+                        style: TextStyles.bold14.copyWith(color: Colors.grey[500]),
                         children: [
                           TextSpan(
                             text: 'From '

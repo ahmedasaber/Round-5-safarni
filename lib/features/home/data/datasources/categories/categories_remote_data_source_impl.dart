@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:safarni/features/home/data/datasources/categories_remote_data_source.dart';
+import 'package:safarni/features/home/data/datasources/categories/categories_remote_data_source.dart';
 import 'package:safarni/features/home/data/models/category_model.dart';
 
 class CategoriesRemoteDataSourceImpl implements CategoriesRemoteDataSource{
-  Dio dio = Dio();
+  final Dio dio;
+
+  CategoriesRemoteDataSourceImpl({required this.dio});
   @override
   Future<List<CategoryModel>> fetchCategories() async{
     try {
