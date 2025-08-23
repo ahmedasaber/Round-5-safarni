@@ -5,9 +5,6 @@ import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
-import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
-import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
 
 Future<void> main() async {

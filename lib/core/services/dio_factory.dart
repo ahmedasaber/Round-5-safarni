@@ -7,7 +7,6 @@ class DioFactory {
   static Dio? dio;
 
   static Dio getDio() {
-    // ✅ زيادة مدة الـ timeout من 30 ثانية إلى 60 ثانية
     Duration timeOut = const Duration(seconds: 60);
 
     if (dio == null) {
@@ -15,8 +14,7 @@ class DioFactory {
       dio!
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut
-        ..options.sendTimeout = timeOut // ✅ إضافة send timeout كمان
-        // ✅ إضافة headers مفيدة
+        ..options.sendTimeout = timeOut 
         ..options.headers = {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -35,14 +33,12 @@ class DioFactory {
         requestBody: true,
         requestHeader: true,
         responseHeader: true,
-        // ✅ تقليل الـ logs عشان ميبطئش الأداء
         logPrint: (object) {
           print('🌐 API: $object');
         },
       ),
     );
     
-    // ✅ إضافة interceptor للـ retry في حالة فشل الطلب
     dio?.interceptors.add(
       InterceptorsWrapper(
         onError: (error, handler) {

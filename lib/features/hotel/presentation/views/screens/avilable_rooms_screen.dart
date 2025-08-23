@@ -13,9 +13,14 @@ class AvailableRoomsScreen extends StatelessWidget {
     // استقبال hotel ID من الـ arguments
     final int? hotelId = ModalRoute.of(context)?.settings.arguments as int?;
     
+    print('🎯 AvailableRoomsScreen - Received hotel ID: $hotelId'); // Debug print
+    
     return BlocProvider(
-      create: (context) => getIt<HotelCubit>()..fetchAvailableRooms(hotelId: hotelId),
-      child: const AvailableRoomsScreenBody(),
+      create: (context) {
+        print('🔧 Creating HotelCubit and calling fetchAvailableRooms with hotelId: $hotelId'); // Debug print
+        return getIt<HotelCubit>()..fetchAvailableRooms(hotelId: hotelId);
+      },
+      child: AvailableRoomsScreenBody(hotelId: hotelId), // تمرير hotelId للـ body
     );
   }
 }

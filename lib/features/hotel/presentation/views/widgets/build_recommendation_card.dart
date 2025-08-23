@@ -26,6 +26,7 @@ class BuildRecommendationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('🎯 BuildNearbyHotelCard - Navigating with hotel ID: $hotelId');
         // ⭐ التنقل إلى شاشة الغرف المتاحة مع تمرير hotel ID
         Navigator.pushNamed(
           context,
@@ -57,7 +58,7 @@ class BuildRecommendationCard extends StatelessWidget {
                     if (loadingProgress == null) return child;
                     return Container(
                       width: double.infinity,
-                      height: 140,
+                      height: 125,
                       color: Colors.grey[200],
                       child: Center(
                         child: CircularProgressIndicator(
@@ -72,7 +73,7 @@ class BuildRecommendationCard extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       width: double.infinity,
-                      height: 125,
+                      height: 20,
                       color: Colors.grey[200],
                       child: Icon(
                         Icons.broken_image,

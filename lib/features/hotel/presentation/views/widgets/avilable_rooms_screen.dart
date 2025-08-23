@@ -9,7 +9,9 @@ import 'package:safarni/features/hotel/presentation/views/widgets/build_room_car
 import 'package:safarni/features/hotel/presentation/views/widgets/search_bar_widget.dart';
 
 class AvailableRoomsScreenBody extends StatefulWidget {
-  const AvailableRoomsScreenBody({super.key});
+  final int? hotelId; // استقبال hotelId من الخارج
+
+  const AvailableRoomsScreenBody({super.key, this.hotelId});
 
   @override
   State<AvailableRoomsScreenBody> createState() =>
@@ -17,22 +19,16 @@ class AvailableRoomsScreenBody extends StatefulWidget {
 }
 
 class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
-  int? hotelId;
+  int? get hotelId => widget.hotelId; // استخدام hotelId من widget
 
   @override
   void initState() {
     super.initState();
-    // Get hotel ID from route arguments
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final args = ModalRoute.of(context)?.settings.arguments;
-      if (args is int) {
-        hotelId = args;
-        context.read<HotelCubit>().fetchAvailableRooms(hotelId: hotelId);
-      } else {
-        // If no hotel ID provided, fetch all available rooms
-        context.read<HotelCubit>().fetchAvailableRooms();
-      }
-    });
+    print(
+      '🏨 AvailableRoomsScreenBody initialized with hotel ID: $hotelId',
+    ); // Debug print
+    // لا نحتاج addPostFrameCallback لأن hotelId متاح فوراً
+    // الـ BlocProvider في الـ parent بيستدعي fetchAvailableRooms أصلاً
   }
 
   @override
@@ -60,6 +56,8 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
       ),
       body: BlocBuilder<HotelCubit, HotelState>(
         builder: (context, state) {
+          print('🔄 Current state: ${state.runtimeType}'); // Debug print
+
           if (state is HotelLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -91,12 +89,15 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
           }
 
           if (state is HotelSuccess) {
+            print(
+              '✅ HotelSuccess state - Available rooms count: ${state.availableRooms.length}',
+            ); // Debug print
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Search bar (optional, you can remove if not needed for specific hotel)
                   if (hotelId == null) ...[
                     const SearchBarWidget(),
                     verticalSpace(16),
@@ -126,7 +127,8 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                   ),
                   verticalSpace(16),
 
-                  if (state.availableRooms.isEmpty)
+                  // التحقق الصحيح من الغرف المتاحة
+                  if (state.availableRooms.isEmpty) ...[
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
@@ -147,15 +149,28 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                             ),
                             verticalSpace(8),
                             Text(
-                              'Try selecting a different date or hotel',
+                              hotelId != null
+                                  ? 'This hotel has no available rooms for today. Please check back later or try a different date.'
+                                  : 'No rooms are currently available. Try selecting a different date.',
                               style: TextStyles.font14DarkGrayNormal,
                               textAlign: TextAlign.center,
                             ),
+                            if (hotelId != null) ...[
+                              verticalSpace(16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // العودة للصفحة الرئيسية للفنادق
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Try Another Hotel'),
+                              ),
+                            ],
                           ],
                         ),
                       ),
-                    )
-                  else
+                    ),
+                  ] else ...[
+                    // عرض الغرف المتاحة
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -188,11 +203,13 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                         ),
                       ],
                     ),
+                  ],
                 ],
               ),
             );
           }
 
+          // الحالة الافتراضية
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

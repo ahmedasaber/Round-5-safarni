@@ -26,6 +26,7 @@ class BuildNearbyHotelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('🎯 BuildRecommendationCard - Navigating with hotel ID: $hotelId');
         // ⭐ التنقل إلى شاشة الغرف المتاحة مع تمرير hotel ID
         Navigator.pushNamed(
           context,

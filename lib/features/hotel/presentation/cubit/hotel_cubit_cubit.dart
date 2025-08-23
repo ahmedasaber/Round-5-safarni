@@ -23,56 +23,81 @@ class HotelCubit extends Cubit<HotelState> {
       final nearbyHotelsResponse = futures[1];
       final recommendedHotelsResponse = futures[2];
 
-      emit(
-        HotelSuccess(
-          hotels: allHotelsResponse.data,
-          nearbyHotels: nearbyHotelsResponse.data,
-          recommendedHotels: recommendedHotelsResponse.data,
-          availableRooms: [],
-        ),
-      );
-    } catch (e) {
-      emit(HotelError(message: 'Failed to fetch hotels: ${e.toString()}'));
-    }
-  }
-
-  Future<void> fetchAvailableRooms({int? hotelId}) async {
-    emit(HotelLoading());
-    try {
-      _currentHotelId = hotelId;
-
-      final roomsResponse = await _repository.getAvailableRooms(
-        hotelId: hotelId,
-      );
-
-      if (state is HotelSuccess) {
-        final currentState = state as HotelSuccess;
+      if (!isClosed) {
         emit(
           HotelSuccess(
-            recommendedHotels: currentState.recommendedHotels,
-            nearbyHotels: currentState.nearbyHotels,
-            availableRooms: roomsResponse.data,
-            isSearchMode: currentState.isSearchMode,
-            searchResults: currentState.searchResults,
-            searchQuery: currentState.searchQuery,
-            hotels: currentState.hotels,
-          ),
-        );
-      } else {
-        emit(
-          HotelSuccess(
-            recommendedHotels: [],
-            nearbyHotels: [],
-            availableRooms: roomsResponse.data,
-            isSearchMode: false,
-            searchResults: null,
-            searchQuery: null,
-            hotels: [],
+            hotels: allHotelsResponse.data,
+            nearbyHotels: nearbyHotelsResponse.data,
+            recommendedHotels: recommendedHotelsResponse.data,
+            availableRooms: [],
           ),
         );
       }
     } catch (e) {
-      emit(HotelError(message: e.toString()));
+      if (!isClosed) {
+        emit(HotelError(message: 'Failed to fetch hotels: ${e.toString()}'));
+      }
+    }
+  }
+
+  Future<void> fetchAvailableRooms({int? hotelId}) async {
+    print('🎯 HotelCubit - fetchAvailableRooms called with hotelId: $hotelId');
+    emit(HotelLoading());
+
+    try {
+      _currentHotelId = hotelId;
+
+      print('📡 Calling repository.getAvailableRooms with hotelId: $hotelId');
+      final roomsResponse = await _repository.getAvailableRooms(
+        hotelId: hotelId,
+      );
+
+      print('📊 Repository returned ${roomsResponse.data.length} rooms');
+      print(
+        '📋 Rooms data: ${roomsResponse.data.map((r) => 'ID:${r.id}, Name:${r.name}').toList()}',
+      );
+
+      if (!isClosed) {
+        if (state is HotelSuccess) {
+          final currentState = state as HotelSuccess;
+          print(
+            '✅ Updating existing HotelSuccess state with ${roomsResponse.data.length} rooms',
+          );
+          emit(
+            HotelSuccess(
+              recommendedHotels: currentState.recommendedHotels,
+              nearbyHotels: currentState.nearbyHotels,
+              availableRooms:
+                  roomsResponse.data, // ⭐ هنا المفروض يجي فاضي لو مفيش غرف
+              isSearchMode: currentState.isSearchMode,
+              searchResults: currentState.searchResults,
+              searchQuery: currentState.searchQuery,
+              hotels: currentState.hotels,
+            ),
+          );
+        } else {
+          print(
+            '✅ Creating new HotelSuccess state with ${roomsResponse.data.length} rooms',
+          );
+          emit(
+            HotelSuccess(
+              recommendedHotels: [],
+              nearbyHotels: [],
+              availableRooms:
+                  roomsResponse.data, // ⭐ هنا المفروض يجي فاضي لو مفيش غرف
+              isSearchMode: false,
+              searchResults: null,
+              searchQuery: null,
+              hotels: [],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        print('❌ Error in fetchAvailableRooms: $e');
+        emit(HotelError(message: 'Failed to fetch rooms: ${e.toString()}'));
+      }
     }
   }
 
@@ -99,20 +124,25 @@ class HotelCubit extends Cubit<HotelState> {
       print(
         '🔍 Search Results: ${searchResponse.data.length} hotels found for "$query"',
       );
-      emit(
-        HotelSuccess(
-          hotels: hotels,
-          nearbyHotels: nearbyHotels,
-          recommendedHotels: recommendedHotels,
-          availableRooms: availableRooms,
-          searchResults: searchResponse.data,
-          searchQuery: query,
-          isSearchMode: true,
-        ),
-      );
+
+      if (!isClosed) {
+        emit(
+          HotelSuccess(
+            hotels: hotels,
+            nearbyHotels: nearbyHotels,
+            recommendedHotels: recommendedHotels,
+            availableRooms: availableRooms,
+            searchResults: searchResponse.data,
+            searchQuery: query,
+            isSearchMode: true,
+          ),
+        );
+      }
     } catch (e) {
       print('❌ Error in searchHotels: $e');
-      emit(HotelError(message: 'Failed to search hotels: ${e.toString()}'));
+      if (!isClosed) {
+        emit(HotelError(message: 'Failed to search hotels: ${e.toString()}'));
+      }
     }
   }
 

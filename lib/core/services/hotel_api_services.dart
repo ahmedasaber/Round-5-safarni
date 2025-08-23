@@ -17,9 +17,7 @@ class HotelApiService {
 
       final response = await _dio.get(
         ApiConstants.searchHotels,
-        queryParameters: {
-          'key': query, // حسب الـ API اللي شفته في الصورة
-        },
+        queryParameters: {'key': query},
       );
 
       print('✅ Search Response status: ${response.statusCode}');
@@ -112,26 +110,36 @@ class HotelApiService {
     }
   }
 
+  // في method getAvailableRooms فقط - باقي الكود يبقى زي ما هو
   Future<RoomsResponseModel> getAvailableRooms({int? hotelId}) async {
     try {
       String endpoint;
 
-      // Build endpoint based on whether hotel ID is provided
+      print(
+        '🎯 HotelApiService.getAvailableRooms called with hotelId: $hotelId',
+      );
+
       if (hotelId != null) {
-        // ✅ استخدام الدالة المساعدة من ApiConstants
+        // إذا كان هناك hotel ID، استخدم endpoint خاص بالفندق
         endpoint = ApiConstants.getHotelRooms(hotelId);
-        print('🏨 Fetching rooms for hotel ID: $hotelId from: $endpoint');
+        print('🏨 Hotel ID provided: $hotelId');
+        print('🔗 Using specific hotel endpoint: $endpoint');
       } else {
-        // ✅ إذا مفيش هوتل ID، جيب كل الغرف المتاحة
+        // إذا لم يكن هناك hotel ID، اجلب كل الغرف المتاحة
         endpoint = ApiConstants.getAvailableRooms;
-        print('🏨 Fetching all available rooms from: $endpoint');
+        print('🏨 No hotel ID provided - fetching all rooms');
+        print('🔗 Using general rooms endpoint: $endpoint');
       }
 
       print('📅 Current date: ${DateTime.now().toString()}');
+      print('🚀 About to call API endpoint: $endpoint');
 
       final response = await _dio.get(endpoint);
 
       print('✅ Rooms Response status: ${response.statusCode}');
+      print(
+        '🌐 Actual request URL: ${response.requestOptions.uri}',
+      ); // هذا سيظهر الـ URL الحقيقي
       print('📊 Raw response data: ${response.data}');
 
       if (response.data != null) {
@@ -140,9 +148,12 @@ class HotelApiService {
         print('  - Message: ${response.data['message']}');
         print('  - Data type: ${response.data['data'].runtimeType}');
         print('  - Data length: ${response.data['data']?.length ?? 0}');
+
         if (response.data['data'] is List) {
           final rooms = response.data['data'] as List;
-          for (int i = 0; i < rooms.length; i++) {
+          print('  - Found ${rooms.length} rooms for hotel ID: $hotelId');
+          for (int i = 0; i < rooms.length && i < 3; i++) {
+            // عرض أول 3 غرف فقط
             print('  - Room $i: ${rooms[i]}');
           }
         }
@@ -150,19 +161,25 @@ class HotelApiService {
 
       if (response.statusCode == 200 && response.data != null) {
         final roomsResponse = RoomsResponseModel.fromJson(response.data);
-        print('✅ Successfully parsed ${roomsResponse.data.length} rooms');
+        print(
+          '✅ Successfully parsed ${roomsResponse.data.length} rooms for hotel $hotelId',
+        );
         return roomsResponse;
       } else {
         throw Exception('Invalid response: Status ${response.statusCode}');
       }
     } on DioException catch (e) {
-      print('❌ Dio error in getAvailableRooms: ${e.message}');
+      print(
+        '❌ Dio error in getAvailableRooms for hotel $hotelId: ${e.message}',
+      );
       print('🔍 Error type: ${e.type}');
       print('📋 Error response: ${e.response?.data}');
-      print('🌐 Request URL: ${e.requestOptions.path}');
+      print(
+        '🌐 Attempted URL: ${e.requestOptions.uri}',
+      ); // سيظهر الـ URL اللي حاول يوصله
       throw Exception('Network error: ${e.message}');
     } catch (e, stackTrace) {
-      print('💥 General error in getAvailableRooms: $e');
+      print('💥 General error in getAvailableRooms for hotel $hotelId: $e');
       print('📍 Stack trace: $stackTrace');
       throw Exception('Failed to fetch available rooms: $e');
     }
