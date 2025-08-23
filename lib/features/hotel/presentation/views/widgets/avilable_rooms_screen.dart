@@ -17,10 +17,22 @@ class AvailableRoomsScreenBody extends StatefulWidget {
 }
 
 class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
+  int? hotelId;
+
   @override
   void initState() {
     super.initState();
-    context.read<HotelCubit>().fetchAvailableRooms();
+    // Get hotel ID from route arguments
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is int) {
+        hotelId = args;
+        context.read<HotelCubit>().fetchAvailableRooms(hotelId: hotelId);
+      } else {
+        // If no hotel ID provided, fetch all available rooms
+        context.read<HotelCubit>().fetchAvailableRooms();
+      }
+    });
   }
 
   @override
@@ -29,6 +41,11 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        title: Text(
+          hotelId != null ? 'Hotel Rooms' : 'Available Rooms',
+          style: TextStyles.font17LightBlackNormal,
+        ),
+        centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: IconButton(
@@ -52,6 +69,8 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                  verticalSpace(16),
                   Text(
                     'Error: ${state.message}',
                     style: TextStyles.font16LightBlackNormal,
@@ -60,7 +79,9 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                   verticalSpace(16),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<HotelCubit>().fetchAvailableRooms();
+                      context.read<HotelCubit>().fetchAvailableRooms(
+                        hotelId: hotelId,
+                      );
                     },
                     child: const Text('Retry'),
                   ),
@@ -75,18 +96,26 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SearchBarWidget(),
-                  verticalSpace(16),
+                  // Search bar (optional, you can remove if not needed for specific hotel)
+                  if (hotelId == null) ...[
+                    const SearchBarWidget(),
+                    verticalSpace(16),
+                  ],
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Available Rooms',
+                        hotelId != null
+                            ? 'Available Rooms'
+                            : 'All Available Rooms',
                         style: TextStyles.font17LightBlackNormal,
                       ),
                       TextButton(
                         onPressed: () {
-                          context.read<HotelCubit>().fetchAvailableRooms();
+                          context.read<HotelCubit>().fetchAvailableRooms(
+                            hotelId: hotelId,
+                          );
                         },
                         child: Text(
                           'Refresh',
@@ -110,13 +139,15 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                             ),
                             verticalSpace(16),
                             Text(
-                              'No rooms available for today',
+                              hotelId != null
+                                  ? 'No rooms available in this hotel today'
+                                  : 'No rooms available for today',
                               style: TextStyles.font16LightBlackNormal,
                               textAlign: TextAlign.center,
                             ),
                             verticalSpace(8),
                             Text(
-                              'Try selecting a different date',
+                              'Try selecting a different date or hotel',
                               style: TextStyles.font14DarkGrayNormal,
                               textAlign: TextAlign.center,
                             ),
@@ -148,7 +179,7 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                           itemBuilder: (context, index) {
                             final room = state.availableRooms[index];
                             return BuildRoomCard(
-                              roomId: room.id, // Pass the room ID from API ⭐
+                              roomId: room.id,
                               roomName: room.name,
                               price: '\$${room.price.toStringAsFixed(0)}',
                               imageUrl: room.image,
@@ -173,7 +204,9 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                 verticalSpace(16),
                 ElevatedButton(
                   onPressed: () {
-                    context.read<HotelCubit>().fetchAvailableRooms();
+                    context.read<HotelCubit>().fetchAvailableRooms(
+                      hotelId: hotelId,
+                    );
                   },
                   child: const Text('Try Again'),
                 ),

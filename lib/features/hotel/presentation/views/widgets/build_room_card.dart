@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart' as roomDetail;
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
@@ -73,7 +74,7 @@ class BuildRoomCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      roomName,
+                      "Room_${roomDetail.id}",
                       style: TextStyles.font13LightBlackNormal,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -98,17 +99,17 @@ class BuildRoomCard extends StatelessWidget {
     );
   }
 
-    Widget _buildImage() {
+  Widget _buildImage() {
     if (imageUrl.startsWith('http')) {
       return SafeNetworkImage(
         imageUrl: imageUrl,
-        width: 24,
+        width: double.infinity,
         height: 24,
       );
     } else {
       return Image.asset(
         imageUrl,
-        height: 24,
+        height: double.infinity,
         width: 24,
         errorBuilder: (context, error, stackTrace) {
           return Container(

@@ -8,6 +8,7 @@ class HotelCubit extends Cubit<HotelState> {
   final HotelRepository _repository;
 
   HotelCubit(this._repository) : super(HotelInitial());
+  int? _currentHotelId;
 
   Future<void> fetchAllHotelsData() async {
     emit(HotelLoading());
@@ -31,51 +32,53 @@ class HotelCubit extends Cubit<HotelState> {
         ),
       );
     } catch (e) {
-      emit(HotelError('Failed to fetch hotels: ${e.toString()}'));
+      emit(HotelError(message: 'Failed to fetch hotels: ${e.toString()}'));
     }
   }
 
-  // ✨ Fixed: This method should emit loading state first
-  Future<void> fetchAvailableRooms() async {
-    emit(HotelLoading()); // 🔥 Add loading state
+  Future<void> fetchAvailableRooms({int? hotelId}) async {
+    emit(HotelLoading());
     try {
-      final roomsResponse = await _repository.getAvailableRooms();
+      _currentHotelId = hotelId;
 
-      // Check if we have previous hotel data
-      final currentState = state;
-      List<HotelModel> hotels = [];
-      List<HotelModel> nearbyHotels = [];
-      List<HotelModel> recommendedHotels = [];
-
-      if (currentState is HotelSuccess) {
-        hotels = currentState.hotels;
-        nearbyHotels = currentState.nearbyHotels;
-        recommendedHotels = currentState.recommendedHotels;
-      }
-
-      print(
-        'Available Rooms fetched: ${roomsResponse.data.length}',
-      ); // Debug log
-
-      emit(
-        HotelSuccess(
-          hotels: hotels,
-          nearbyHotels: nearbyHotels,
-          recommendedHotels: recommendedHotels,
-          availableRooms: roomsResponse.data,
-        ),
+      final roomsResponse = await _repository.getAvailableRooms(
+        hotelId: hotelId,
       );
+
+      if (state is HotelSuccess) {
+        final currentState = state as HotelSuccess;
+        emit(
+          HotelSuccess(
+            recommendedHotels: currentState.recommendedHotels,
+            nearbyHotels: currentState.nearbyHotels,
+            availableRooms: roomsResponse.data,
+            isSearchMode: currentState.isSearchMode,
+            searchResults: currentState.searchResults,
+            searchQuery: currentState.searchQuery,
+            hotels: currentState.hotels,
+          ),
+        );
+      } else {
+        emit(
+          HotelSuccess(
+            recommendedHotels: [],
+            nearbyHotels: [],
+            availableRooms: roomsResponse.data,
+            isSearchMode: false,
+            searchResults: null,
+            searchQuery: null,
+            hotels: [],
+          ),
+        );
+      }
     } catch (e) {
-      print('Error in fetchAvailableRooms: $e'); // Debug log
-      emit(HotelError('Failed to fetch rooms: ${e.toString()}'));
+      emit(HotelError(message: e.toString()));
     }
   }
 
   Future<void> searchHotels(String query) async {
-    // Don't search if query is too short
     if (query.trim().length < 2) return;
 
-    // Get current state data to preserve it
     final currentState = state;
     List<HotelModel> hotels = [];
     List<HotelModel> nearbyHotels = [];
@@ -96,8 +99,6 @@ class HotelCubit extends Cubit<HotelState> {
       print(
         '🔍 Search Results: ${searchResponse.data.length} hotels found for "$query"',
       );
-
-      // ✨ Emit same state but with search results
       emit(
         HotelSuccess(
           hotels: hotels,
@@ -111,18 +112,7 @@ class HotelCubit extends Cubit<HotelState> {
       );
     } catch (e) {
       print('❌ Error in searchHotels: $e');
-      // Return to normal state on error
-      emit(
-        HotelSuccess(
-          hotels: hotels,
-          nearbyHotels: nearbyHotels,
-          recommendedHotels: recommendedHotels,
-          availableRooms: availableRooms,
-          isSearchMode: false,
-        ),
-      );
-      // Show error message
-      emit(HotelError('Failed to search hotels: ${e.toString()}'));
+      emit(HotelError(message: 'Failed to search hotels: ${e.toString()}'));
     }
   }
 

@@ -39,5 +39,5 @@ class HotelSearchSuccess extends HotelState {
 class HotelError extends HotelState {
   final String message;
 
-  HotelError(this.message);
+  HotelError({ required this.message,});
 }

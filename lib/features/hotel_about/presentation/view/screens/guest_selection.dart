@@ -5,6 +5,7 @@ import 'package:safarni/core/services/hotel_api_services.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/hotel_about/data/model/booking_data_model.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
 
 // Guest Selection Modal Widget
 class GuestSelectionModal extends StatefulWidget {
@@ -135,7 +136,7 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
 
       // Show success message
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.pushNamed(context, PaymentMethodView.routeName);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

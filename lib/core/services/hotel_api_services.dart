@@ -9,6 +9,7 @@ class HotelApiService {
   final Dio _dio;
 
   HotelApiService(this._dio);
+
   Future<HotelsResponseModel> searchHotels(String query) async {
     try {
       print('🔍 Searching hotels with query: $query');
@@ -111,14 +112,24 @@ class HotelApiService {
     }
   }
 
-  Future<RoomsResponseModel> getAvailableRooms() async {
+  Future<RoomsResponseModel> getAvailableRooms({int? hotelId}) async {
     try {
-      print(
-        '🏨 Fetching available rooms from: ${ApiConstants.getAvailableRooms}',
-      );
+      String endpoint;
+
+      // Build endpoint based on whether hotel ID is provided
+      if (hotelId != null) {
+        // ✅ استخدام الدالة المساعدة من ApiConstants
+        endpoint = ApiConstants.getHotelRooms(hotelId);
+        print('🏨 Fetching rooms for hotel ID: $hotelId from: $endpoint');
+      } else {
+        // ✅ إذا مفيش هوتل ID، جيب كل الغرف المتاحة
+        endpoint = ApiConstants.getAvailableRooms;
+        print('🏨 Fetching all available rooms from: $endpoint');
+      }
+
       print('📅 Current date: ${DateTime.now().toString()}');
 
-      final response = await _dio.get(ApiConstants.getAvailableRooms);
+      final response = await _dio.get(endpoint);
 
       print('✅ Rooms Response status: ${response.statusCode}');
       print('📊 Raw response data: ${response.data}');

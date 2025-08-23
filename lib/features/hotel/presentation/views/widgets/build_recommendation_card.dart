@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
 
 class BuildRecommendationCard extends StatelessWidget {
+  final int hotelId; // ⭐ إضافة hotel ID
   final String name;
   final String location;
   final String discount;
@@ -13,6 +14,7 @@ class BuildRecommendationCard extends StatelessWidget {
 
   const BuildRecommendationCard({
     super.key,
+    required this.hotelId, // ⭐ إضافة hotel ID
     required this.name,
     required this.location,
     required this.discount,
@@ -24,7 +26,12 @@ class BuildRecommendationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, HotelAboutPage.routeName);
+        // ⭐ التنقل إلى شاشة الغرف المتاحة مع تمرير hotel ID
+        Navigator.pushNamed(
+          context,
+          AvailableRoomsScreen.routeName,
+          arguments: hotelId, // تمرير hotel ID
+        );
       },
       child: Container(
         width: 217,
@@ -42,7 +49,6 @@ class BuildRecommendationCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
                 child: Image.network(
-                  // تم التغيير هنا
                   imageUrl,
                   width: double.infinity,
                   height: 125,

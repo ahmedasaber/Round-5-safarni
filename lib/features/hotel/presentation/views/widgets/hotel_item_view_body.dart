@@ -1,3 +1,4 @@
+// Update HotelItemViewBody to pass hotel IDs
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/helpers/spacing.dart';
@@ -6,7 +7,7 @@ import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_cubit.dart
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_state.dart';
 import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_nearby_hotel_card.dart';
-import 'package:safarni/features/hotel/presentation/views/widgets/build_recommendation_card.dart';
+import 'package:safarni/features/hotel/presentation/views/widgets/build_recommendation_card.dart' hide BuildNearbyHotelCard;
 import 'package:safarni/features/hotel/presentation/views/widgets/search_bar_widget.dart';
 
 class HotelItemViewBody extends StatefulWidget {
@@ -165,6 +166,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: BuildNearbyHotelCard(
+                              hotelId: hotel.id, // تمرير hotel ID ⭐
                               name: hotel.name,
                               location: hotel.location,
                               discount: '10%Off',
@@ -213,6 +215,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                               itemBuilder: (context, index) {
                                 final hotel = state.recommendedHotels[index];
                                 return BuildRecommendationCard(
+                                  hotelId: hotel.id, // تمرير hotel ID ⭐
                                   name: hotel.name,
                                   location: hotel.location,
                                   discount: '10%Off',
@@ -253,6 +256,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: BuildNearbyHotelCard(
+                              hotelId: hotel.id, // تمرير hotel ID ⭐
                               name: hotel.name,
                               location: hotel.location,
                               discount: '10%Off',
