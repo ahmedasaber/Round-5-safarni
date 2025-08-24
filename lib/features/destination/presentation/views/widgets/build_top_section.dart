@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:safarni/core/common/widgets/circular_icon.dart';
+import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 
+
 class BuildTopSection extends StatefulWidget {
-  const BuildTopSection({super.key, required this.tour, required this.favoriteLocalDataSource});
+  const BuildTopSection({super.key, required this.tour});
 
   final TourModel tour;
-  final FavoriteLocalDataSource favoriteLocalDataSource;
   @override
   State<BuildTopSection> createState() => _BuildTopSectionState();
 }
@@ -51,7 +52,7 @@ class _BuildTopSectionState extends State<BuildTopSection> {
           child: CircularIcon(
             onPressed: (){
               widget.tour.isFav = !widget.tour.isFav;
-              widget.favoriteLocalDataSource.toggleFavorite(widget.tour);
+              getIt<FavoriteLocalDataSource>().toggleFavorite(widget.tour);
               setState((){});
             },
             icon: Iconsax.heart5,

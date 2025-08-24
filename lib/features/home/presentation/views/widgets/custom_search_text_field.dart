@@ -9,10 +9,12 @@ class CustomSearchTextField extends StatelessWidget {
     this.onTap,
     this.readOnly = false,
     this.onChange,
+    this.onSubmitted,
   });
 
   final VoidCallback? onTap;
   final ValueChanged? onChange;
+  final ValueChanged? onSubmitted;
   final bool readOnly;
 
   @override
@@ -41,6 +43,7 @@ class CustomSearchTextField extends StatelessWidget {
         child: TextField(
           onTap: onTap,
           onChanged: onChange,
+          onSubmitted: onSubmitted,
           readOnly: readOnly,
           decoration: InputDecoration(
             hintText: 'Search ...',

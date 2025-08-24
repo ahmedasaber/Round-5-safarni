@@ -14,6 +14,10 @@ import 'package:safarni/features/home/data/repositories/recommendation_repo_impl
 import 'package:safarni/features/home/domain/repositories/available_tours_repo.dart';
 import 'package:safarni/features/home/domain/repositories/categories_repo.dart';
 import 'package:safarni/features/home/domain/repositories/recommendation_repo.dart';
+import 'package:safarni/features/search/data/datasource/search_remote_data_source.dart';
+import 'package:safarni/features/search/data/datasource/search_remote_data_source_impl.dart';
+import 'package:safarni/features/search/data/repo/search_repo_impl.dart';
+import 'package:safarni/features/search/domain/repo/search_repo.dart';
 
 final getIt = GetIt.instance;
 
@@ -21,7 +25,9 @@ void setupGetIt() {
   getIt.registerSingleton<Dio>(Dio());
 
   final favoritesBox = Hive.box('favorites');
-  getIt.registerSingleton<FavoriteLocalDataSource>(FavoriteLocalDataSource(favoritesBox));
+  getIt.registerSingleton<FavoriteLocalDataSource>(
+    FavoriteLocalDataSource(favoritesBox),
+  );
 
   getIt.registerSingleton<CategoriesRemoteDataSource>(
     CategoriesRemoteDataSourceImpl(dio: getIt<Dio>()),
@@ -52,5 +58,14 @@ void setupGetIt() {
     AvailableToursRepoImpl(
       availableToursRemoteDataSource: getIt<AvailableToursRemoteDataSource>(),
     ),
+  );
+  getIt.registerSingleton<SearchRemoteDataSource>(
+    SearchRemoteDataSourceImpl(
+      dio: getIt<Dio>(),
+      favoriteLocalDataSource: getIt<FavoriteLocalDataSource>(),
+    ),
+  );
+  getIt.registerSingleton<SearchRepo>(
+    SearchRepoImpl(searchRemoteDataSource: getIt<SearchRemoteDataSource>()),
   );
 }

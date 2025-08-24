@@ -7,7 +7,6 @@ import 'package:safarni/features/booking_flight/presentation/view/choose_seat_vi
 import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
 import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
-import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
@@ -37,13 +36,7 @@ import '../../features/splash/presentaion/pages/splash_page.dart';
 
 
 import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
-import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
-import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 
-import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
-import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
-
-import '../dependency _ injection/get_it.dart';
 
 
 
@@ -110,9 +103,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
       return MaterialPageRoute(builder: (_) => PersonalInformationScreen());
 
     case SearchView.routeName:
-      return MaterialPageRoute(builder: (_) => const SearchView());
+      return MaterialPageRoute(builder: (_) => SearchView());
     case ResultView.routeName:
-      return MaterialPageRoute(builder: (_) => const ResultView());
+      final query = settings.arguments as String;
+      return MaterialPageRoute(builder: (_) => ResultView(query: query,));
     case FilterView.routeName:
       return MaterialPageRoute(builder: (_) => const FilterView());
     case AccountSecurityScreen.routeName:
@@ -121,7 +115,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
       return MaterialPageRoute(builder: (_) => const MyBookingScreen());
     case DestinationView.routeName:
       final tourModel = settings.arguments as TourModel;
-      return MaterialPageRoute(builder: (_) =>  DestinationView(tourModel: tourModel, favoriteLocalDataSource: getIt<FavoriteLocalDataSource>()));
+      return MaterialPageRoute(builder: (_) =>  DestinationView(tourModel: tourModel));
     case PaymentMethodView.routeName:
       return MaterialPageRoute(builder: (_) => const PaymentMethodView());
     case SuccessPaymentView.routeName:

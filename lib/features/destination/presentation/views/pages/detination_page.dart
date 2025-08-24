@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 
 import '../widgets/best_time_to_visit.dart';
@@ -11,11 +10,11 @@ import '../widgets/top_activates.dart';
 import '../widgets/trip_details.dart';
 
 class DestinationView extends StatelessWidget {
-  const DestinationView({super.key, required this.tourModel, required this.favoriteLocalDataSource});
+  const DestinationView({super.key, required this.tourModel});
   static const routeName = '/destination';
 
   final TourModel tourModel;
-  final FavoriteLocalDataSource favoriteLocalDataSource;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +23,7 @@ class DestinationView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // The image and app bar at the top
-            BuildTopSection(tour: tourModel, favoriteLocalDataSource: favoriteLocalDataSource,),
+            BuildTopSection(tour: tourModel),
             // The main trip details (City Breaks, title, etc.)
             TripDetails(),
             // The "Top Activates" section

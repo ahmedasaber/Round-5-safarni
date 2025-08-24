@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
+import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
+import 'package:safarni/features/home/data/models/available_tours_model.dart';
 
 class CardResultItem extends StatefulWidget {
-  CardResultItem({
+  const CardResultItem({
     super.key,
-    required this.image,
-    required this.title,
-    required this.rate,
-    required this.pickUpAvailable,
-    required this.price,
-    required this.isFavorite,
+    required this.tourModel,
+
   });
 
-  final String image, title, rate, pickUpAvailable, price;
-  bool isFavorite = false;
+  final TourModel tourModel;
   @override
   State<CardResultItem> createState() => _CardResultItemState();
 }
@@ -45,11 +43,19 @@ class _CardResultItemState extends State<CardResultItem> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
-                      child: Image.asset(
-                        widget.image,
+                      child: Image.network(
+                        widget.tourModel.image,
                         fit: BoxFit.cover,
                         height: 199,
                         width: double.infinity,
+                        errorBuilder: (_,_,_){
+                          return Image.asset(
+                              'assets/images/placeholder.png',
+                              fit: BoxFit.cover,
+                              height: 199,
+                              width: double.infinity,
+                          );
+                        },
                       ),
                     ),
                     SizedBox(height: 8,),
@@ -57,7 +63,7 @@ class _CardResultItemState extends State<CardResultItem> {
                       children: [
                         Expanded(
                           child: Text(
-                            widget.title,
+                            widget.tourModel.title,
                             style: TextStyles.semiBold17,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -68,7 +74,7 @@ class _CardResultItemState extends State<CardResultItem> {
                           children: [
                             SvgPicture.asset('assets/icons/Rate.svg'),
                             SizedBox(width: 4),
-                            Text(widget.rate, style: TextStyles.semiBold12),
+                            Text(widget.tourModel.rating.toString(), style: TextStyles.semiBold12),
                           ],
                         ),
                       ],
@@ -83,7 +89,7 @@ class _CardResultItemState extends State<CardResultItem> {
                           child: Container(padding:EdgeInsets.all(5),color: Color(0xff1E429F),),
                         ),
                         SizedBox(width: 4,),
-                        Text(widget.pickUpAvailable, style: TextStyles.regular14.copyWith(color: Colors.grey)),
+                        Text('5 Days', style: TextStyles.regular14.copyWith(color: Colors.grey)),
                       ],
                     ),
                     const SizedBox(height: 4.0),
@@ -93,7 +99,7 @@ class _CardResultItemState extends State<CardResultItem> {
                         children: [
                           TextSpan(text: 'From '),
                           TextSpan(
-                            text: '${widget.price}\$',
+                            text: '${widget.tourModel.price}\$',
                             style: TextStyles.semiBold15.copyWith(color: Color(0xff1c64f2)),
                           ),
                           TextSpan(text: ' Per Person'),
@@ -115,10 +121,11 @@ class _CardResultItemState extends State<CardResultItem> {
                   ),
                   child: IconButton(
                     onPressed: () {
-                      widget.isFavorite = !widget.isFavorite;
-                      setState(() {});
+                      widget.tourModel.isFav = !widget.tourModel.isFav;
+                      getIt<FavoriteLocalDataSource>().toggleFavorite(widget.tourModel);
+                      setState((){});
                     },
-                    icon: widget.isFavorite
+                    icon: widget.tourModel.isFav
                         ? SvgPicture.asset('assets/icons/heart.svg', )
                         : SvgPicture.asset('assets/icons/favorite.svg',),
                   ),
