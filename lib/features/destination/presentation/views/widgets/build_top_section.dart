@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:safarni/core/common/widgets/circular_icon.dart';
+import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_colors.dart';
+import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
+import 'package:safarni/features/home/data/models/available_tours_model.dart';
 
-class BuildTopSection extends StatelessWidget {
-  const BuildTopSection({super.key});
+class BuildTopSection extends StatefulWidget {
+  const BuildTopSection({super.key, required this.tour, required this.favoriteLocalDataSource});
+
+  final TourModel tour;
+  final FavoriteLocalDataSource favoriteLocalDataSource;
+  @override
+  State<BuildTopSection> createState() => _BuildTopSectionState();
+}
+
+class _BuildTopSectionState extends State<BuildTopSection> {
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +36,11 @@ class BuildTopSection extends StatelessWidget {
           child: IconButton(
             icon: CircularIcon(
               icon: Icons.arrow_back_ios,
-              color: Colors.black),
-            onPressed: () {},
+              color: Colors.black
+            ),
+            onPressed: () {
+              context.pop();
+            },
           ),
         ),
 
@@ -35,9 +49,13 @@ class BuildTopSection extends StatelessWidget {
           top: 40,
           right: 10,
           child: CircularIcon(
-            onPressed: (){},
+            onPressed: (){
+              widget.tour.isFav = !widget.tour.isFav;
+              widget.favoriteLocalDataSource.toggleFavorite(widget.tour);
+              setState((){});
+            },
             icon: Iconsax.heart5,
-            color: AppColors.black,
+            color:  widget.tour.isFav? Colors.red : Colors.grey
           )
         ),
         Positioned(

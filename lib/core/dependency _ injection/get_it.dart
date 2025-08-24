@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:safarni/features/home/data/datasources/available%20tours/available_tours_remote_data_source.dart';
 import 'package:safarni/features/home/data/datasources/available%20tours/available_tours_remote_data_source_impl.dart';
 import 'package:safarni/features/home/data/datasources/categories/categories_remote_data_source.dart';
 import 'package:safarni/features/home/data/datasources/categories/categories_remote_data_source_impl.dart';
+import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
 import 'package:safarni/features/home/data/datasources/recommendation/recommendation_remote_data_source.dart';
 import 'package:safarni/features/home/data/datasources/recommendation/recommendation_remote_data_source_impl.dart';
 import 'package:safarni/features/home/data/repositories/available_tours_repo_impl.dart';
@@ -18,12 +20,37 @@ final getIt = GetIt.instance;
 void setupGetIt() {
   getIt.registerSingleton<Dio>(Dio());
 
-  getIt.registerSingleton<CategoriesRemoteDataSource>(CategoriesRemoteDataSourceImpl(dio: getIt<Dio>()));
-  getIt.registerSingleton<CategoriesRepo>(CategoriesRepoImpl(categoriesRemoteDataSource: getIt<CategoriesRemoteDataSource>()));
+  final favoritesBox = Hive.box('favorites');
+  getIt.registerSingleton<FavoriteLocalDataSource>(FavoriteLocalDataSource(favoritesBox));
 
-  getIt.registerSingleton<RecommendationRemoteDataSource>(RecommendationRemoteDataSourceImpl(dio: getIt<Dio>()));
-  getIt.registerSingleton<RecommendationRepo>(RecommendationRepoImpl(recommendationRemoteDataSource: getIt<RecommendationRemoteDataSource>()));
+  getIt.registerSingleton<CategoriesRemoteDataSource>(
+    CategoriesRemoteDataSourceImpl(dio: getIt<Dio>()),
+  );
 
-  getIt.registerSingleton<AvailableToursRemoteDataSource>(AvailableToursRemoteDataSourceImpl(dio: getIt<Dio>()));
-  getIt.registerSingleton<AvailableToursRepo>(AvailableToursRepoImpl(availableToursRemoteDataSource: getIt<AvailableToursRemoteDataSource>()));
+  getIt.registerSingleton<CategoriesRepo>(
+    CategoriesRepoImpl(
+      categoriesRemoteDataSource: getIt<CategoriesRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerSingleton<RecommendationRemoteDataSource>(
+    RecommendationRemoteDataSourceImpl(dio: getIt<Dio>()),
+  );
+  getIt.registerSingleton<RecommendationRepo>(
+    RecommendationRepoImpl(
+      recommendationRemoteDataSource: getIt<RecommendationRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerSingleton<AvailableToursRemoteDataSource>(
+    AvailableToursRemoteDataSourceImpl(
+      dio: getIt<Dio>(),
+      favoriteLocalDataSource: getIt<FavoriteLocalDataSource>(),
+    ),
+  );
+  getIt.registerSingleton<AvailableToursRepo>(
+    AvailableToursRepoImpl(
+      availableToursRemoteDataSource: getIt<AvailableToursRemoteDataSource>(),
+    ),
+  );
 }

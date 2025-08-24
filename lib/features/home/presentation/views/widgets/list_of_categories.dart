@@ -15,7 +15,7 @@ class ListOfCategories extends StatelessWidget {
       child: ListView.builder(
         padding: EdgeInsets.only(left: 16),
         scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
+        itemCount: 4,
         itemBuilder: (context, i){
           return Padding(
             padding: const EdgeInsets.only(right: 16.0),

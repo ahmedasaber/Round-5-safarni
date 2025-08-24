@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
 import 'package:safarni/features/home/domain/entities/available_tours_entity.dart';
 import 'package:safarni/features/home/presentation/views/widgets/card_recommendation_item.dart';
 
@@ -16,11 +18,16 @@ class ListOfRecommendations extends StatelessWidget {
         clipBehavior: Clip.none,
         itemCount: recommendedList.length,
         itemBuilder: (context, i) {
-          return CardRecommendationItem(
-            image: recommendedList[i].image,
-            title: recommendedList[i].title,
-            rate: recommendedList[i].rating.toStringAsFixed(1),
-            location: recommendedList[i].location,
+          return GestureDetector(
+            child: CardRecommendationItem(
+              image: recommendedList[i].image,
+              title: recommendedList[i].title,
+              rate: recommendedList[i].rating.toStringAsFixed(1),
+              location: recommendedList[i].location,
+            ),
+            onTap: (){
+              context.pushNamed(DestinationView.routeName, arguments: recommendedList[i]);
+            },
           );
         },
       ),

@@ -7,15 +7,14 @@ import 'package:safarni/features/booking_flight/presentation/view/choose_seat_vi
 import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
 import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
-import 'package:flutter/services.dart'; // Add this import for SystemNavigator
+import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';
+import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
 import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
-import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
-import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 import 'package:safarni/features/car_booking/presentation/views/pages/car_details.dart';
 import 'package:safarni/features/car_booking/presentation/views/pages/car_booking_page.dart';
@@ -24,7 +23,6 @@ import 'package:safarni/features/internal_tour/presentation/views/pages/destinat
 import 'package:safarni/features/internal_tour/presentation/views/pages/internal_tour_page.dart';
 import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
-import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import '../../features/auth/presentaion/pages/Password Reset Success.dart';
@@ -44,6 +42,8 @@ import 'package:safarni/features/profile/presentation/views/screens/profile_view
 
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
+
+import '../dependency _ injection/get_it.dart';
 
 
 
@@ -120,7 +120,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
     case MyBookingScreen.routeName:
       return MaterialPageRoute(builder: (_) => const MyBookingScreen());
     case DestinationView.routeName:
-      return MaterialPageRoute(builder: (_) => const DestinationView());
+      final tourModel = settings.arguments as TourModel;
+      return MaterialPageRoute(builder: (_) =>  DestinationView(tourModel: tourModel, favoriteLocalDataSource: getIt<FavoriteLocalDataSource>()));
     case PaymentMethodView.routeName:
       return MaterialPageRoute(builder: (_) => const PaymentMethodView());
     case SuccessPaymentView.routeName:

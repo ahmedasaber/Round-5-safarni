@@ -9,8 +9,9 @@ class ToursEntity {
   final int views;
   final bool isRecommended;
   final double rating;
+  bool isFav;
 
-  const ToursEntity({
+  ToursEntity({
     required this.id,
     required this.categoryId,
     required this.title,
@@ -21,5 +22,6 @@ class ToursEntity {
     required this.views,
     required this.isRecommended,
     required this.rating,
+    this.isFav = false,
   });
 }

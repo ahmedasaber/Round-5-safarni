@@ -63,7 +63,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                                   },
                                   readOnly: true,
                                 )),
-                              SizedBox(width: 16),
+                              SizedBox(width: 13),
                               CustomFilterBt(
                                 onTap: () {
                                   context.pushNamed(FilterView.routeName);

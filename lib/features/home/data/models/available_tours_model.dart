@@ -1,7 +1,7 @@
 import 'package:safarni/features/home/domain/entities/available_tours_entity.dart';
 
 class TourModel extends ToursEntity {
-  const TourModel({
+   TourModel({
     required super.id,
     required super.categoryId,
     required super.title,
@@ -12,6 +12,7 @@ class TourModel extends ToursEntity {
     required super.views,
     required super.isRecommended,
     required super.rating,
+    super.isFav
   });
 
   /// Create a Model from JSON (API response)
@@ -27,6 +28,7 @@ class TourModel extends ToursEntity {
       views: json['views'] as int,
       isRecommended: json['is_recommended'] as bool,
       rating: (json['rating'] as num).toDouble(),
+      isFav: json['isFavorite']?? false,
     );
   }
 
@@ -43,6 +45,23 @@ class TourModel extends ToursEntity {
       views: entity.views,
       isRecommended: entity.isRecommended,
       rating: entity.rating,
+      isFav: entity.isFav,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'category_id': categoryId,
+      'title': title,
+      'location': location,
+      'description': description,
+      'price': price,
+      'image': image,
+      'views': views,
+      'is_recommended': isRecommended,
+      'rating': rating,
+      'isFavorite': isFav,
+    };
   }
 }

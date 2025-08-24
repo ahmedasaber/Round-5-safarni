@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +20,8 @@ Future<void> main() async {
       }
 
       Bloc.observer = BlocObserverService();
+      await Hive.initFlutter();
+      await Hive.openBox('favorites');
       setupGetIt();
       runApp(const SafarniApp());
     },
