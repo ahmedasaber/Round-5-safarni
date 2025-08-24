@@ -67,11 +67,10 @@ class HotelCubit extends Cubit<HotelState> {
             HotelSuccess(
               recommendedHotels: currentState.recommendedHotels,
               nearbyHotels: currentState.nearbyHotels,
-              availableRooms:
-                  roomsResponse.data, // ⭐ هنا المفروض يجي فاضي لو مفيش غرف
-              isSearchMode: currentState.isSearchMode,
-              searchResults: currentState.searchResults,
-              searchQuery: currentState.searchQuery,
+              availableRooms: roomsResponse.data,
+              isSearchMode: false, // Reset search mode when fetching all rooms
+              searchResults: null,
+              searchQuery: null,
               hotels: currentState.hotels,
             ),
           );
@@ -83,8 +82,7 @@ class HotelCubit extends Cubit<HotelState> {
             HotelSuccess(
               recommendedHotels: [],
               nearbyHotels: [],
-              availableRooms:
-                  roomsResponse.data, // ⭐ هنا المفروض يجي فاضي لو مفيش غرف
+              availableRooms: roomsResponse.data,
               isSearchMode: false,
               searchResults: null,
               searchQuery: null,
@@ -97,6 +95,53 @@ class HotelCubit extends Cubit<HotelState> {
       if (!isClosed) {
         print('❌ Error in fetchAvailableRooms: $e');
         emit(HotelError(message: 'Failed to fetch rooms: ${e.toString()}'));
+      }
+    }
+  }
+
+  // New method for searching rooms
+  Future<void> searchRooms(String query, {int? hotelId}) async {
+    if (query.trim().length < 2) return;
+
+    print('🔍 HotelCubit - searchRooms called with query: "$query", hotelId: $hotelId');
+
+    // Preserve current state
+    final currentState = state;
+    List<HotelModel> hotels = [];
+    List<HotelModel> nearbyHotels = [];
+    List<HotelModel> recommendedHotels = [];
+
+    if (currentState is HotelSuccess) {
+      hotels = currentState.hotels;
+      nearbyHotels = currentState.nearbyHotels;
+      recommendedHotels = currentState.recommendedHotels;
+    }
+
+    emit(HotelSearchLoading());
+    
+    try {
+      final roomsResponse = await _repository.searchRooms(query, hotelId: hotelId);
+
+      print('📊 Room search returned ${roomsResponse.data.length} rooms');
+      
+      if (!isClosed) {
+        emit(
+          HotelSuccess(
+            hotels: hotels,
+            nearbyHotels: nearbyHotels,
+            recommendedHotels: recommendedHotels,
+            availableRooms: roomsResponse.data, 
+            searchResults: null, 
+            searchQuery: query,
+            isSearchMode: true, 
+            roomSearchMode: true,
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Error in searchRooms: $e');
+      if (!isClosed) {
+        emit(HotelError(message: 'Failed to search rooms: ${e.toString()}'));
       }
     }
   }
@@ -135,6 +180,7 @@ class HotelCubit extends Cubit<HotelState> {
             searchResults: searchResponse.data,
             searchQuery: query,
             isSearchMode: true,
+            roomSearchMode: false,
           ),
         );
       }
@@ -156,6 +202,7 @@ class HotelCubit extends Cubit<HotelState> {
           recommendedHotels: currentState.recommendedHotels,
           availableRooms: currentState.availableRooms,
           isSearchMode: false,
+          roomSearchMode: false,
         ),
       );
     } else {

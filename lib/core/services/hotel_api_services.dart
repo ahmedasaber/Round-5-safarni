@@ -42,6 +42,49 @@ class HotelApiService {
     }
   }
 
+  // Add room search method
+  Future<RoomsResponseModel> searchRooms(String query, {int? hotelId}) async {
+    try {
+      print('🔍 Searching rooms with query: $query, hotelId: $hotelId');
+      
+      String endpoint = ApiConstants.searchRooms;
+      Map<String, dynamic> queryParameters = {'key': query};
+      
+      // If hotelId is provided, add it to query parameters
+      if (hotelId != null) {
+        queryParameters['hotel_id'] = hotelId;
+      }
+      
+      print('🚀 Room search URL: $endpoint');
+      print('📋 Query parameters: $queryParameters');
+
+      final response = await _dio.get(
+        endpoint,
+        queryParameters: queryParameters,
+      );
+
+      print('✅ Room search response status: ${response.statusCode}');
+      print('📊 Room search response data: ${response.data}');
+
+      if (response.statusCode == 200 && response.data != null) {
+        return RoomsResponseModel.fromJson(response.data);
+      } else {
+        throw Exception(
+          'Invalid room search response: Status ${response.statusCode}',
+        );
+      }
+    } on DioException catch (e) {
+      print('❌ Dio error in searchRooms: ${e.message}');
+      print('🔍 Error type: ${e.type}');
+      print('📋 Error response: ${e.response?.data}');
+      throw Exception('Network error: ${e.message}');
+    } catch (e, stackTrace) {
+      print('💥 General error in searchRooms: $e');
+      print('📍 Stack trace: $stackTrace');
+      throw Exception('Failed to search rooms: $e');
+    }
+  }
+
   Future<HotelsResponseModel> getAllHotels() async {
     try {
       print('🚀 Fetching all hotels from: ${ApiConstants.getAllHotels}');
@@ -110,7 +153,6 @@ class HotelApiService {
     }
   }
 
-  // في method getAvailableRooms فقط - باقي الكود يبقى زي ما هو
   Future<RoomsResponseModel> getAvailableRooms({int? hotelId}) async {
     try {
       String endpoint;
@@ -120,12 +162,10 @@ class HotelApiService {
       );
 
       if (hotelId != null) {
-        // إذا كان هناك hotel ID، استخدم endpoint خاص بالفندق
         endpoint = ApiConstants.getHotelRooms(hotelId);
         print('🏨 Hotel ID provided: $hotelId');
         print('🔗 Using specific hotel endpoint: $endpoint');
       } else {
-        // إذا لم يكن هناك hotel ID، اجلب كل الغرف المتاحة
         endpoint = ApiConstants.getAvailableRooms;
         print('🏨 No hotel ID provided - fetching all rooms');
         print('🔗 Using general rooms endpoint: $endpoint');
@@ -139,7 +179,7 @@ class HotelApiService {
       print('✅ Rooms Response status: ${response.statusCode}');
       print(
         '🌐 Actual request URL: ${response.requestOptions.uri}',
-      ); // هذا سيظهر الـ URL الحقيقي
+      );
       print('📊 Raw response data: ${response.data}');
 
       if (response.data != null) {
@@ -153,7 +193,6 @@ class HotelApiService {
           final rooms = response.data['data'] as List;
           print('  - Found ${rooms.length} rooms for hotel ID: $hotelId');
           for (int i = 0; i < rooms.length && i < 3; i++) {
-            // عرض أول 3 غرف فقط
             print('  - Room $i: ${rooms[i]}');
           }
         }
@@ -176,7 +215,7 @@ class HotelApiService {
       print('📋 Error response: ${e.response?.data}');
       print(
         '🌐 Attempted URL: ${e.requestOptions.uri}',
-      ); // سيظهر الـ URL اللي حاول يوصله
+      );
       throw Exception('Network error: ${e.message}');
     } catch (e, stackTrace) {
       print('💥 General error in getAvailableRooms for hotel $hotelId: $e');

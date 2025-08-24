@@ -7,7 +7,7 @@ import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_cubit.dart
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_state.dart';
 import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_nearby_hotel_card.dart';
-import 'package:safarni/features/hotel/presentation/views/widgets/build_recommendation_card.dart' hide BuildNearbyHotelCard;
+import 'package:safarni/features/hotel/presentation/views/widgets/build_recommendation_card.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/search_bar_widget.dart';
 
 class HotelItemViewBody extends StatefulWidget {
@@ -96,8 +96,6 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                 children: [
                   const SearchBarWidget(),
                   verticalSpace(18),
-
-                  // ✨ Show search results if in search mode
                   if (state.isSearchMode && state.searchResults != null) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,7 +164,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: BuildNearbyHotelCard(
-                              hotelId: hotel.id, // تمرير hotel ID ⭐
+                              hotelId: hotel.id,
                               name: hotel.name,
                               location: hotel.location,
                               discount: '10%Off',
@@ -177,9 +175,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                         }).toList(),
                       ),
                   ]
-                  // ✨ Show normal content if not in search mode
                   else ...[
-                    // Recommendation Section
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -215,7 +211,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                               itemBuilder: (context, index) {
                                 final hotel = state.recommendedHotels[index];
                                 return BuildRecommendationCard(
-                                  hotelId: hotel.id, // تمرير hotel ID ⭐
+                                  hotelId: hotel.id,     
                                   name: hotel.name,
                                   location: hotel.location,
                                   discount: '10%Off',
@@ -256,7 +252,7 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: BuildNearbyHotelCard(
-                              hotelId: hotel.id, // تمرير hotel ID ⭐
+                              hotelId: hotel.id,
                               name: hotel.name,
                               location: hotel.location,
                               discount: '10%Off',
@@ -271,7 +267,6 @@ class _HotelItemViewBodyState extends State<HotelItemViewBody> {
               ),
             );
           }
-
           return const Center(child: Text('Something went wrong'));
         },
       ),

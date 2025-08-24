@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/helpers/spacing.dart';
-import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/hotel/data/models/room_model.dart';
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_cubit.dart';
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_state.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_room_card.dart';
-import 'package:safarni/features/hotel/presentation/views/widgets/search_bar_widget.dart';
+import 'package:safarni/features/hotel/presentation/views/widgets/room_search_bart_widget.dart';
 
 class AvailableRoomsScreenBody extends StatefulWidget {
-  final int? hotelId; // استقبال hotelId من الخارج
+  final int? hotelId;
 
   const AvailableRoomsScreenBody({super.key, this.hotelId});
 
@@ -19,16 +19,69 @@ class AvailableRoomsScreenBody extends StatefulWidget {
 }
 
 class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
-  int? get hotelId => widget.hotelId; // استخدام hotelId من widget
+  int? get hotelId => widget.hotelId;
+
+  // للاحتفاظ بالغرف الأصلية والمفلترة
+  List<RoomModel> originalRooms = [];
+  List<RoomModel> filteredRooms = [];
+  String currentSearchQuery = '';
+  bool isSearchActive = false;
 
   @override
   void initState() {
     super.initState();
+    print('🏨 AvailableRoomsScreenBody initialized with hotel ID: $hotelId');
+  }
+
+  // البحث المحلي في الغرف
+  void _filterRooms(String query) {
+    setState(() {
+      currentSearchQuery = query.trim();
+      isSearchActive = currentSearchQuery.isNotEmpty;
+
+      if (currentSearchQuery.isEmpty) {
+        // إذا مفيش بحث، أظهر كل الغرف
+        filteredRooms = originalRooms;
+      } else {
+        // البحث في أسماء الغرف
+        filteredRooms = originalRooms.where((room) {
+          return room.name.toLowerCase().contains(
+            currentSearchQuery.toLowerCase(),
+          );
+        }).toList();
+      }
+    });
+
     print(
-      '🏨 AvailableRoomsScreenBody initialized with hotel ID: $hotelId',
-    ); // Debug print
-    // لا نحتاج addPostFrameCallback لأن hotelId متاح فوراً
-    // الـ BlocProvider في الـ parent بيستدعي fetchAvailableRooms أصلاً
+      '🔍 Local search for "$currentSearchQuery": ${filteredRooms.length} results',
+    );
+  }
+
+  // مسح البحث
+  void _clearSearch() {
+    setState(() {
+      currentSearchQuery = '';
+      isSearchActive = false;
+      filteredRooms = originalRooms;
+    });
+  }
+
+  // تحديث الغرف عندما يتغير الـ state
+  void _updateRoomsFromState(List<RoomModel> newRooms) {
+    setState(() {
+      originalRooms = newRooms;
+
+      // إذا كان في بحث نشط، طبق البحث على البيانات الجديدة
+      if (isSearchActive && currentSearchQuery.isNotEmpty) {
+        filteredRooms = originalRooms.where((room) {
+          return room.name.toLowerCase().contains(
+            currentSearchQuery.toLowerCase(),
+          );
+        }).toList();
+      } else {
+        filteredRooms = originalRooms;
+      }
+    });
   }
 
   @override
@@ -54,9 +107,15 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
           ),
         ),
       ),
-      body: BlocBuilder<HotelCubit, HotelState>(
+      body: BlocConsumer<HotelCubit, HotelState>(
+        listener: (context, state) {
+          // تحديث الغرف عندما يتغير الـ state
+          if (state is HotelSuccess) {
+            _updateRoomsFromState(state.availableRooms);
+          }
+        },
         builder: (context, state) {
-          print('🔄 Current state: ${state.runtimeType}'); // Debug print
+          print('🔄 Current state: ${state.runtimeType}');
 
           if (state is HotelLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -91,75 +150,108 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
           if (state is HotelSuccess) {
             print(
               '✅ HotelSuccess state - Available rooms count: ${state.availableRooms.length}',
-            ); // Debug print
+            );
+            print('🔍 Filtered rooms count: ${filteredRooms.length}');
+            print(
+              '🔍 Search active: $isSearchActive, Query: "$currentSearchQuery"',
+            );
+
+            // تحديد العنوان بناءً على حالة البحث
+            String roomsTitle = 'Available Rooms';
+            if (isSearchActive && currentSearchQuery.isNotEmpty) {
+              roomsTitle = 'Search Results for "$currentSearchQuery"';
+            } else if (hotelId != null) {
+              roomsTitle = 'Available Rooms';
+            } else {
+              roomsTitle = 'All Available Rooms';
+            }
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (hotelId == null) ...[
-                    const SearchBarWidget(),
-                    verticalSpace(16),
-                  ],
+                  // شريط البحث المحلي
+                  LocalRoomSearchWidget(
+                    hotelId: hotelId,
+                    onSearchChanged: _filterRooms,
+                    onClearSearch: _clearSearch,
+                  ),
+                  verticalSpace(16),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        hotelId != null
-                            ? 'Available Rooms'
-                            : 'All Available Rooms',
-                        style: TextStyles.font17LightBlackNormal,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<HotelCubit>().fetchAvailableRooms(
-                            hotelId: hotelId,
-                          );
-                        },
+                      Expanded(
                         child: Text(
-                          'Refresh',
-                          style: TextStyles.font15DarkBlueNormal,
+                          roomsTitle,
+                          style: TextStyles.font17LightBlackNormal,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      if (isSearchActive) ...[
+                        TextButton(
+                          onPressed: _clearSearch,
+                          child: Text(
+                            'Clear Search',
+                            style: TextStyles.font15DarkBlueNormal,
+                          ),
+                        ),
+                      ] else ...[
+                        TextButton(
+                          onPressed: () {
+                            context.read<HotelCubit>().fetchAvailableRooms(
+                              hotelId: hotelId,
+                            );
+                          },
+                          child: Text(
+                            'Refresh',
+                            style: TextStyles.font15DarkBlueNormal,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   verticalSpace(16),
 
-                  // التحقق الصحيح من الغرف المتاحة
-                  if (state.availableRooms.isEmpty) ...[
+                  // عرض الغرف المفلترة
+                  if (filteredRooms.isEmpty) ...[
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
                         child: Column(
                           children: [
                             Icon(
-                              Icons.hotel_outlined,
+                              isSearchActive
+                                  ? Icons.search_off
+                                  : Icons.hotel_outlined,
                               size: 64,
                               color: Colors.grey[400],
                             ),
                             verticalSpace(16),
                             Text(
-                              hotelId != null
-                                  ? 'No rooms available in this hotel today'
-                                  : 'No rooms available for today',
+                              _getEmptyRoomsMessage(),
                               style: TextStyles.font16LightBlackNormal,
                               textAlign: TextAlign.center,
                             ),
                             verticalSpace(8),
                             Text(
-                              hotelId != null
-                                  ? 'This hotel has no available rooms for today. Please check back later or try a different date.'
-                                  : 'No rooms are currently available. Try selecting a different date.',
+                              _getEmptyRoomsSubtitle(),
                               style: TextStyles.font14DarkGrayNormal,
                               textAlign: TextAlign.center,
                             ),
-                            if (hotelId != null) ...[
+                            if (isSearchActive) ...[
+                              verticalSpace(16),
+                              ElevatedButton(
+                                onPressed: _clearSearch,
+                                child: const Text('Show All Rooms'),
+                              ),
+                            ] else if (hotelId != null &&
+                                originalRooms.isEmpty) ...[
                               verticalSpace(16),
                               ElevatedButton(
                                 onPressed: () {
-                                  // العودة للصفحة الرئيسية للفنادق
                                   Navigator.pop(context);
                                 },
                                 child: const Text('Try Another Hotel'),
@@ -170,12 +262,13 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                       ),
                     ),
                   ] else ...[
-                    // عرض الغرف المتاحة
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${state.availableRooms.length} rooms found',
+                          isSearchActive
+                              ? '${filteredRooms.length} rooms found for "$currentSearchQuery"'
+                              : '${filteredRooms.length} rooms found',
                           style: TextStyles.font14DarkGrayNormal,
                         ),
                         verticalSpace(12),
@@ -190,9 +283,9 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                                 mainAxisSpacing: 16,
                                 childAspectRatio: 0.75,
                               ),
-                          itemCount: state.availableRooms.length,
+                          itemCount: filteredRooms.length,
                           itemBuilder: (context, index) {
-                            final room = state.availableRooms[index];
+                            final room = filteredRooms[index];
                             return BuildRoomCard(
                               roomId: room.id,
                               roomName: room.name,
@@ -209,7 +302,6 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
             );
           }
 
-          // الحالة الافتراضية
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -233,5 +325,25 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
         },
       ),
     );
+  }
+
+  String _getEmptyRoomsMessage() {
+    if (isSearchActive && currentSearchQuery.isNotEmpty) {
+      return 'No rooms found for "$currentSearchQuery"';
+    } else if (hotelId != null) {
+      return 'No rooms available in this hotel today';
+    } else {
+      return 'No rooms available for today';
+    }
+  }
+
+  String _getEmptyRoomsSubtitle() {
+    if (isSearchActive) {
+      return 'Try searching with different keywords or clear the search to see all available rooms.';
+    } else if (hotelId != null) {
+      return 'This hotel has no available rooms for today. Please check back later or try a different date.';
+    } else {
+      return 'No rooms are currently available. Try selecting a different date.';
+    }
   }
 }

@@ -8,6 +8,8 @@ class ApiConstants {
   
   static const String getRoomDetails = '${baseUrl}room/details/1';
   static const String searchHotels = '${baseUrl}hotels/search';
+  static const String searchRooms = '${baseUrl}rooms/search'; // Add room search endpoint
+  
   static String getHotelRooms(int hotelId) {
     return '${baseUrl}hotel/rooms/$hotelId';
   }

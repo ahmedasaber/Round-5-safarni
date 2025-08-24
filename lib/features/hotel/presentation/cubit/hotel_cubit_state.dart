@@ -17,6 +17,7 @@ class HotelSuccess extends HotelState {
   final List<HotelModel>? searchResults;
   final String? searchQuery;
   final bool isSearchMode;
+  final bool roomSearchMode; // New flag to indicate room search
 
   HotelSuccess({
     required this.hotels,
@@ -26,6 +27,7 @@ class HotelSuccess extends HotelState {
     this.searchResults,
     this.searchQuery,
     this.isSearchMode = false,
+    this.roomSearchMode = false, // Default to false
   });
 }
 
