@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Add this import for SystemNavigator
 import 'package:safarni/core/utils/app_assets.dart';
+import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 import 'package:safarni/features/hotel/presentation/views/hotel_item_view.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
+import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
 
 import '../../features/auth/presentaion/pages/Password Reset Success.dart';
 import '../../features/auth/presentaion/pages/Reset Password.dart';
@@ -16,8 +21,15 @@ import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/splash/presentaion/pages/splash_page.dart';
 
 
-Route<dynamic> onGenerateRoute(RouteSettings settings) {
-  switch (settings.name) {
+import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+
+
+import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
+import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
+
+Route<dynamic> onGenerateRoute(RouteSettings settings){
+  switch(settings.name){
     case HomeView.routeName:
       return MaterialPageRoute(builder: (_) => const HomeView());
       case GetStartedPage.routeName:
@@ -65,12 +77,24 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           reviewsCount: args?['reviewsCount'] ?? 356,
         ),
       );
+    case ProfileScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const ProfileScreen());
+    case PersonalInformationScreen.routeName:
+      return MaterialPageRoute(
+        builder: (_) =>  PersonalInformationScreen(),
+      );
 
+    case SearchView.routeName:
+      return MaterialPageRoute(builder: (_) => const SearchView());
+     case ResultView.routeName:
+      return MaterialPageRoute(builder: (_) => const ResultView());
+    case FilterView.routeName:
+      return MaterialPageRoute(builder: (_) => const FilterView());
     default:
       return MaterialPageRoute(
         builder: (_) => Scaffold(
-          appBar: AppBar(title: const Text('Unknown Route')),
-          body: Center(child: Text('No route defined for ${settings.name}')),
+          appBar: AppBar(title: Text('Page Not Found')),
+          body: Center(child: Text('Route not found: ${settings.name}')),
         ),
       );
   }

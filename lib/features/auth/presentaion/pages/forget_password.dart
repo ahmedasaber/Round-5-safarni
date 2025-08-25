@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/shared_widgets/custom_button.dart';
 import '../widget/button.dart';
 import '../widget/custom_text_field.dart';
-
-
 import 'Verify Code.dart';
+import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 
 class ForgetPasswordPage extends StatelessWidget {
   const ForgetPasswordPage({super.key});
@@ -20,46 +21,66 @@ class ForgetPasswordPage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-          child: Column(
-            children: [SizedBox(height: height * 0.08),
-           Image.asset("assets/images/key.png"),
-              SizedBox(height: height * 0.05),
-              Text(
-                "Forget the Password",
-                style: TextStyle(
-                  fontSize: width * 0.05,
-                  fontWeight: FontWeight.bold,)),SizedBox(height: height * 0.05),
-              Text(
-                "Please enter your email to reset your password",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: width * 0.035,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+          child: BlocConsumer<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is AuthLoading) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Loading...")),
+                );
+              } else if (state is AuthSuccess) {
+                Navigator.pushNamed(
+                  context,
+                  VerifyCodePage.routeName,
+                );
+              } else if (state is AuthFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                children: [
+                  SizedBox(height: height * 0.08),
+                  Image.asset("assets/images/key.png"),
+                  SizedBox(height: height * 0.05),
+                  Text(
+                    "Forget the Password",
+                    style: TextStyle(
+                      fontSize: width * 0.05,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.05),
+                  Text(
+                    "Please enter your email to reset your password",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: width * 0.035,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.05),
 
-              SizedBox(height: height * 0.05),
+                  CustomTextField(
+                    hint: "Email",
+                    controller: emailController,
+                  ),
 
-              CustomTextField(
-                hint: "Email",
-                controller: emailController,
-              ),
+                  SizedBox(height: height * 0.05),
 
-              SizedBox(height: height * 0.05),
-
-              CustomButton(
-                text: "Reset Password",
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    VerifyCodePage.routeName,
-                  );
-                },
-              ),
-            ],
+                  CustomButton(
+                    text: state is AuthLoading ? "Loading..." : "Reset Password",
+                    onPressed: () {
+                      final email = emailController.text;
+                      context.read<AuthCubit>().forgotPassword(email);
+                    },
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
