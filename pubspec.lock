@@ -169,6 +169,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  equatable:
+    dependency: "direct main"
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -310,6 +318,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.9.3"
+  flutter_stripe:
+    dependency: "direct main"
+    description:
+      name: flutter_stripe
+      sha256: "04202b7655239ba8d988d4ab0439454ce2ea08891308574b7a10771599546358"
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -336,6 +352,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: "7294967ff0a6d98638e7acb774aac3af2550777accd8149c90af5b014e6d44d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   get_it:
     dependency: "direct main"
     description:
@@ -781,6 +805,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  stripe_android:
+    dependency: transitive
+    description:
+      name: stripe_android
+      sha256: "78e92aaf83eb22539af4964f6e24c5097ab7717a3c55e2190fcaf2c9d5caf87b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.0"
+  stripe_ios:
+    dependency: transitive
+    description:
+      name: stripe_ios
+      sha256: "85e4d921269ba1e0c909cc241cde3f249a18e48f4d724fc1f6c9252db880fc27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.0"
+  stripe_platform_interface:
+    dependency: transitive
+    description:
+      name: stripe_platform_interface
+      sha256: b3536d9e52b419a6fcbe6d8b372dfdddd32631ac7f43a291829a1f201e42f142
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.0"
   synchronized:
     dependency: transitive
     description:

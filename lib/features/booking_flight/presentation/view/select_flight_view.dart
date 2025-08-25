@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/common/widgets/elevated_button.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/widgets/top_section.dart';
+
+import '../cubit/flight_booking_cubit.dart';
+import '../cubit/flight_booking_state.dart';
 
 class SelectFlightView extends StatefulWidget {
   const SelectFlightView({super.key});
@@ -32,63 +36,75 @@ class _SelectFlightViewState extends State<SelectFlightView> {
               children: [
                 Expanded(
                   child: _buildDateButton(
-                    "Dec 16th, 2025",
+                    "${departureDate!.day}/${departureDate!.month}/${departureDate!.year}",
                     icon: Icons.calendar_today,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildDateButton(
-                    "Jan 6th, 2025",
-                    icon: Icons.person_outline,
+                    "${returnDate!.day}/${returnDate!.month}/${returnDate!.year}",
+                    icon: Icons.calendar_today,
                   ),
                 ),
               ],
             ),
           ),
 
-          // Flight list
+          // Flight list with Bloc
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildFlightCard(
-                  departureTime: "7:05 AM",
-                  arrivalTime: "8:05 PM",
-                  departureAirportCode: "YUL",
-                  arrivalAirportCode: "YUL",
-                  duration: "13:00",
-                  airline: "Air Canada",
-                  price: "\$1,400",
-                ),
-                _buildFlightCard(
-                  departureTime: "9:05 AM",
-                  arrivalTime: "4:55 PM",
-                  departureAirportCode: "YUL",
-                  arrivalAirportCode: "YYZ",
-                  duration: "18:55",
-                  airline: "Scoot",
-                  price: "\$1,300",
-                ),
-                _buildFlightCard(
-                  departureTime: "9:05 AM",
-                  arrivalTime: "4:55 PM",
-                  departureAirportCode: "YUL",
-                  arrivalAirportCode: "YYZ",
-                  duration: "18:55",
-                  airline: "Scoot",
-                  price: "\$1,300",
-                ),
-                _buildFlightCard(
-                  departureTime: "10:00 AM",
-                  arrivalTime: "11:00 PM",
-                  departureAirportCode: "YUL",
-                  arrivalAirportCode: "YUL",
-                  duration: "13:00",
-                  airline: "Air Canada",
-                  price: "\$1,400",
-                ),
-              ],
+            child: BlocConsumer<FlightBookingCubit, FlightBookingState>(
+              listener: (context, state) {
+                if (state is FlightBookingError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.message)),
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state is FlightBookingLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is FlightBookingLoaded) {
+                  final flights = state.flights;
+                  if (flights.isEmpty) {
+                    return const Center(child: Text("No flights found"));
+                  }
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: flights.length,
+                    itemBuilder: (context, index) {
+                      final flight = flights[index];
+                      return _buildFlightCard(
+                        departureTime: flight.departureTime,
+                        arrivalTime: flight.arrivalTime,
+                        departureAirportCode: flight.from,
+                        arrivalAirportCode: flight.to,
+                        duration: flight.duration,
+                        airline: flight.airline,
+                        price: "\$${flight.price}",
+                      );
+                    },
+                  );
+                } else if (state is FlightBookingError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Error: ${state.message}"),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: () {
+                            // إعادة محاولة البحث
+                            context.read<FlightBookingCubit>().retryLastSearch();
+                          },
+                          child: const Text("Retry"),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return const Center(child: Text("Search for flights"));
+              },
             ),
           ),
 
@@ -98,7 +114,9 @@ class _SelectFlightViewState extends State<SelectFlightView> {
             child: AppElevatedButton(
               buttonTitle: 'Continue',
               primaryButton: true,
-              onPressed: () => Navigator.of(context).pushReplacementNamed(ChooseSeatView.routeName),
+              onPressed: () => Navigator.of(context).pushReplacementNamed(
+                ChooseSeatView.routeName,
+              ),
             ),
           ),
         ],

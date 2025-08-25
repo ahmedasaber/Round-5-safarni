@@ -1,7 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-import '../../../domain/entities/destination.dart';
-import '../../../domain/usecases/get_destination_details.dart';
 import '../../domain/entities/destination.dart';
 import '../../domain/usecases/get_destination_details.dart';
 

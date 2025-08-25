@@ -1,6 +1,4 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
+import 'package:dio/dio.dart';
 import '../models/destination_model.dart';
 
 abstract class DestinationRemoteDataSource {
@@ -8,20 +6,22 @@ abstract class DestinationRemoteDataSource {
 }
 
 class DestinationRemoteDataSourceImpl implements DestinationRemoteDataSource {
-  final http.Client client;
+  final Dio dio;
 
-  DestinationRemoteDataSourceImpl(this.client);
+  DestinationRemoteDataSourceImpl(this.dio);
 
   @override
   Future<DestinationModel> getDestinationDetails(String id) async {
-    final response = await client.get(
-      Uri.parse('https://api.example.com/destinations/$id'),
-    );
+    try {
+      final response = await dio.get('http://round5-safarnia.huma-volve.com/api/tours/$id');
 
-    if (response.statusCode == 200) {
-      return DestinationModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception("Failed to load destination details");
+      if (response.statusCode == 200) {
+        return DestinationModel.fromJson(response.data);
+      } else {
+        throw Exception("Failed to load destination details");
+      }
+    } catch (e) {
+      throw Exception("Error fetching destination details: $e");
     }
   }
 }

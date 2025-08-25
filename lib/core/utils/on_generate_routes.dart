@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/routes.dart';
 import 'package:safarni/core/utils/app_assets.dart';
@@ -72,7 +73,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
     case FilterView.routeName:
       return MaterialPageRoute(builder: (_) => const FilterView());
     case DestinationView.routeName:
-      return MaterialPageRoute(builder: (_) => const DestinationView());
+      final id = settings.arguments as String;
+      return MaterialPageRoute(
+        builder: (_) => DestinationView(destinationId: id),
+      );
     case PaymentMethodView.routeName:
       return MaterialPageRoute(builder: (_) => const PaymentMethodView());
     case SuccessPaymentView.routeName:

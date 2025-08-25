@@ -23,7 +23,7 @@ class DestinationModel extends Destination {
       rating: (json['rating'] as num).toDouble(),
       reviewsCount: json['reviewsCount'],
       description: json['description'],
-      images: List<String>.from(json['images']),
+      images: List<String>.from(json['image']),
       topActivities: List<String>.from(json['topActivities']),
       bestTimeToVisit: json['bestTimeToVisit'],
     );

@@ -1,0 +1,111 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/usecases/boarding_pass.dart';
+import '../../domain/usecases/search_flights.dart';
+import 'flight_booking_state.dart';
+import '../../domain/usecases/get_seats.dart';
+import 'package:bloc/bloc.dart';
+import '../../../domain/entities/boarding_pass.dart';
+import '../../../domain/usecases/get_boarding_pass.dart';
+
+part 'boarding_pass_state.dart';
+
+class FlightBookingCubit extends Cubit<FlightBookingState> {
+  final SearchFlights searchFlights;
+
+  FlightBookingCubit(this.searchFlights) : super(FlightBookingInitial());
+
+  String? _lastFrom;
+  String? _lastTo;
+  String? _lastDepartureDate;
+  String? _lastReturnDate;
+  String? _lastTripType;
+  int? _lastPassengers;
+
+  Future<void> search({
+    required String from,
+    required String to,
+    required String departureDate,
+    required String returnDate,
+    required String tripType,
+    required int passengers,
+  }) async {
+    emit(FlightBookingLoading());
+
+    _lastFrom = from;
+    _lastTo = to;
+    _lastDepartureDate = departureDate;
+    _lastReturnDate = returnDate;
+    _lastTripType = tripType;
+    _lastPassengers = passengers;
+
+    try {
+      final flights = await searchFlights(
+        from: from,
+        to: to,
+        departureDate: departureDate,
+        returnDate: returnDate,
+        tripType: tripType,
+        passengers: passengers,
+      );
+      emit(FlightBookingLoaded(flights));
+    } catch (e) {
+      emit(FlightBookingError(e.toString()));
+    }
+  }
+
+  Future<void> retryLastSearch() async {
+    if (_lastFrom != null &&
+        _lastTo != null &&
+        _lastDepartureDate != null &&
+        _lastReturnDate != null &&
+        _lastTripType != null &&
+        _lastPassengers != null) {
+      await search(
+        from: _lastFrom!,
+        to: _lastTo!,
+        departureDate: _lastDepartureDate!,
+        returnDate: _lastReturnDate!,
+        tripType: _lastTripType!,
+        passengers: _lastPassengers!,
+      );
+    }
+  }
+}
+
+
+
+class SeatCubit extends Cubit<SeatState> {
+  final GetSeats getSeats;
+
+  SeatCubit(this.getSeats) : super(SeatInitial());
+
+  Future<void> fetchSeats(String flightId) async {
+    emit(SeatLoading());
+    try {
+      final seats = await getSeats(flightId);
+      emit(SeatLoaded(seats));
+    } catch (e) {
+      emit(SeatError(e.toString()));
+    }
+  }
+}
+
+
+// presentation/cubit/boarding_pass_cubit.dart
+
+class BoardingPassCubit extends Cubit<BoardingPassState> {
+  final GetBoardingPass getBoardingPassUseCase;
+
+  BoardingPassCubit(this.getBoardingPassUseCase) : super(BoardingPassInitial());
+
+  void fetchBoardingPass() async {
+    emit(BoardingPassLoading());
+    try {
+      final boardingPass = await getBoardingPassUseCase();
+      emit(BoardingPassLoaded(boardingPass));
+    } catch (e) {
+      emit(BoardingPassError(e.toString()));
+    }
+  }
+}
+
