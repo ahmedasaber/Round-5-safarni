@@ -14,7 +14,7 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio dio;
-  static const String _base = 'https://round5-safarnia.huma-volve.com/api/';
+  static const String _base = 'https://round5-safarnia.huma-volve.com/api';
 
   AuthRemoteDataSourceImpl({required this.dio});
 

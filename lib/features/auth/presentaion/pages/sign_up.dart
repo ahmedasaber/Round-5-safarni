@@ -23,7 +23,7 @@ class SignUpPage extends StatelessWidget {
     final nameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    final confirmPasswordController = TextEditingController(); // ✨ جديد
+    final confirmPasswordController = TextEditingController();
 
     return Scaffold(
       body: Padding(
@@ -37,7 +37,7 @@ class SignUpPage extends StatelessWidget {
             } else if (state is AuthSuccess) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                HomeView.routeName,
+                SignInPage.routeName,
                     (route) => false,
               );
             } else if (state is AuthFailure) {

@@ -34,6 +34,7 @@ class SignInPage extends StatelessWidget {
                 const SnackBar(content: Text("Loading...")),
               );
             } else if (state is AuthSuccess) {
+              // ✅ هنا لغيت SnackBar اللي بيظهر بعد تسجيل الدخول
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 HomeView.routeName,

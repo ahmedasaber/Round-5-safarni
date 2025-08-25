@@ -1,11 +1,12 @@
-class AuthMessageModel {
-  final int status;
-  final String message;
+import 'package:safarni/features/auth/domain/entities/auth_message_entity.dart';
 
+class AuthMessageModel extends AuthMessage {
   AuthMessageModel({
-    required this.status,
-    required this.message,
-  });
+    required int status,
+    required super.message,
+  }) : super(
+    success: status == 200 || status == 201,
+  );
 
   factory AuthMessageModel.fromJson(Map<String, dynamic> json) {
     return AuthMessageModel(

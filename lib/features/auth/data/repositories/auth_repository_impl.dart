@@ -1,45 +1,63 @@
-import '../../domain/entities/auth_message_entity.dart';
-import '../../domain/entities/otp_entity.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../datasources/auth_remote_data_source.dart';
+import 'package:dio/dio.dart';
 import '../models/register_reques.dart';
 import '../models/user_model.dart';
 import '../models/auth_message_model.dart';
 import '../models/otp_model.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
+abstract class AuthRemoteDataSource {
+  Future<UserModel> login(String email, String password);
+  Future<UserModel> register(RegisterRequest request);
+  Future<AuthMessageModel> forgotPassword(String email);
+  Future<AuthMessageModel> updatePassword(String email, String newPassword);
+  Future<OtpModel> verifyOtp(String email, String otp);
+}
 
-  AuthRepositoryImpl({required this.remoteDataSource});
-
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final Dio dio;
+  static const String _base = 'https://round5-safarnia.huma-volve.com/api/';
+  AuthRemoteDataSourceImpl({required this.dio});
   @override
-  Future<User> login(String email, String password) async {
-    UserModel model = await remoteDataSource.login(email, password);
-    return model;
+  Future<UserModel> login(String email, String password) async {
+    final res = await dio.post(
+      '$_base/login',
+      data: {'email': email, 'password': password},
+    );
+    return UserModel.fromJson(res.data['data']);
   }
 
   @override
-  Future<User> register(RegisterRequest request) async {
-    UserModel model = await remoteDataSource.register(request);
-    return model;
+  Future<UserModel> register(RegisterRequest request) async {
+    final response = await dio.post('$_base/register', data: request.toJson());
+    return UserModel.fromJson(response.data['data']);
   }
 
   @override
-  Future<AuthMessage> forgotPassword(String email) async {
-    AuthMessageModel model = await remoteDataSource.forgotPassword(email);
-    return model;
+  Future<AuthMessageModel> forgotPassword(String email) async {
+    final res = await dio.post(
+      '$_base/forgot-password',
+      data: {'email': email},
+    );
+    return AuthMessageModel.fromJson(res.data);
   }
 
   @override
-  Future<AuthMessage> updatePassword(String email, String newPassword) async {
-    AuthMessageModel model = await remoteDataSource.updatePassword(email, newPassword);
-    return model;
+  Future<AuthMessageModel> updatePassword(
+    String email,
+    String newPassword,
+  ) async {
+    final res = await dio.post(
+      '$_base/update-password',
+      data: {'email': email, 'password': newPassword},
+    );
+    return AuthMessageModel.fromJson(res.data);
   }
 
   @override
-  Future<Otp> verifyOtp(String email, String otp) async {
-    OtpModel model = await remoteDataSource.verifyOtp(email, otp);
-    return model;
+  Future<OtpModel> verifyOtp(String email, String otp) async {
+    final res = await dio.post(
+      '$_base/otp',
+      data: {'email': email, 'otp': otp},
+    );
+    return OtpModel.fromJson(res.data);
   }
 }
