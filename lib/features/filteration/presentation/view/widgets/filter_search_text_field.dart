@@ -6,11 +6,11 @@ import 'package:safarni/core/utils/app_styles.dart';
 class FilterSearchTextFiled extends StatelessWidget {
   const FilterSearchTextFiled({
     super.key,
-    this.onChange,
+    this.onChange, required this.controller,
   });
 
-  final ValueChanged? onChange;
-
+  final ValueChanged<String>? onChange;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +25,7 @@ class FilterSearchTextFiled extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 16),
         child: TextField(
+          controller: controller,
           onChanged: onChange,
           decoration: InputDecoration(
             hintText: 'Search ...',

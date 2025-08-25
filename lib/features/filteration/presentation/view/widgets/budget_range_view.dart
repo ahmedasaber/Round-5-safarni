@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class BudgetRangeView extends StatefulWidget {
-  const BudgetRangeView({super.key});
+class BudgetRangeView extends StatelessWidget {
+   const BudgetRangeView({super.key, required this.onRangeChanged, required this.budgetRange});
 
-  @override
-  State<BudgetRangeView> createState() => _BudgetRangeViewState();
-}
-
-class _BudgetRangeViewState extends State<BudgetRangeView> {
-  RangeValues budgetRange = RangeValues(2125, 6375);
+  final ValueChanged<RangeValues> onRangeChanged;
+   final RangeValues budgetRange;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +25,7 @@ class _BudgetRangeViewState extends State<BudgetRangeView> {
               "\$${budgetRange.start.toInt()}",
               "\$${budgetRange.end.toInt()}",
             ),
-            onChanged: (RangeValues values) {
-              setState(() {
-                budgetRange = values;
-              });
-            },
+            onChanged: onRangeChanged,
           ),
         )
       ],

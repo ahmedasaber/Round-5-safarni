@@ -1,17 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
 import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
-
-
 import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
-
-
+import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
 
 Future<void> main() async {
   runZonedGuarded(
@@ -24,6 +23,10 @@ Future<void> main() async {
       }
 
       Bloc.observer = BlocObserverService();
+      await Hive.initFlutter();
+      await Hive.openBox('favorites');
+      final searchHistoryBox = await Hive.openBox<String>('searchHistory');
+      setupGetIt(searchHistoryBox);
       runApp(const SafarniApp());
     },
     (error, stack) {

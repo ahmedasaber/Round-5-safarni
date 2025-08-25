@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import '../../../data/datasource/destination_remote_data_source.dart';
 import '../../../data/models/destination_model.dart';
 import '../widgets/best_time_to_visit.dart';
@@ -12,8 +13,8 @@ import '../widgets/trip_details.dart';
 
 class DestinationView extends StatelessWidget {
   final String destinationId;
-
-  const DestinationView({super.key,this.destinationId = "1"});
+  final TourModel tourModel;
+  const DestinationView({super.key,this.destinationId = "1", required this.tourModel});
   static const routeName = '/destination';
 
   @override
@@ -22,17 +23,22 @@ class DestinationView extends StatelessWidget {
       body: FutureBuilder(
         future: _loadDestinationDetails(destinationId),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
-          } else if (snapshot.hasData) {
-            final destination = snapshot.data!;
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return const Center(child: CircularProgressIndicator());
+          // } else if (snapshot.hasError) {
+          //   return Center(child: Text(snapshot.error.toString()));
+          // } else if (snapshot.hasData) {
+          //   final destination = snapshot.data!;
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  BuildTopSection(),
-                  TripDetails(),
+                  BuildTopSection(tour: tourModel,),
+                  TripDetails(
+                    rate: tourModel.rating.toString(),
+                    views: tourModel.views.toString(),
+                    location: tourModel.location,
+                    title: tourModel.title,
+                  ),
                   TopActivates(),
                   BestTimeToVisit(),
                   Gallery(),
@@ -42,8 +48,8 @@ class DestinationView extends StatelessWidget {
               ),
             );
           }
-          return const SizedBox();
-        },
+          //return const SizedBox();
+        //},
       ),
     );
   }

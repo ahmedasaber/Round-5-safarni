@@ -24,13 +24,15 @@ class OnboardingPageWidget extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: Image.asset(
-            model.image,
-            height: 500,
-            width: 300,
-            fit: BoxFit.cover,
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.asset(
+              model.image,
+              height: 500,
+              width: 300,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         const SizedBox(height: 30),
