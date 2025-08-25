@@ -162,9 +162,9 @@ class _FilterViewBodyState extends State<FilterViewBody> {
           }
           switch(selectedSort){
             case 'Price (Low to High)':
-              selectedSort = 'price high';
+              selectedSort = 'price low';
             case 'Price (High to Low)':
-                selectedSort = 'price low';
+                selectedSort = 'price high';
             case 'Biggest Deals (Highest Saving)':
                 selectedSort = 'biggest';
             case 'Most Reviewed':

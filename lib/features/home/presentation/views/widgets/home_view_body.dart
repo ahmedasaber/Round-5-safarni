@@ -5,8 +5,10 @@ import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/features/home/presentation/cubit/available%20tours/available_tours_cubit.dart';
 import 'package:safarni/features/home/presentation/cubit/categories/categories_cubit.dart';
 import 'package:safarni/features/home/presentation/cubit/recommendation/recommendations_cubit.dart';
+import 'package:safarni/features/home/presentation/views/widgets/available_tours_view_all.dart';
 import 'package:safarni/features/home/presentation/views/widgets/list_of_available_tours.dart';
 import 'package:safarni/features/home/presentation/views/widgets/list_of_categories.dart';
+import 'package:safarni/features/home/presentation/views/widgets/recommended_tours_view_all.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 import 'package:safarni/features/home/presentation/views/widgets/home_app_bar.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
@@ -105,10 +107,16 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                  'Recommendation', style: TextStyles.medium17),
+                              Text('Recommendation', style: TextStyles.medium17),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.pushNamed(
+                                    RecommendedToursViewAll.routeName,
+                                    arguments: recommendationsState is RecommendationsSuccess
+                                      ? recommendationsState.recommendations
+                                      : [],
+                                  );
+                                },
                                 child: Text(
                                   'View all',
                                   style: TextStyles.medium13.copyWith(
@@ -135,7 +143,14 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                               Text('Available Tours',
                                   style: TextStyles.medium17),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.pushNamed(
+                                    AvailableToursViewAll.routeName,
+                                    arguments: availableToursState is AvailableToursSuccess
+                                      ? availableToursState.availableTours
+                                      : [],
+                                  );
+                                },
                                 child: Text(
                                   'View all',
                                   style: TextStyles.medium13.copyWith(

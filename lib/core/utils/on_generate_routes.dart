@@ -10,6 +10,8 @@ import 'package:safarni/features/destination/presentation/views/pages/detination
 // Add this import for SystemNavigator
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/features/home/presentation/views/widgets/available_tours_view_all.dart';
+import 'package:safarni/features/home/presentation/views/widgets/recommended_tours_view_all.dart';
 import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
 import 'package:safarni/features/hotel/presentation/views/screens/hotel_item_view.dart';
 import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
@@ -101,6 +103,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
 
     case SearchView.routeName:
       return MaterialPageRoute(builder: (_) => const SearchView());
+    case RecommendedToursViewAll.routeName:
+      final tours = settings.arguments as List<TourModel>;
+      return MaterialPageRoute(builder: (_) => RecommendedToursViewAll(tours: tours,));
+    case AvailableToursViewAll.routeName:
+      final tours = settings.arguments as List<TourModel>;
+      return MaterialPageRoute(builder: (_) => AvailableToursViewAll(toursList: tours,));
     case ResultView.routeName:
       final argus = settings.arguments as ResultView;
       return MaterialPageRoute(
