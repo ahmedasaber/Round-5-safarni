@@ -7,7 +7,7 @@ import 'core/utils/on_generate_routes.dart';
 
 
 import 'features/auth/data/datasources/auth_remote_data_source.dart';
-import 'features/auth/data/repositories/auth_repository_impl.dart';
+import 'features/auth/data/repositories/auth_repository_impl.dart' hide AuthRemoteDataSourceImpl;
 
 
 

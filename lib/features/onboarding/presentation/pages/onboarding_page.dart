@@ -21,7 +21,7 @@ class OnboardingPage extends StatelessWidget {
             appBar: AppBar( automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
               centerTitle: false,
-              title: const Text(
+              title: Text(
                 "Safarni",
                 style: TextStyle(
                   fontSize: 22,
@@ -38,9 +38,9 @@ class OnboardingPage extends StatelessWidget {
                     );
                   },
                   child: Row(
-                    children: const [
+                    children: [
                       Padding(
-                        padding: EdgeInsets.only(right: 4),
+                        padding: const EdgeInsets.only(right: 4),
                         child: Text(
                           "Skip",
                           style: TextStyle(
