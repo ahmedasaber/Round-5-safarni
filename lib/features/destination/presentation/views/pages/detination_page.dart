@@ -28,7 +28,12 @@ class DestinationView extends StatelessWidget {
             // The image and app bar at the top
             BuildTopSection(tour: tourModel),
             // The main trip details (City Breaks, title, etc.)
-            TripDetails(),
+            TripDetails(
+              rate: tourModel.rating.toString(),
+              views: tourModel.views.toString(),
+              location: tourModel.location,
+              title: tourModel.title,
+            ),
             // The "Top Activates" section
             TopActivates(),
             // The "Best Time to Visit" section
@@ -43,7 +48,7 @@ class DestinationView extends StatelessWidget {
         ),
       ),
       // The fixed bottom bar with price and button
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(price: tourModel.price.toString(),),
     );
   }
 }

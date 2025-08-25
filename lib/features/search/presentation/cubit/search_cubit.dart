@@ -10,12 +10,26 @@ class SearchCubit extends Cubit<SearchState> {
 
   final SearchRepo searchRepo;
 
-  Future<void> searchTours(String query) async{
+  Future<void> searchTours({
+    required String query,
+    required String location,
+    required String minPrice,
+    required String maxPrice,
+    required String minRate,
+    required String sortedBy,
+  }) async {
     emit(SearchLoading());
-    final data = await searchRepo.getSearchedTours(query);
+    final data = await searchRepo.getSearchedTours(
+      query: query,
+      location: location,
+      maxPrice: maxPrice,
+      minPrice: minPrice,
+      minRate: minRate,
+      sortedBy: sortedBy,
+    );
     data.fold(
       (failure) => emit(SearchError(message: failure.message)),
-      (searchedEntities) => emit(SearchSuccess(toursEntity: searchedEntities))
+      (searchedEntities) => emit(SearchSuccess(toursEntity: searchedEntities)),
     );
   }
 }

@@ -22,7 +22,8 @@ Future<void> main() async {
       Bloc.observer = BlocObserverService();
       await Hive.initFlutter();
       await Hive.openBox('favorites');
-      setupGetIt();
+      final searchHistoryBox = await Hive.openBox<String>('searchHistory');
+      setupGetIt(searchHistoryBox);
       runApp(const SafarniApp());
     },
     (error, stack) {

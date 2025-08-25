@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
 import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
 
 class BottomBar extends StatelessWidget {
-  const BottomBar({super.key});
-
+  const BottomBar({super.key, required this.price});
+  final String price;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,7 +32,7 @@ class BottomBar extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '\$150.00',
+                    '\$$price',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text('/per person.', style: TextStyle(color: AppColors.softGrey,fontWeight: FontWeight.w500)),

@@ -23,7 +23,6 @@ import 'package:safarni/features/internal_tour/presentation/views/pages/internal
 import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
-import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import '../../features/auth/presentaion/pages/Password Reset Success.dart';
 import '../../features/auth/presentaion/pages/Reset Password.dart';
 import '../../features/auth/presentaion/pages/Verify Code.dart';
@@ -34,43 +33,39 @@ import '../../features/auth/presentaion/pages/sign_up.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/splash/presentaion/pages/splash_page.dart';
 
-
 import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
 
-
-
-
-Route<dynamic> onGenerateRoute(RouteSettings settings){
-  switch(settings.name){
+Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  switch (settings.name) {
     case Routes.internalTourPage:
       return MaterialPageRoute(builder: (_) => const InternalTourPage());
     case Routes.destinationPage:
       return MaterialPageRoute(builder: (_) => const DestinationPage());
     case Routes.carBookingPage:
       return MaterialPageRoute(builder: (_) => const CarBookingPage());
- case Routes.carDetailsPage:
+    case Routes.carDetailsPage:
       return MaterialPageRoute(builder: (_) => const CarDetailsPage());
     case HomeView.routeName:
       return MaterialPageRoute(builder: (_) => const HomeView());
-      case GetStartedPage.routeName:
+    case GetStartedPage.routeName:
       return MaterialPageRoute(builder: (_) => const GetStartedPage());
 
-      case VerifyCodePage.routeName:
+    case VerifyCodePage.routeName:
       return MaterialPageRoute(builder: (_) => const VerifyCodePage());
 
-      case SuccessPage.routeName:
+    case SuccessPage.routeName:
       return MaterialPageRoute(builder: (_) => const SuccessPage());
 
-      case ResetPasswordPage.routeName:
+    case ResetPasswordPage.routeName:
       return MaterialPageRoute(builder: (_) => const ResetPasswordPage());
 
-      case ForgetPasswordPage.routeName:
+    case ForgetPasswordPage.routeName:
       return MaterialPageRoute(builder: (_) => const ForgetPasswordPage());
 
-      case SignUpPage.routeName:
+    case SignUpPage.routeName:
       return MaterialPageRoute(builder: (_) => const SignUpPage());
 
-      case SignInPage.routeName:
+    case SignInPage.routeName:
       return MaterialPageRoute(builder: (_) => const SignInPage());
 
     case HotelItemView.routeName:
@@ -105,17 +100,29 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
     case SearchView.routeName:
       return MaterialPageRoute(builder: (_) => SearchView());
     case ResultView.routeName:
-      final query = settings.arguments as String;
-      return MaterialPageRoute(builder: (_) => ResultView(query: query,));
+      final argus = settings.arguments as ResultView;
+      return MaterialPageRoute(
+        builder: (_) => ResultView(
+          query: argus.query,
+          location: argus.location,
+          minPrice: argus.minPrice,
+          maxPrice: argus.maxPrice,
+          minRate: argus.minRate,
+          sortedBy: argus.sortedBy,
+        ),
+      );
     case FilterView.routeName:
-      return MaterialPageRoute(builder: (_) => const FilterView());
+      String query = settings.arguments as String;
+      return MaterialPageRoute(builder: (_) => FilterView(query: query));
     case AccountSecurityScreen.routeName:
       return MaterialPageRoute(builder: (_) => const AccountSecurityScreen());
     case MyBookingScreen.routeName:
       return MaterialPageRoute(builder: (_) => const MyBookingScreen());
     case DestinationView.routeName:
       final tourModel = settings.arguments as TourModel;
-      return MaterialPageRoute(builder: (_) =>  DestinationView(tourModel: tourModel));
+      return MaterialPageRoute(
+        builder: (_) => DestinationView(tourModel: tourModel),
+      );
     case PaymentMethodView.routeName:
       return MaterialPageRoute(builder: (_) => const PaymentMethodView());
     case SuccessPaymentView.routeName:
@@ -124,7 +131,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
       return MaterialPageRoute(builder: (_) => const FlightBookingView());
     case SelectFlightView.routeName:
       return MaterialPageRoute(builder: (_) => const SelectFlightView());
-     case ChooseSeatView.routeName:
+    case ChooseSeatView.routeName:
       return MaterialPageRoute(builder: (_) => const ChooseSeatView());
     case BoardingPassView.routeName:
       return MaterialPageRoute(builder: (_) => const BoardingPassView());

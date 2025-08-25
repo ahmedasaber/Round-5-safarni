@@ -10,24 +10,24 @@ class SearchViewBody extends StatelessWidget {
 
    List<LocationItem> list = [
      LocationItem(image: 'assets/icons/paris.svg', location: 'Paris', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/rome.svg', location: 'Rome', knownBy: 'History Event base'),
-     LocationItem(image: 'assets/icons/rio.svg', location: 'Rio De Janeiro', knownBy: 'Adventures here'),
-     LocationItem(image: 'assets/icons/dubai.svg', location: 'Dubai', knownBy: 'Boom in the town'),
-     LocationItem(image: 'assets/icons/london.svg', location: 'London', knownBy: 'City of culture'),
-     LocationItem(image: 'assets/icons/sydney.svg', location: 'Sydney', knownBy: 'Waves over here'),
-     LocationItem(image: 'assets/icons/beijing.svg', location: 'Beijing', knownBy: 'Unique tradition'),
-     LocationItem(image: 'assets/icons/amsterdam.svg', location: 'Amsterdam', knownBy: 'City of Flowers'),
-     LocationItem(image: 'assets/icons/berlin.svg', location: 'Berlin', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/ankara.svg', location: 'Ankara', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/pizza.svg', location: 'Pizza', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/washington.svg', location: 'Washington', knownBy: 'Family trendy'),
-     LocationItem(image: 'assets/icons/malaysia.svg', location: 'Malaysia', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/barcelona.svg', location: 'Barcelona', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/florence.svg', location: 'Florence', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/delhi.svg', location: 'Delhi', knownBy: 'City of color'),
-     LocationItem(image: 'assets/icons/china.svg', location: 'China', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/istanbul.svg', location: 'Istanbul', knownBy: 'City of arts'),
-     LocationItem(image: 'assets/icons/egypt.svg', location: 'Egypt', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Rome', knownBy: 'History Event base'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Rio De Janeiro', knownBy: 'Adventures here'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Dubai', knownBy: 'Boom in the town'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'London', knownBy: 'City of culture'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Sydney', knownBy: 'Waves over here'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Beijing', knownBy: 'Unique tradition'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Amsterdam', knownBy: 'City of Flowers'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Berlin', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Ankara', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Pizza', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Washington', knownBy: 'Family trendy'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Malaysia', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Barcelona', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Florence', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Delhi', knownBy: 'City of color'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'China', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Istanbul', knownBy: 'City of arts'),
+     LocationItem(image: 'assets/icons/paris.svg', location: 'Egypt', knownBy: 'City of arts'),
    ];
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class SearchViewBody extends StatelessWidget {
               SizedBox(height: 24,),
               CustomSearchTextField(
                 onSubmitted: (value){
-                  context.pushNamed(ResultView.routeName, arguments: value);
+                  context.pushNamed(ResultView.routeName, arguments: ResultView(query: value,));
                 },
               ),
               SizedBox(height: 24,),
@@ -52,7 +52,7 @@ class SearchViewBody extends StatelessWidget {
                 itemBuilder: (context,i){
                   return GestureDetector(
                     onTap: (){
-                      context.pushNamed(ResultView.routeName, arguments: list[i].location);
+                      context.pushNamed(ResultView.routeName, arguments: ResultView(query: list[i].location,));
                     }, child: list[i]
                   );
                 }),
