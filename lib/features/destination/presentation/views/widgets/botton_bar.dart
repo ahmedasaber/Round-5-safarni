@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
 import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
 
 class BottomBar extends StatelessWidget {

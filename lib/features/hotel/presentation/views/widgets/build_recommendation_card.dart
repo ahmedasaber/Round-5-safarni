@@ -2,27 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
 
 class BuildRecommendationCard extends StatelessWidget {
+  final int hotelId; // ⭐ إضافة hotel ID
   final String name;
   final String location;
   final String discount;
   final double rating;
   final String imageUrl;
+
   const BuildRecommendationCard({
     super.key,
+    required this.hotelId, // ⭐ إضافة hotel ID
     required this.name,
     required this.location,
     required this.discount,
     required this.rating,
     required this.imageUrl,
   });
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, HotelAboutPage.routeName);
+        print('🎯 BuildNearbyHotelCard - Navigating with hotel ID: $hotelId');
+        // ⭐ التنقل إلى شاشة الغرف المتاحة مع تمرير hotel ID
+        Navigator.pushNamed(
+          context,
+          AvailableRoomsScreen.routeName,
+          arguments: hotelId, // تمرير hotel ID
+        );
       },
       child: Container(
         width: 217,
@@ -31,14 +41,6 @@ class BuildRecommendationCard extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Color(0xFFE5E7EB), width: 1),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.grey.withOpacity(0.10),
-          //     spreadRadius: 1,
-          //     blurRadius: 8,
-          //     offset: const Offset(0, 4),
-          //   ),
-          // ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,15 +49,42 @@ class BuildRecommendationCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
-                child: Image.asset(
+                child: Image.network(
                   imageUrl,
                   width: double.infinity,
-                  height: 140,
+                  height: 125,
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      width: double.infinity,
+                      height: 125,
+                      color: Colors.grey[200],
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 20,
+                      color: Colors.grey[200],
+                      child: Icon(
+                        Icons.broken_image,
+                        color: Colors.grey[400],
+                        size: 50,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(

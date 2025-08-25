@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:dio/dio.dart';
+import '../../../data/datasource/destination_remote_data_source.dart';
+import '../../../data/models/destination_model.dart';
 import '../widgets/best_time_to_visit.dart';
 import '../widgets/botton_bar.dart';
 import '../widgets/build_top_section.dart';
@@ -9,35 +11,45 @@ import '../widgets/top_activates.dart';
 import '../widgets/trip_details.dart';
 
 class DestinationView extends StatelessWidget {
-  const DestinationView({super.key});
+  final String destinationId;
+
+  const DestinationView({super.key,this.destinationId = "1"});
   static const routeName = '/destination';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // The image and app bar at the top
-            BuildTopSection(),
-            // The main trip details (City Breaks, title, etc.)
-            TripDetails(),
-            // The "Top Activates" section
-            TopActivates(),
-            // The "Best Time to Visit" section
-            BestTimeToVisit(),
-            // The "Gallery" section
-            Gallery(),
-            // The "Reviews" section
-            Reviews(),
-            // Spacer to separate the content from the bottom button
-            SizedBox(height: 100),
-          ],
-        ),
+      body: FutureBuilder(
+        future: _loadDestinationDetails(destinationId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          } else if (snapshot.hasData) {
+            final destination = snapshot.data!;
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  BuildTopSection(),
+                  TripDetails(),
+                  TopActivates(),
+                  BestTimeToVisit(),
+                  Gallery(),
+                  Reviews(),
+                  const SizedBox(height: 100),
+                ],
+              ),
+            );
+          }
+          return const SizedBox();
+        },
       ),
-      // The fixed bottom bar with price and button
-      bottomNavigationBar: BottomBar(),
     );
+  }
+
+  Future<DestinationModel> _loadDestinationDetails(String id) async {
+    final dataSource = DestinationRemoteDataSourceImpl(Dio());
+    return await dataSource.getDestinationDetails(id);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/features/hotel_about/data/model/review_data.dart';
+import 'package:safarni/features/hotel_about/data/model/room_detail_model.dart';
 import 'package:safarni/features/hotel_about/presentation/view/widgets/hotel_bottom_section.dart';
 import 'package:safarni/features/hotel_about/presentation/view/widgets/hotel_header_section.dart';
 import 'package:safarni/features/hotel_about/presentation/view/widgets/hotel_tabs_section.dart';
@@ -18,6 +19,7 @@ class HotelContentSection extends StatefulWidget {
   final List<File> selectedImages;
   final VoidCallback onPickImage;
   final Function(int) onRemoveImage;
+  final RoomDetailModel? roomDetail;
 
   const HotelContentSection({
     super.key,
@@ -31,6 +33,7 @@ class HotelContentSection extends StatefulWidget {
     required this.selectedImages,
     required this.onPickImage,
     required this.onRemoveImage,
+    this.roomDetail,
   });
 
   @override
@@ -42,10 +45,9 @@ class _HotelContentSectionState extends State<HotelContentSection> {
 
   void _addReview(ReviewData reviewData) {
     setState(() {
-      reviews.insert(0, reviewData); // Add new review at the beginning
+      reviews.insert(0, reviewData);
     });
 
-    // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Review added successfully!'),
@@ -57,6 +59,9 @@ class _HotelContentSectionState extends State<HotelContentSection> {
 
   @override
   Widget build(BuildContext context) {
+    // Print room ID for debugging
+    print('🏨 HotelContentSection - Room ID: ${widget.roomDetail?.id}');
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -71,8 +76,7 @@ class _HotelContentSectionState extends State<HotelContentSection> {
             // Header Section
             HotelHeaderSection(
               rating: widget.rating,
-              reviewsCount:
-                  widget.reviewsCount + reviews.length, // Updated count
+              reviewsCount: widget.reviewsCount + reviews.length,
               roomName: widget.roomName,
               address: widget.address,
             ),
@@ -85,6 +89,7 @@ class _HotelContentSectionState extends State<HotelContentSection> {
             // Tab Content
             Expanded(
               child: HotelTabContent(
+                roomDetail: widget.roomDetail,
                 selectedIndex: widget.selectedTabIndex,
                 selectedImages: widget.selectedImages,
                 onPickImage: widget.onPickImage,
@@ -98,13 +103,14 @@ class _HotelContentSectionState extends State<HotelContentSection> {
               ),
             ),
             verticalSpace(20),
-            // Price and Book Button
+            // Price and Book Button - مرر الـ room ID من roomDetail
             HotelBottomSection(
               price: widget.price,
               hotelName: widget.roomName,
               address: widget.address,
               rating: widget.rating,
               reviewsCount: widget.reviewsCount + reviews.length,
+              roomId: widget.roomDetail?.id, // مرر الـ room ID هنا
             ),
           ],
         ),

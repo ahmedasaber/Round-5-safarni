@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/core/common/widgets/elevated_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../cubit/flight_booking_cubit.dart';
+import '../cubit/flight_booking_state.dart';
 
 class ChooseSeatView extends StatefulWidget {
   const ChooseSeatView({super.key});
@@ -14,18 +16,12 @@ class ChooseSeatView extends StatefulWidget {
 class _ChooseSeatViewState extends State<ChooseSeatView> {
   int? selectedSeatNumber;
 
-  // The list of seat numbers, including nulls for the empty spaces in the layout
-  final List<int?> seats = [
-    1, 2, null, 3, 4, 5,
-    6, 7, null, 8, 9, 10,
-    11, 12, null, 13, 14, 15,
-    16, 17, null, 18, 19, 20,
-    21, 22, null, 23, 24, 25,
-    26, 27, null, 28, 29, 30,
-  ];
-
-  // A list of seat numbers that are unavailable
-  final List<int> unavailableSeats = [4, 5, 8, 9, 10, 16, 17, 20, 24, 25, 26, 28, 29];
+  @override
+  void initState() {
+    super.initState();
+    // 👇 نجيب الـ seats عند فتح الصفحة (مثلا flightId = "1")
+    context.read<SeatCubit>().fetchSeats("1");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
@@ -52,23 +48,30 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
             _buildLegend(),
             const SizedBox(height: 30),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 60,
-                  childAspectRatio: 1.0,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: seats.length,
-                itemBuilder: (context, index) {
-                  final seatNumber = seats[index];
-                  if (seatNumber == null) {
-                    return const SizedBox.shrink(); // Empty space for aisle
+              child: BlocBuilder<SeatCubit, SeatState>(
+                builder: (context, state) {
+                  if (state is SeatLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is SeatLoaded) {
+                    final seats = state.seats;
+                    return GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 60,
+                        childAspectRatio: 1.0,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: seats.length,
+                      itemBuilder: (context, index) {
+                        final seat = seats[index];
+                        final isSelected = selectedSeatNumber == seat.seatNumber;
+                        return _buildSeat(seat.seatNumber, seat.isAvailable, isSelected);
+                      },
+                    );
+                  } else if (state is SeatError) {
+                    return Center(child: Text("Error: ${state.message}"));
                   }
-                  final isUnavailable = unavailableSeats.contains(seatNumber);
-                  final isSelected = selectedSeatNumber == seatNumber;
-
-                  return _buildSeat(seatNumber, !isUnavailable, isSelected);
+                  return const SizedBox();
                 },
               ),
             ),
@@ -78,7 +81,9 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {Navigator.of(context).pushReplacementNamed(BoardingPassView.routeName);},
+                onPressed: selectedSeatNumber != null
+                    ? () => Navigator.of(context).pushReplacementNamed(BoardingPassView.routeName)
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -103,9 +108,9 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildLegendItem(Colors.blue[800]!, 'Available'),
+        _buildLegendItem(AppColors.primaryColor, 'Available'),
         _buildLegendItem(Colors.green, 'Selected'),
-        _buildLegendItem(Colors.grey[400]!, 'Un available'),
+        _buildLegendItem(Colors.grey[400]!, 'Unavailable'),
       ],
     );
   }
@@ -134,12 +139,7 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
         ? AppColors.primaryColor
         : Colors.grey[400];
 
-    // هنا بحدد لون الرقم
-    final textColor = isSelected
-        ? Colors.white
-        : isAvailable
-        ? Colors.white
-        : Colors.black; // لو الكرسي رمادي يبقى الرقم أسود
+    final textColor = isSelected || isAvailable ? Colors.white : Colors.black;
 
     return GestureDetector(
       onTap: () {
@@ -167,8 +167,6 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
     );
   }
 
-
-
   Widget _buildPricingSection() {
     return Column(
       children: [
@@ -178,7 +176,7 @@ class _ChooseSeatViewState extends State<ChooseSeatView> {
         const SizedBox(height: 10),
         _buildPriceRow('Total Price', '150.00\$'),
         const SizedBox(height: 10),
-        _buildPriceRow('your Seat', selectedSeatNumber != null ? '$selectedSeatNumber' : '--'),
+        _buildPriceRow('Your Seat', selectedSeatNumber != null ? '$selectedSeatNumber' : '--'),
         const Divider(),
       ],
     );

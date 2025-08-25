@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/common/widgets/elevated_button.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
@@ -8,6 +9,7 @@ import 'package:safarni/features/booking_flight/presentation/view/widgets/sectio
 import 'package:safarni/features/booking_flight/presentation/view/widgets/top_section.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../cubit/flight_booking_cubit.dart';
 
 class FlightBookingView extends StatefulWidget {
   const FlightBookingView({super.key});
@@ -106,7 +108,20 @@ class _FlightBookingViewState extends State<FlightBookingView> {
                   const SizedBox(height: 24),
 
                   // Search Button
-                  AppElevatedButton(buttonTitle: "Search Flights",primaryButton: true,onPressed: () => Navigator.of(context).pushReplacementNamed(SelectFlightView.routeName),)
+                  AppElevatedButton(
+                    buttonTitle: "Search Flights",
+                    primaryButton: true,
+                    onPressed: () {
+                      context.read<FlightBookingCubit>().search(
+                        from: locationController.text,
+                        to: destinationController.text,
+                        departureDate: "${departureDate!.year}-${departureDate!.month}-${departureDate!.day}",
+                        returnDate: "${returnDate!.year}-${returnDate!.month}-${returnDate!.day}",
+                        tripType: tripType,
+                        passengers: 1,
+                      );
+                    },
+                  )
                 ],
               ),
             ),

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'dart:io';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/features/hotel_about/presentation/view/widgets/hotel_content_section.dart';
 import 'package:safarni/features/hotel_about/presentation/view/widgets/hotel_image_cursor.dart';
+import 'package:safarni/features/hotel_about/presentation/cubit/room_detail_cubit.dart';
 
 class HotelAboutPage extends StatefulWidget {
   static const routeName = '/hotel-about-screen';
 
+  final int? roomId;
   final String roomName;
   final String price;
   final String imageUrl;
@@ -17,6 +21,7 @@ class HotelAboutPage extends StatefulWidget {
 
   const HotelAboutPage({
     super.key,
+    this.roomId,
     required this.roomName,
     required this.price,
     required this.imageUrl,
@@ -117,30 +122,98 @@ class _HotelAboutPageState extends State<HotelAboutPage> {
       Assets.assetsImagesHotel3,
     ];
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(flex: 2, child: HotelImageCarousel(images: galleryImages)),
-          Expanded(
-            flex: 3,
-            child: HotelContentSection(
-              roomName: widget.roomName,
-              address: widget.address,
-              rating: widget.rating,
-              reviewsCount: widget.reviewsCount,
-              price: widget.price,
-              selectedTabIndex: _selectedTabIndex,
-              onTabChanged: (index) {
-                setState(() {
-                  _selectedTabIndex = index;
-                });
-              },
-              selectedImages: _selectedImages,
-              onPickImage: _pickImage,
-              onRemoveImage: _removeImage,
-            ),
-          ),
-        ],
+    return BlocProvider(
+      create: (context) =>
+          RoomDetailCubit(getIt())..getRoomDetails(widget.roomId ?? 1),
+      child: Scaffold(
+        body: BlocBuilder<RoomDetailCubit, RoomDetailState>(
+          builder: (context, state) {
+            if (state is RoomDetailLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is RoomDetailError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error, size: 64, color: Colors.red),
+                    SizedBox(height: 16),
+                    Text('Error: ${state.message}'),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<RoomDetailCubit>().getRoomDetails(
+                          widget.roomId ?? 1,
+                        );
+                      },
+                      child: Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            } else if (state is RoomDetailSuccess) {
+              final roomDetail = state.roomDetail;
+              return Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: HotelImageCarousel(
+                      images: roomDetail.image.isNotEmpty
+                          ? [roomDetail.image] + galleryImages
+                          : galleryImages,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: HotelContentSection(
+                      roomName: "Room_${roomDetail.id}",
+                      address: widget.address,
+                      rating: roomDetail.averageRating,
+                      reviewsCount: roomDetail.totalReviews,
+                      price: roomDetail.price,
+                      selectedTabIndex: _selectedTabIndex,
+                      onTabChanged: (index) {
+                        setState(() {
+                          _selectedTabIndex = index;
+                        });
+                      },
+                      selectedImages: _selectedImages,
+                      onPickImage: _pickImage,
+                      onRemoveImage: _removeImage,
+                      roomDetail: roomDetail, // Pass room details
+                    ),
+                  ),
+                ],
+              );
+            }
+            return Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: HotelImageCarousel(images: galleryImages),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: HotelContentSection(
+                    roomName: widget.roomName,
+                    address: widget.address,
+                    rating: widget.rating,
+                    reviewsCount: widget.reviewsCount,
+                    price: widget.price,
+                    selectedTabIndex: _selectedTabIndex,
+                    onTabChanged: (index) {
+                      setState(() {
+                        _selectedTabIndex = index;
+                      });
+                    },
+                    selectedImages: _selectedImages,
+                    onPickImage: _pickImage,
+                    onRemoveImage: _removeImage,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
