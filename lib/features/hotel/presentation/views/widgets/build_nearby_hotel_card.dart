@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
 
 class BuildNearbyHotelCard extends StatelessWidget {
+  final int hotelId; // ⭐ إضافة hotel ID
   final String imageUrl;
   final String name;
   final String location;
   final String discount;
   final double rating;
+
   const BuildNearbyHotelCard({
     super.key,
+    required this.hotelId, // ⭐ إضافة hotel ID
     required this.imageUrl,
     required this.name,
     required this.location,
@@ -23,7 +26,13 @@ class BuildNearbyHotelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, HotelAboutPage.routeName);
+        print('🎯 BuildRecommendationCard - Navigating with hotel ID: $hotelId');
+        // ⭐ التنقل إلى شاشة الغرف المتاحة مع تمرير hotel ID
+        Navigator.pushNamed(
+          context,
+          AvailableRoomsScreen.routeName,
+          arguments: hotelId, // تمرير hotel ID
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -44,11 +53,44 @@ class BuildNearbyHotelCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
+                  child: Image.network(
                     imageUrl,
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.grey[200],
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.grey[400],
+                          size: 30,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -79,10 +121,12 @@ class BuildNearbyHotelCard extends StatelessWidget {
                     children: [
                       Image.asset(Assets.assetsImagesLocation, width: 24),
                       horizontalSpace(4),
-                      Text(
-                        location,
-                        style: TextStyles.font14DarkGrayNormal,
-                        overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        child: Text(
+                          location,
+                          style: TextStyles.font14DarkGrayNormal,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

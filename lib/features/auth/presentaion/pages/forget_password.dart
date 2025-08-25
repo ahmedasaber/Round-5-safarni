@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import '../../../../core/shared_widgets/custom_button.dart';
+import '../widget/button.dart';
+import '../widget/custom_text_field.dart';
+
+
+import 'Verify Code.dart';
+
+class ForgetPasswordPage extends StatelessWidget {
+  const ForgetPasswordPage({super.key});
+  static const routeName = '/forgetPassword-screen';
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
+
+    final emailController = TextEditingController();
+
+    return SafeArea(
+      child: Scaffold(
+
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+          child: Column(
+            children: [SizedBox(height: height * 0.08),
+           Image.asset("assets/images/key.png"),
+              SizedBox(height: height * 0.05),
+              Text(
+                "Forget the Password",
+                style: TextStyle(
+                  fontSize: width * 0.05,
+                  fontWeight: FontWeight.bold,)),SizedBox(height: height * 0.05),
+              Text(
+                "Please enter your email to reset your password",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: width * 0.035,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              SizedBox(height: height * 0.05),
+
+              CustomTextField(
+                hint: "Email",
+                controller: emailController,
+              ),
+
+              SizedBox(height: height * 0.05),
+
+              CustomButton(
+                text: "Reset Password",
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    VerifyCodePage.routeName,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

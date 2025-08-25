@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/widgets/custom_app_bar.dart';
+import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
 import 'package:safarni/features/home/presentation/views/widgets/favorite-item.dart';
+import 'package:safarni/features/internal_tour/presentation/views/pages/destination_page.dart';
 
+// ignore: must_be_immutable
 class FavoriteViewBody extends StatelessWidget {
    FavoriteViewBody({
     super.key,
@@ -22,7 +26,10 @@ class FavoriteViewBody extends StatelessWidget {
         padding: EdgeInsets.only(top: 16),
         itemCount: list.length,
         itemBuilder: (context, i){
-          return list[i];
+          return GestureDetector(
+            onTap:(){
+              context.pushNamed(DestinationView.routeName);
+            },child: list[i]);
         }
       ),
     );

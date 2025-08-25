@@ -8,6 +8,7 @@ class HotelBottomSection extends StatelessWidget {
   final String? address;
   final double? rating;
   final int? reviewsCount;
+  final int? roomId;
 
   const HotelBottomSection({
     super.key,
@@ -16,15 +17,26 @@ class HotelBottomSection extends StatelessWidget {
     this.address,
     this.rating,
     this.reviewsCount,
+    this.roomId,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Print room ID for debugging
+    print('💰 HotelBottomSection - Room ID: $roomId');
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         HotelPriceInfo(price: price),
-        HotelBookButton(price: '\$$price',),
+        HotelBookButton(
+          price: price, // إصلاح هنا - كان فيه '\$price' غلط
+          hotelName: hotelName,
+          address: address,
+          rating: rating,
+          reviewsCount: reviewsCount,
+          roomId: roomId, // مرر الـ room ID
+        ),
       ],
     );
   }

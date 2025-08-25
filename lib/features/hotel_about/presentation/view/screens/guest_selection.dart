@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
 import 'package:safarni/core/helpers/spacing.dart';
+import 'package:safarni/core/services/hotel_api_services.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
+import 'package:safarni/features/hotel_about/data/model/booking_data_model.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
 
 // Guest Selection Modal Widget
 class GuestSelectionModal extends StatefulWidget {
-  const GuestSelectionModal({super.key});
+  final BookingData bookingData;
+
+  const GuestSelectionModal({super.key, required this.bookingData});
 
   @override
   State<GuestSelectionModal> createState() => _GuestSelectionModalState();
@@ -13,8 +19,11 @@ class GuestSelectionModal extends StatefulWidget {
 
 class _GuestSelectionModalState extends State<GuestSelectionModal> {
   int adultsCount = 1;
-  int childrenCount = 1;
-  int infantsCount = 1;
+  int childrenCount = 0;
+  int infantsCount = 0;
+  bool isLoading = false;
+
+  final HotelApiService _hotelApiService = getIt<HotelApiService>();
 
   Widget _buildGuestCounter({
     required String title,
@@ -84,6 +93,107 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
     );
   }
 
+  Future<void> _completeBooking() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Validate room ID
+      if (widget.bookingData.roomId == null) {
+        throw Exception('Room ID is required for booking');
+      }
+
+      // Create booking request
+      final bookingRequest = BookingRequest(
+        userId:
+            17, // Replace with actual user ID from SharedPreferences or auth state
+        roomId: widget.bookingData.roomId!,
+        checkInDate: widget.bookingData.checkInDate,
+        checkOutDate: widget.bookingData.checkOutDate,
+        adultsCount: adultsCount,
+        childrenCount: childrenCount,
+        infantsCount: infantsCount,
+        note: widget.bookingData.note,
+      );
+
+      // Print booking request for debugging
+      print('🚀 Booking Request Data:');
+      print('  - User ID: ${bookingRequest.userId}');
+      print('  - Room ID: ${bookingRequest.roomId}');
+      print('  - Check In: ${bookingRequest.checkInDate}');
+      print('  - Check Out: ${bookingRequest.checkOutDate}');
+      print('  - Adults: ${bookingRequest.adultsCount}');
+      print('  - Children: ${bookingRequest.childrenCount}');
+      print('  - Infants: ${bookingRequest.infantsCount}');
+      print('  - Note: ${bookingRequest.note ?? 'No note'}');
+      print('  - JSON: ${bookingRequest.toJson()}');
+
+      // Call the booking API
+      final response = await _hotelApiService.bookRoom(bookingRequest);
+
+      // Show success message
+      if (mounted) {
+        Navigator.pushNamed(context, PaymentMethodView.routeName);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Room booked successfully! Booking ID: ${response.data.id}',
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      print('💥 Booking Error Details: $e');
+
+      // Show error message with more details
+      String errorMessage = 'Booking failed: Unknown error';
+
+      if (e.toString().contains('500')) {
+        errorMessage =
+            'Server error occurred. Please try again later or contact support.';
+      } else if (e.toString().contains('Network error')) {
+        errorMessage =
+            'Network connection problem. Please check your internet connection.';
+      } else if (e.toString().contains('Room ID is required')) {
+        errorMessage = 'Room information is missing. Please try again.';
+      } else {
+        // Extract meaningful error message
+        final errorString = e.toString();
+        if (errorString.contains('Exception: ')) {
+          errorMessage = errorString.split('Exception: ').last;
+        } else {
+          errorMessage = errorString;
+        }
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: () => _completeBooking(),
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -110,6 +220,21 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
               child: Column(
                 children: [
                   verticalSpace(20),
+
+                  // Debug info (remove in production)
+                  if (widget.bookingData.roomId != null)
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      margin: EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Room ID: ${widget.bookingData.roomId}\nCheck-in: ${widget.bookingData.checkInDate}\nCheck-out: ${widget.bookingData.checkOutDate}',
+                        style: TextStyle(fontSize: 12, color: Colors.blue[800]),
+                      ),
+                    ),
 
                   // Adults Counter
                   _buildGuestCounter(
@@ -174,15 +299,13 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
             ),
           ),
 
-          // Check Out Button
+          // Complete Booking Button
           Container(
             padding: EdgeInsets.all(20),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: isLoading ? null : _completeBooking,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.darkBlue,
                   foregroundColor: Colors.white,
@@ -192,10 +315,24 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
                   ),
                   elevation: 0,
                 ),
-                child: Text(
-                  'Check Out',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
+                child: isLoading
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        'Complete Booking',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
             ),
           ),
@@ -207,11 +344,11 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
 }
 
 // Function to show guest selection modal
-void showGuestSelectionModal(BuildContext context) {
+void showGuestSelectionModal(BuildContext context, BookingData bookingData) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => GuestSelectionModal(),
+    builder: (context) => GuestSelectionModal(bookingData: bookingData),
   );
 }
