@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 
@@ -17,6 +19,7 @@ class DestinationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("destination page ${tourModel.toJson().toString()}");
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

@@ -26,7 +26,7 @@ class _CardResultItemState extends State<CardResultItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        context.pushNamed(DestinationView.routeName);
+        context.pushNamed(DestinationView.routeName,arguments: widget.tourModel);
       },
       child: Card(
         color: Colors.white,

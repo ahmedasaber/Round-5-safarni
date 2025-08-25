@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:safarni/core/helpers/extentions.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/core/widgets/custom_app_bar.dart';
-import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import 'package:safarni/features/search/presentation/cubit/search_cubit.dart';
 import 'package:safarni/features/search/presentation/view/widgets/card_result_item.dart';
@@ -24,7 +22,6 @@ class _ResultViewBodyState extends State<ResultViewBody> {
     context.read<SearchCubit>().searchTours(widget.query);
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +65,8 @@ class _ResultViewBodyState extends State<ResultViewBody> {
                         itemCount: state.toursEntity.length,
                         shrinkWrap: true,
                         itemBuilder: (context, i){
-                          TourModel tour = TourModel.fromEntity(state.toursEntity[i]);
-                          return GestureDetector(
-                            onTap: (){
-                              context.pushNamed(DestinationView.routeName,arguments: tour);
-                            },
-                            child: CardResultItem(
-                              tourModel: tour,
-                            ),
+                          return CardResultItem(
+                            tourModel: TourModel.fromEntity(state.toursEntity[i]),
                           );
                         }
                       ),
