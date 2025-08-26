@@ -9,4 +9,5 @@ abstract class ProfileRemoteDataSource {
     required String confirmPassword,
   });
   Future<void> deleteAccount();
+  Future<void> logout();
 }

@@ -13,6 +13,7 @@ import 'package:safarni/features/profile/presentation/views/screens/my_booking_s
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
 import 'package:safarni/features/profile/presentation/views/widgets/build_menu_item.dart';
 import 'package:safarni/features/profile/presentation/views/widgets/profile_photo_widget.dart';
+import 'dart:async';
 
 class ProfileScreen extends StatelessWidget {
   static const routeName = '/profile-screen';
@@ -39,114 +40,171 @@ class ProfileScreenView extends StatefulWidget {
 
 class _ProfileScreenViewState extends State<ProfileScreenView> {
   ProfileUserEntity? currentUser;
+  bool _isNavigating = false;
+  Timer? _navigationTimer;
+
+  @override
+  void dispose() {
+    _navigationTimer?.cancel();
+    super.dispose();
+  }
+
+  // دالة آمنة للملاحة
+  void _safeNavigate(
+    BuildContext context,
+    String routeName, {
+    bool removeAll = false,
+  }) {
+    if (_isNavigating || !mounted) return;
+
+    setState(() => _isNavigating = true);
+
+    // تأخير قصير لتجنب التداخل
+    _navigationTimer = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        try {
+          if (removeAll) {
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pushNamedAndRemoveUntil(routeName, (route) => false);
+          } else {
+            Navigator.of(context).pushNamed(routeName);
+          }
+        } catch (e) {
+          debugPrint('Navigation error: $e');
+        } finally {
+          if (mounted) {
+            setState(() => _isNavigating = false);
+          }
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: BlocConsumer<ProfileCubit, ProfileState>(
-          listener: (context, state) {
-            if (state is ProfileError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state is ProfileLoaded) {
-              setState(() {
-                currentUser = state.user;
-              });
-            } else if (state is ProfileUpdateSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              // إعادة تحميل البيانات بعد التحديث
-              context.read<ProfileCubit>().getUserProfile();
-            } else if (state is ProfileLogoutSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-            } else if (state is ProfileAccountDeleted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.orange,
-                ),
-              );
-              Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (route) => false);
-            }
-          },
-          builder: (context, state) {
-            if (state is ProfileLoading && currentUser == null) {
+    return WillPopScope(
+      onWillPop: () async => !_isNavigating,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              if (_isNavigating) return;
+
+              if (state is ProfileError) {
+                _showMessage(context, state.message, Colors.red);
+              } else if (state is ProfileLoaded) {
+                setState(() => currentUser = state.user);
+              } else if (state is ProfileUpdateSuccess) {
+                _showMessage(context, state.message, Colors.green);
+                context.read<ProfileCubit>().getUserProfile();
+              } else if (state is ProfileLogoutSuccess) {
+                _handleLogoutSuccess(context, state.message);
+              } else if (state is ProfileAccountDeleted) {
+                _handleAccountDeleted(context, state.message);
+              }
+            },
+            builder: (context, state) {
+              if (state is ProfileLoading && currentUser == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (currentUser != null) {
+                return _buildProfileContent(context, currentUser!);
+              }
+
+              if (state is ProfileError) {
+                return _buildErrorContent(context, state.message);
+              }
+
               return const Center(child: CircularProgressIndicator());
-            }
-
-            if (currentUser != null) {
-              return _buildProfileContent(context, currentUser!);
-            }
-
-            if (state is ProfileError) {
-              return _buildErrorContent(context, state.message);
-            }
-
-            return const Center(child: CircularProgressIndicator());
-          },
+            },
+          ),
         ),
       ),
     );
   }
 
+  void _showMessage(BuildContext context, String message, Color color) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _handleLogoutSuccess(BuildContext context, String message) {
+    if (_isNavigating || !mounted) return;
+
+    _showMessage(context, message, Colors.green);
+
+    // إعطاء وقت لعرض الرسالة قبل الانتقال
+    Timer(const Duration(seconds: 1), () {
+      _safeNavigate(context, '/welcome', removeAll: true);
+    });
+  }
+
+  void _handleAccountDeleted(BuildContext context, String message) {
+    if (_isNavigating || !mounted) return;
+
+    _showMessage(context, message, Colors.orange);
+
+    // إعطاء وقت لعرض الرسالة قبل الانتقال
+    Timer(const Duration(seconds: 1), () {
+      _safeNavigate(context, '/welcome', removeAll: true);
+    });
+  }
+
   Widget _buildProfileContent(BuildContext context, ProfileUserEntity user) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      child: Column(
-        children: [
-          verticalSpace(40),
-          GestureDetector(
-            onTap: () => _showImagePickerDialog(context),
-            child: ProfilePhotoWidget(
-              imageUrl: user.image,
-              userName: user.name,
+    return SingleChildScrollView(
+      // Added to prevent overflow
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Column(
+          children: [
+            verticalSpace(40),
+            GestureDetector(
+              onTap: () => _showImagePickerDialog(context),
+              child: ProfilePhotoWidget(
+                imageUrl: user.image,
+                userName: user.name,
+              ),
             ),
-          ),
-          verticalSpace(16),
-          Text(
-            user.name,
-            style: TextStyles.font16GrayLighterSemiBold,
-          ),
-          verticalSpace(8),
-          Text(
-            user.email,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xff6B6E80),
-              fontWeight: FontWeight.w500,
+            verticalSpace(16),
+            Text(user.name, style: TextStyles.font16GrayLighterSemiBold),
+            verticalSpace(8),
+            Text(
+              user.email,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xff6B6E80),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          verticalSpace(32),
-          Expanded(
-            child: Column(
+            verticalSpace(32),
+            // Changed from Expanded to Column to prevent overflow
+            Column(
               children: [
                 BuildMenuItem(
                   image: Assets.assetsImagesUser,
                   title: 'Personal info',
                   onTap: () async {
+                    if (_isNavigating) return;
+
                     final result = await Navigator.pushNamed(
                       context,
                       PersonalInformationScreen.routeName,
                       arguments: user,
                     );
-                    // إذا تم التحديث، أعد تحميل البيانات
-                    if (result == true) {
+
+                    if (result == true && mounted) {
                       context.read<ProfileCubit>().getUserProfile();
                     }
                   },
@@ -155,11 +213,17 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                 BuildMenuItem(
                   image: Assets.assetsImagesSecurity,
                   title: 'Account & Security',
-                  onTap: () {
-                    Navigator.pushNamed(
+                  onTap: () async {
+                    if (_isNavigating) return;
+
+                    final result = await Navigator.pushNamed(
                       context,
                       AccountSecurityScreen.routeName,
                     );
+
+                    if (result == 'account_deleted' && mounted) {
+                      _safeNavigate(context, '/welcome', removeAll: true);
+                    }
                   },
                   showArrow: true,
                 ),
@@ -167,6 +231,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   image: Assets.assetsImagesBooking,
                   title: 'My Booking',
                   onTap: () {
+                    if (_isNavigating) return;
                     Navigator.pushNamed(context, MyBookingScreen.routeName);
                   },
                   showArrow: true,
@@ -175,6 +240,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   image: Assets.assetsImagesLanguage,
                   title: 'App Language',
                   onTap: () {
+                    if (_isNavigating) return;
                     // Navigate to language settings
                   },
                   showArrow: true,
@@ -185,13 +251,14 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                   textColor: Colors.red,
                   showArrow: false,
                   onTap: () {
+                    if (_isNavigating) return;
                     _showLogoutDialog(context);
                   },
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -215,9 +282,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
           ),
           verticalSpace(24),
           ElevatedButton(
-            onPressed: () {
-              context.read<ProfileCubit>().getUserProfile();
-            },
+            onPressed: () => context.read<ProfileCubit>().getUserProfile(),
             child: const Text('Try Again'),
           ),
         ],
@@ -226,6 +291,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
   }
 
   void _showImagePickerDialog(BuildContext context) {
+    if (!mounted || _isNavigating) return;
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -309,67 +376,120 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
   }
 
   void _showLogoutDialog(BuildContext context) {
+    if (!mounted || _isNavigating) return;
+
+    // Get the ProfileCubit from the main context
+    final profileCubit = context.read<ProfileCubit>();
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Container(
-            width: double.infinity,
-            height: 170,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
+      builder: (BuildContext dialogContext) {
+        return WillPopScope(
+          onWillPop: () async => !_isNavigating,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Do You Want To Register The Exit Already ?',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.font18DarkBlackNormal,
-                ),
-                verticalSpace(10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                      ),
-                      child: Text(
-                        'NO',
-                        style: TextStyles.font18DarkBlackNormal,
-                      ),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.logout, color: Colors.orange, size: 48),
+                  verticalSpace(16),
+                  Text('تسجيل الخروج', style: TextStyles.font18DarkBlackNormal),
+                  verticalSpace(12),
+                  const Text(
+                    'هل أنت متأكد من أنك تريد تسجيل الخروج؟',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      height: 1.4,
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        // إضافة منطق الخروج هنا
-                        // context.read<ProfileCubit>().logout();
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                      ),
-                      child: const Text(
-                        'Yes',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.red,
+                  ),
+                  verticalSpace(24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: _isNavigating
+                              ? null
+                              : () => Navigator.of(dialogContext).pop(),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            backgroundColor: Colors.grey[100],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'إلغاء',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: BlocConsumer<ProfileCubit, ProfileState>(
+                          bloc: profileCubit, // Use the specific cubit instance
+                          listener: (context, state) {
+                            if ((state is ProfileLogoutSuccess ||
+                                    state is ProfileError) &&
+                                Navigator.of(dialogContext).canPop()) {
+                              Navigator.of(dialogContext).pop();
+                            }
+                          },
+                          builder: (context, state) {
+                            return TextButton(
+                              onPressed:
+                                  (state is ProfileLoading || _isNavigating)
+                                  ? null
+                                  : () => profileCubit.logout(),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: state is ProfileLoading
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'تسجيل الخروج',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

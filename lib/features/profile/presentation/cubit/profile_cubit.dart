@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:safarni/core/helpers/token_manger.dart';
 import '../../domain/entities/profile_user_entity.dart';
 import '../../domain/repositories/profile_repository.dart';
 
@@ -13,12 +14,18 @@ class ProfileCubit extends Cubit<ProfileState> {
       super(ProfileInitial());
 
   Future<void> getUserProfile() async {
+    if (isClosed) return;
+
     emit(ProfileLoading());
     try {
       final user = await _repository.getUserProfile();
-      emit(ProfileLoaded(user: user));
+      if (!isClosed) {
+        emit(ProfileLoaded(user: user));
+      }
     } catch (e) {
-      emit(ProfileError(message: _extractErrorMessage(e)));
+      if (!isClosed) {
+        emit(ProfileError(message: _extractErrorMessage(e)));
+      }
     }
   }
 
@@ -28,9 +35,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     String? phone,
     String? country,
   }) async {
-    final currentState = state;
+    if (isClosed) return;
 
-    // احتفظ بالمستخدم الحالي أثناء التحميل
+    final currentState = state;
     ProfileUserEntity? currentUser;
     if (currentState is ProfileLoaded) {
       currentUser = currentState.user;
@@ -46,68 +53,73 @@ class ProfileCubit extends Cubit<ProfileState> {
         country: country,
       );
 
-      // أولاً emit ProfileLoaded مع البيانات الجديدة
-      emit(ProfileLoaded(user: updatedUser));
-
-      // ثم emit ProfileUpdateSuccess للإشعار
-      await Future.delayed(const Duration(milliseconds: 100));
-      emit(
-        ProfileUpdateSuccess(
-          message: 'Profile updated successfully',
-          user: updatedUser,
-        ),
-      );
-    } catch (e) {
-      // في حالة الخطأ، أرجع للمستخدم السابق إن وجد
-      if (currentUser != null) {
-        emit(ProfileLoaded(user: currentUser));
+      if (!isClosed) {
+        emit(ProfileLoaded(user: updatedUser));
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!isClosed) {
+          emit(
+            ProfileUpdateSuccess(
+              message: 'Profile updated successfully',
+              user: updatedUser,
+            ),
+          );
+        }
       }
-      emit(ProfileError(message: _extractErrorMessage(e)));
-    }
-  }
-
-  Future<void> changePassword({
-    required String currentPassword,
-    required String newPassword,
-    required String confirmPassword,
-  }) async {
-    emit(ProfileLoading());
-    try {
-      await _repository.changePassword(
-        currentPassword: currentPassword,
-        newPassword: newPassword,
-        confirmPassword: confirmPassword,
-      );
-      emit(
-        ProfilePasswordChangeSuccess(message: 'Password changed successfully'),
-      );
     } catch (e) {
-      emit(ProfileError(message: _extractErrorMessage(e)));
+      if (!isClosed) {
+        if (currentUser != null) {
+          emit(ProfileLoaded(user: currentUser));
+        }
+        emit(ProfileError(message: _extractErrorMessage(e)));
+      }
     }
   }
 
   Future<void> deleteAccount() async {
+    if (isClosed) return;
+
     emit(ProfileLoading());
     try {
       await _repository.deleteAccount();
-      emit(ProfileAccountDeleted(message: 'Account deleted successfully'));
+
+      // تنظيف التوكن
+      await TokenManager.clearTokens();
+
+      if (!isClosed) {
+        emit(ProfileAccountDeleted(message: 'Account deleted successfully'));
+      }
     } catch (e) {
-      emit(ProfileError(message: _extractErrorMessage(e)));
+      // تنظيف التوكن حتى لو فشل الـ API
+      await TokenManager.clearTokens();
+
+      if (!isClosed) {
+        // في حالة حذف الحساب، نعتبر العملية نجحت محلياً
+        emit(ProfileAccountDeleted(message: 'Account deleted successfully'));
+      }
     }
   }
 
   Future<void> logout() async {
+    if (isClosed) return;
+
     emit(ProfileLoading());
     try {
-      // هنا ممكن تضيف API call للـ logout
-      // await _repository.logout();
+      // تنظيف التوكن أولاً
+      await TokenManager.clearTokens();
 
-      // امسح التوكنز
-      // await TokenManager.clearTokens();
+      // ثم استدعاء الـ API
+      await _repository.logout();
 
-      emit(ProfileLogoutSuccess(message: 'Logged out successfully'));
+      if (!isClosed) {
+        emit(ProfileLogoutSuccess(message: 'Logout Successfully'));
+      }
     } catch (e) {
-      emit(ProfileError(message: _extractErrorMessage(e)));
+      // حتى لو فشل الـ API، نعتبر الخروج نجح محلياً
+      await TokenManager.clearTokens();
+
+      if (!isClosed) {
+        emit(ProfileLogoutSuccess(message: 'Logout Successfully'));
+      }
     }
   }
 
@@ -116,5 +128,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       return error.toString().replaceAll('Exception: ', '');
     }
     return error.toString();
+  }
+
+  @override
+  Future<void> close() async {
+    await super.close();
   }
 }

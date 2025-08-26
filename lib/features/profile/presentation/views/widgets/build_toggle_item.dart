@@ -4,26 +4,31 @@ import 'package:safarni/core/utils/app_styles.dart';
 class BuildToggleItem extends StatelessWidget {
   final String title;
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged; // made nullable to handle disabled state
   const BuildToggleItem({
     super.key,
     required this.title,
     required this.value,
-    required this.onChanged,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyles.font14DarkBlackNormal),
+          Text(
+            title,
+            style: TextStyles.font14DarkBlackNormal.copyWith(
+              color: onChanged == null ? Colors.grey : Colors.black,
+            ),
+          ),
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Colors.blue,
+            activeColor: onChanged == null ? Colors.grey : Colors.blue,
             inactiveThumbColor: Colors.grey[300],
             inactiveTrackColor: Colors.grey[200],
           ),

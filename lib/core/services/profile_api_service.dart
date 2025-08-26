@@ -6,7 +6,6 @@ class ProfileApiService {
 
   ProfileApiService(this._dio);
 
-  // Get user profile
   Future<Map<String, dynamic>> getUserProfile() async {
     try {
       final response = await _dio.get(ApiConstants.getUserProfile);
@@ -16,7 +15,6 @@ class ProfileApiService {
     }
   }
 
-  // Update user profile
   Future<Map<String, dynamic>> updateUserProfile(
     Map<String, dynamic> profileData,
   ) async {
@@ -31,8 +29,6 @@ class ProfileApiService {
     }
   }
 
-
-  // Change password
   Future<Map<String, dynamic>> changePassword({
     required String currentPassword,
     required String newPassword,
@@ -53,10 +49,18 @@ class ProfileApiService {
     }
   }
 
-  // Delete account
   Future<Map<String, dynamic>> deleteAccount() async {
     try {
       final response = await _dio.delete(ApiConstants.deleteAccount);
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> logout() async {
+    try {
+      final response = await _dio.post(ApiConstants.logout);
       return response.data;
     } catch (e) {
       rethrow;

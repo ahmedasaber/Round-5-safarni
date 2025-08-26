@@ -16,6 +16,9 @@ class ApiConstants {
   static const String changePassword = '${baseUrl}profile/update-password';
   static const String deleteAccount = '${baseUrl}profile/delete-account';
   
+  // Auth API endpoints - NEW
+  static const String logout = '${baseUrl}logout';
+  
   static String getHotelRooms(int hotelId) {
     return '${baseUrl}hotel/rooms/$hotelId';
   }

@@ -14,4 +14,5 @@ abstract class ProfileRepository {
     required String confirmPassword,
   });
   Future<void> deleteAccount();
+  Future<void> logout();
 }

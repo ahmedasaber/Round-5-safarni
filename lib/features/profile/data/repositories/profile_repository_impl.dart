@@ -40,6 +40,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       rethrow;
     }
   }
+
   @override
   Future<void> changePassword({
     required String currentPassword,
@@ -66,6 +67,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
     }
   }
 
+  @override
+  Future<void> logout() async {
+    try {
+      await _remoteDataSource.logout();
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   ProfileUserEntity _modelToEntity(ProfileUserModel model) {
     return ProfileUserEntity(
