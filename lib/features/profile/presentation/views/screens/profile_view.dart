@@ -49,7 +49,6 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
     super.dispose();
   }
 
-  // دالة آمنة للملاحة
   void _safeNavigate(
     BuildContext context,
     String routeName, {
@@ -59,7 +58,6 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
 
     setState(() => _isNavigating = true);
 
-    // تأخير قصير لتجنب التداخل
     _navigationTimer = Timer(const Duration(milliseconds: 300), () {
       if (mounted) {
         try {
@@ -145,9 +143,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
 
     _showMessage(context, message, Colors.green);
 
-    // إعطاء وقت لعرض الرسالة قبل الانتقال
     Timer(const Duration(seconds: 1), () {
-      _safeNavigate(context, '/welcome', removeAll: true);
+      _safeNavigate(context, '/splash-screen', removeAll: true);
     });
   }
 
@@ -156,9 +153,8 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
 
     _showMessage(context, message, Colors.orange);
 
-    // إعطاء وقت لعرض الرسالة قبل الانتقال
     Timer(const Duration(seconds: 1), () {
-      _safeNavigate(context, '/welcome', removeAll: true);
+      _safeNavigate(context, '/splash-screen', removeAll: true);
     });
   }
 
@@ -222,7 +218,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                     );
 
                     if (result == 'account_deleted' && mounted) {
-                      _safeNavigate(context, '/welcome', removeAll: true);
+                      _safeNavigate(context, '/splash-screen', removeAll: true);
                     }
                   },
                   showArrow: true,
@@ -403,10 +399,10 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                 children: [
                   const Icon(Icons.logout, color: Colors.orange, size: 48),
                   verticalSpace(16),
-                  Text('تسجيل الخروج', style: TextStyles.font18DarkBlackNormal),
+                  Text('Logout', style: TextStyles.font18DarkBlackNormal),
                   verticalSpace(12),
                   const Text(
-                    'هل أنت متأكد من أنك تريد تسجيل الخروج؟',
+                    'Are you sure you want to log out? You will be logged out of all devices.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -430,7 +426,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                             ),
                           ),
                           child: const Text(
-                            'إلغاء',
+                            'Cancel',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -475,7 +471,7 @@ class _ProfileScreenViewState extends State<ProfileScreenView> {
                                       ),
                                     )
                                   : const Text(
-                                      'تسجيل الخروج',
+                                      'Logout',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
