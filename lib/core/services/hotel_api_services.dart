@@ -13,16 +13,12 @@ class HotelApiService {
 
   Future<HotelsResponseModel> searchHotels(String query) async {
     try {
-      print('🔍 Searching hotels with query: $query');
-      print('🚀 Search URL: ${ApiConstants.searchHotels}?key=$query');
 
       final response = await _dio.get(
         ApiConstants.searchHotels,
         queryParameters: {'key': query},
       );
 
-      print('✅ Search Response status: ${response.statusCode}');
-      print('📊 Search Response data: ${response.data}');
 
       if (response.statusCode == 200 && response.data != null) {
         return HotelsResponseModel.fromJson(response.data);
@@ -32,13 +28,8 @@ class HotelApiService {
         );
       }
     } on DioException catch (e) {
-      print('❌ Dio error in searchHotels: ${e.message}');
-      print('🔍 Error type: ${e.type}');
-      print('📋 Error response: ${e.response?.data}');
       throw Exception('Network error: ${e.message}');
-    } catch (e, stackTrace) {
-      print('💥 General error in searchHotels: $e');
-      print('📍 Stack trace: $stackTrace');
+    } catch (e) {
       throw Exception('Failed to search hotels: $e');
     }
   }
@@ -46,7 +37,6 @@ class HotelApiService {
   // Add room search method
   Future<RoomsResponseModel> searchRooms(String query, {int? hotelId}) async {
     try {
-      print('🔍 Searching rooms with query: $query, hotelId: $hotelId');
 
       String endpoint = ApiConstants.searchRooms;
       Map<String, dynamic> queryParameters = {'key': query};
@@ -56,16 +46,12 @@ class HotelApiService {
         queryParameters['hotel_id'] = hotelId;
       }
 
-      print('🚀 Room search URL: $endpoint');
-      print('📋 Query parameters: $queryParameters');
 
       final response = await _dio.get(
         endpoint,
         queryParameters: queryParameters,
       );
 
-      print('✅ Room search response status: ${response.statusCode}');
-      print('📊 Room search response data: ${response.data}');
 
       if (response.statusCode == 200 && response.data != null) {
         return RoomsResponseModel.fromJson(response.data);
@@ -75,24 +61,16 @@ class HotelApiService {
         );
       }
     } on DioException catch (e) {
-      print('❌ Dio error in searchRooms: ${e.message}');
-      print('🔍 Error type: ${e.type}');
-      print('📋 Error response: ${e.response?.data}');
       throw Exception('Network error: ${e.message}');
-    } catch (e, stackTrace) {
-      print('💥 General error in searchRooms: $e');
-      print('📍 Stack trace: $stackTrace');
+    } catch (e) {
       throw Exception('Failed to search rooms: $e');
     }
   }
 
   Future<HotelsResponseModel> getAllHotels() async {
     try {
-      print('🚀 Fetching all hotels from: ${ApiConstants.getAllHotels}');
       final response = await _dio.get(ApiConstants.getAllHotels);
 
-      print('✅ Response status: ${response.statusCode}');
-      print('📝 Response data type: ${response.data.runtimeType}');
 
       if (response.statusCode == 200 && response.data != null) {
         return HotelsResponseModel.fromJson(response.data);
@@ -100,22 +78,16 @@ class HotelApiService {
         throw Exception('Invalid response: Status ${response.statusCode}');
       }
     } on DioException catch (e) {
-      print('❌ Dio error in getAllHotels: ${e.message}');
-      print('🔍 Error type: ${e.type}');
-      print('📋 Error response: ${e.response?.data}');
       throw Exception('Network error: ${e.message}');
     } catch (e) {
-      print('💥 General error in getAllHotels: $e');
       throw Exception('Failed to fetch hotels: $e');
     }
   }
 
   Future<HotelsResponseModel> getNearbyHotels() async {
     try {
-      print('🚀 Fetching nearby hotels from: ${ApiConstants.getNearbyHotels}');
       final response = await _dio.get(ApiConstants.getNearbyHotels);
 
-      print('✅ Response status: ${response.statusCode}');
 
       if (response.statusCode == 200 && response.data != null) {
         return HotelsResponseModel.fromJson(response.data);
@@ -123,22 +95,16 @@ class HotelApiService {
         throw Exception('Invalid response: Status ${response.statusCode}');
       }
     } on DioException catch (e) {
-      print('❌ Dio error in getNearbyHotels: ${e.message}');
       throw Exception('Network error: ${e.message}');
     } catch (e) {
-      print('💥 General error in getNearbyHotels: $e');
       throw Exception('Failed to fetch nearby hotels: $e');
     }
   }
 
   Future<HotelsResponseModel> getRecommendedHotels() async {
     try {
-      print(
-        '🚀 Fetching recommended hotels from: ${ApiConstants.getRecommendedHotels}',
-      );
       final response = await _dio.get(ApiConstants.getRecommendedHotels);
 
-      print('✅ Response status: ${response.statusCode}');
 
       if (response.statusCode == 200 && response.data != null) {
         return HotelsResponseModel.fromJson(response.data);
@@ -146,10 +112,8 @@ class HotelApiService {
         throw Exception('Invalid response: Status ${response.statusCode}');
       }
     } on DioException catch (e) {
-      print('❌ Dio error in getRecommendedHotels: ${e.message}');
       throw Exception('Network error: ${e.message}');
     } catch (e) {
-      print('💥 General error in getRecommendedHotels: $e');
       throw Exception('Failed to fetch recommended hotels: $e');
     }
   }
@@ -158,101 +122,61 @@ class HotelApiService {
     try {
       String endpoint;
 
-      print(
-        '🎯 HotelApiService.getAvailableRooms called with hotelId: $hotelId',
-      );
 
       if (hotelId != null) {
         endpoint = ApiConstants.getHotelRooms(hotelId);
-        print('🏨 Hotel ID provided: $hotelId');
-        print('🔗 Using specific hotel endpoint: $endpoint');
       } else {
         endpoint = ApiConstants.getAvailableRooms;
-        print('🏨 No hotel ID provided - fetching all rooms');
-        print('🔗 Using general rooms endpoint: $endpoint');
       }
 
-      print('📅 Current date: ${DateTime.now().toString()}');
-      print('🚀 About to call API endpoint: $endpoint');
 
       final response = await _dio.get(endpoint);
 
-      print('✅ Rooms Response status: ${response.statusCode}');
-      print('🌐 Actual request URL: ${response.requestOptions.uri}');
-      print('📊 Raw response data: ${response.data}');
 
       if (response.data != null) {
-        print('🔍 Response structure:');
-        print('  - Status: ${response.data['status']}');
-        print('  - Message: ${response.data['message']}');
-        print('  - Data type: ${response.data['data'].runtimeType}');
-        print('  - Data length: ${response.data['data']?.length ?? 0}');
 
         if (response.data['data'] is List) {
           final rooms = response.data['data'] as List;
-          print('  - Found ${rooms.length} rooms for hotel ID: $hotelId');
           for (int i = 0; i < rooms.length && i < 3; i++) {
-            print('  - Room $i: ${rooms[i]}');
           }
         }
       }
 
       if (response.statusCode == 200 && response.data != null) {
         final roomsResponse = RoomsResponseModel.fromJson(response.data);
-        print(
-          '✅ Successfully parsed ${roomsResponse.data.length} rooms for hotel $hotelId',
-        );
         return roomsResponse;
       } else {
         throw Exception('Invalid response: Status ${response.statusCode}');
       }
     } on DioException catch (e) {
-      print(
-        '❌ Dio error in getAvailableRooms for hotel $hotelId: ${e.message}',
-      );
-      print('🔍 Error type: ${e.type}');
-      print('📋 Error response: ${e.response?.data}');
-      print('🌐 Attempted URL: ${e.requestOptions.uri}');
       throw Exception('Network error: ${e.message}');
-    } catch (e, stackTrace) {
-      print('💥 General error in getAvailableRooms for hotel $hotelId: $e');
-      print('📍 Stack trace: $stackTrace');
+    } catch (e) {
       throw Exception('Failed to fetch available rooms: $e');
     }
   }
 
   Future<RoomDetailResponse> getRoomDetails(int roomId) async {
     try {
-      print('🏨 Fetching room details for room ID: $roomId');
       final response = await _dio.get(
         '${ApiConstants.baseUrl}room/details/$roomId',
       );
 
-      print('✅ Room details response status: ${response.statusCode}');
-      print('📊 Room details raw response: ${response.data}');
 
       if (response.statusCode == 200 && response.data != null) {
         final roomDetailResponse = RoomDetailResponse.fromJson(response.data);
-        print('✅ Successfully parsed room details');
         return roomDetailResponse;
       } else {
         throw Exception('Invalid response: Status ${response.statusCode}');
       }
     } on DioException catch (e) {
-      print('❌ Dio error in getRoomDetails: ${e.message}');
-      print('🔍 Error type: ${e.type}');
-      print('📋 Error response: ${e.response?.data}');
       throw Exception('Network error: ${e.message}');
-    } catch (e, stackTrace) {
-      print('💥 General error in getRoomDetails: $e');
-      print('📍 Stack trace: $stackTrace');
+    } catch (e) {
       throw Exception('Failed to fetch room details: $e');
     }
   }
 
   Future<BookingResponse> bookRoom(BookingRequest bookingRequest) async {
     try {
-      print('🚀 Booking room with data: ${bookingRequest.toJson()}');
 
       final response = await _dio.post(
         '${ApiConstants.baseUrl}booking/room',
@@ -266,12 +190,9 @@ class HotelApiService {
         ),
       );
 
-      print('✅ Booking response status: ${response.statusCode}');
-      print('📊 Booking response data: ${response.data}');
 
       if (response.statusCode == 201 && response.data != null) {
         final bookingResponse = BookingResponse.fromJson(response.data);
-        print('✅ Room booked successfully with ID: ${bookingResponse.data.id}');
         return bookingResponse;
       } else {
         throw Exception(
@@ -279,9 +200,6 @@ class HotelApiService {
         );
       }
     } on DioException catch (e) {
-      print('❌ Dio error in bookRoom: ${e.message}');
-      print('🔍 Error type: ${e.type}');
-      print('📋 Error response: ${e.response?.data}');
 
       String errorMessage = 'Network error occurred';
       if (e.response?.data != null) {
@@ -290,9 +208,7 @@ class HotelApiService {
         }
       }
       throw Exception(errorMessage);
-    } catch (e, stackTrace) {
-      print('💥 General error in bookRoom: $e');
-      print('📍 Stack trace: $stackTrace');
+    } catch (e) {
       throw Exception('Failed to book room: $e');
     }
   }

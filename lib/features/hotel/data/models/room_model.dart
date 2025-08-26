@@ -12,12 +12,10 @@ class RoomModel {
   });
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
-    print('🔍 Parsing room JSON: $json');
 
     try {
       int parsedId = 0;
       final rawId = json['id'];
-      print('Raw ID: $rawId (${rawId.runtimeType})');
 
       if (rawId is int) {
         parsedId = rawId;
@@ -44,7 +42,6 @@ class RoomModel {
       // Safe parsing for price
       double parsedPrice = 0.0;
       final rawPrice = json['price'];
-      print('Raw Price: $rawPrice (${rawPrice.runtimeType})');
 
       if (rawPrice is double) {
         parsedPrice = rawPrice;
@@ -61,12 +58,8 @@ class RoomModel {
         price: parsedPrice,
       );
 
-      print('✅ Successfully parsed room: ${room.id} - ${room.name}');
       return room;
-    } catch (e, stackTrace) {
-      print('❌ Error parsing room: $e');
-      print('Stack trace: $stackTrace');
-      print('JSON data: $json');
+    } catch (e) {
       rethrow;
     }
   }

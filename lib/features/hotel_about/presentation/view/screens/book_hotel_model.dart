@@ -42,7 +42,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
   void initState() {
     super.initState();
     _initializeDates();
-    print('BookHotelModal initialized with Room ID: ${widget.roomId}');
   }
 
   void _initializeDates() {
@@ -166,11 +165,6 @@ class _BookHotelModalState extends State<BookHotelModal> {
     );
 
     // Print booking data for debugging
-    print('BookHotelModal - Creating BookingData:');
-    print('  - Room ID: ${bookingData.roomId}');
-    print('  - Check In: ${bookingData.checkInDate}');
-    print('  - Check Out: ${bookingData.checkOutDate}');
-    print('  - Note: ${bookingData.note ?? 'No note'}');
 
     // Navigate to guest selection with booking data
     Navigator.pop(context); // Close current modal
@@ -432,7 +426,6 @@ void showBookHotelModal(
   required String price,
   int? roomId,
 }) {
-  print('showBookHotelModal called with Room ID: $roomId');
 
   showModalBottomSheet(
     context: context,

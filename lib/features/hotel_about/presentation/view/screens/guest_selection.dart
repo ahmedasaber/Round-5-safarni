@@ -99,7 +99,6 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getInt('user_id') ?? 17; // Default to 17 if not found
     } catch (e) {
-      print('Error getting user ID: $e');
       return 17; // Default user ID
     }
   }
@@ -136,16 +135,6 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
       );
 
       // Print booking request for debugging
-      print('Booking Request Data:');
-      print('  - User ID: ${bookingRequest.userId}');
-      print('  - Room ID: ${bookingRequest.roomId}');
-      print('  - Check In: ${bookingRequest.checkInDate}');
-      print('  - Check Out: ${bookingRequest.checkOutDate}');
-      print('  - Adults: ${bookingRequest.adultsCount}');
-      print('  - Children: ${bookingRequest.childrenCount}');
-      print('  - Infants: ${bookingRequest.infantsCount}');
-      print('  - Note: ${bookingRequest.note ?? 'No note'}');
-      print('  - JSON: ${bookingRequest.toJson()}');
 
       // Call the booking API
       final response = await _hotelApiService.bookRoom(bookingRequest);
@@ -169,7 +158,6 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
         Navigator.pushNamed(context, PaymentMethodView.routeName);
       }
     } catch (e) {
-      print('Booking Error Details: $e');
 
       // Parse error message
       String errorMessage = 'Booking failed: Unknown error';

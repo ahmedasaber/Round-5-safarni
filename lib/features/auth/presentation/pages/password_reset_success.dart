@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/features/auth/presentaion/pages/sign_in.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
+import 'package:safarni/features/auth/presentation/pages/sign_in.dart';
 import '../widget/button.dart';
 
 

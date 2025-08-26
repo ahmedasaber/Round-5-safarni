@@ -15,12 +15,10 @@ class HotelImageCarousel extends StatelessWidget {
           itemBuilder: (context, index) {
             final imageUrl = images[index];
 
-            print('🖼️ Loading image $index: $imageUrl'); // للتشخيص
 
             return _buildImageWidget(imageUrl);
           },
         ),
-        // Back button
         Positioned(
           top: 50,
           left: 20,
@@ -41,7 +39,6 @@ class HotelImageCarousel extends StatelessWidget {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-    // تحقق إذا كانت الصورة من الإنترنت
     if (imageUrl.startsWith('http')) {
       return Image.network(
         imageUrl,
@@ -65,8 +62,6 @@ class HotelImageCarousel extends StatelessWidget {
           );
         },
         errorBuilder: (context, error, stackTrace) {
-          print('❌ Failed to load image: $imageUrl');
-          print('❌ Error details: $error');
 
           return Container(
             color: Colors.grey[100],
@@ -93,14 +88,13 @@ class HotelImageCarousel extends StatelessWidget {
         },
       );
     } else {
-      // صورة محلية من الـ assets
+
       return Image.asset(
         imageUrl,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          print('❌ Failed to load asset: $imageUrl');
 
           return Container(
             color: Colors.grey[200],

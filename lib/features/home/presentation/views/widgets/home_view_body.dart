@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 import 'package:safarni/features/home/presentation/cubit/available%20tours/available_tours_cubit.dart';
 import 'package:safarni/features/home/presentation/cubit/categories/categories_cubit.dart';
 import 'package:safarni/features/home/presentation/cubit/recommendation/recommendations_cubit.dart';

@@ -5,7 +5,7 @@ import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_cubit.dart';
 import 'package:safarni/features/hotel/presentation/cubit/hotel_cubit_state.dart';
-import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/available_rooms_screen.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_nearby_hotel_card.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/build_recommendation_card.dart';
 import 'package:safarni/features/hotel/presentation/views/widgets/search_bar_widget.dart';

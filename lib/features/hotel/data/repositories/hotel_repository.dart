@@ -25,7 +25,6 @@ class HotelRepositoryImpl implements HotelRepository {
 
   @override
   Future<RoomsResponseModel> searchRooms(String query, {int? hotelId}) async {
-    print('📡 Repository calling room search API with query: "$query", hotelId: $hotelId');
     return await _hotelApiService.searchRooms(query, hotelId: hotelId);
   }
 
@@ -46,7 +45,6 @@ class HotelRepositoryImpl implements HotelRepository {
 
   @override
   Future<RoomsResponseModel> getAvailableRooms({int? hotelId}) async {
-    print('📡 Repository calling API with hotel ID: $hotelId');
     return await _hotelApiService.getAvailableRooms(hotelId: hotelId);
   }
 

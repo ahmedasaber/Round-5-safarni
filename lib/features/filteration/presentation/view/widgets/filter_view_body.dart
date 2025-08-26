@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive/hive.dart';
 import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/core/widgets/custom_app_bar.dart';
 import 'package:safarni/features/filteration/presentation/view/widgets/adventure_style_filter_group.dart';

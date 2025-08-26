@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/features/auth/presentaion/pages/sign_in.dart';
-import 'package:safarni/features/auth/presentaion/pages/sign_up.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
-import '../../../../core/utils/app_colors.dart';
+import 'package:safarni/features/auth/presentation/pages/sign_in.dart';
+import 'package:safarni/features/auth/presentation/pages/sign_up.dart';
 import '../widget/button.dart';
 
 

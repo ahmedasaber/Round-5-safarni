@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
-import '../../../home/presentation/views/pages/home_view.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../widget/button.dart';
-import 'Reset Password.dart';
+import 'reset_password.dart';
 class VerifyCodePage extends StatelessWidget {
   const VerifyCodePage({super.key});
   static const routeName = '/verifyCode-screen';
@@ -16,10 +14,7 @@ class VerifyCodePage extends StatelessWidget {
     final height = size.height;
     final width = size.width;
 
-    // جايب الايميل من arguments اللي اتبعت من ForgetPasswordPage
     final email = ModalRoute.of(context)!.settings.arguments as String;
-
-    // controllers for 4 digit code
     final controllers = List.generate(4, (_) => TextEditingController());
 
     return Scaffold(
@@ -36,7 +31,7 @@ class VerifyCodePage extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 ResetPasswordPage.routeName,
-                arguments: email, // عشان نكمل بالـ email
+                arguments: email,
               );
             } else if (state is AuthFailure) {
               ScaffoldMessenger.of(context).showSnackBar(

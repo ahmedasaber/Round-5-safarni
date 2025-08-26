@@ -1,13 +1,12 @@
 import '../utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-
-class CustommButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isPrimary;
 
-  const CustommButton({
+  const CustomButton({
     super.key,
     required this.text,
     required this.onPressed,
@@ -19,9 +18,7 @@ class CustommButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: isPrimary ? AppColors.primary : Colors.grey[300],
         foregroundColor: isPrimary ? Colors.white : Colors.black,
       ),

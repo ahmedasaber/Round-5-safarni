@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_colors.dart';

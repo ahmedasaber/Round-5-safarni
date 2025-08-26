@@ -20,8 +20,6 @@ class AvailableRoomsScreenBody extends StatefulWidget {
 
 class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
   int? get hotelId => widget.hotelId;
-
-  // للاحتفاظ بالغرف الأصلية والمفلترة
   List<RoomModel> originalRooms = [];
   List<RoomModel> filteredRooms = [];
   String currentSearchQuery = '';
@@ -30,20 +28,16 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
   @override
   void initState() {
     super.initState();
-    print('🏨 AvailableRoomsScreenBody initialized with hotel ID: $hotelId');
   }
 
-  // البحث المحلي في الغرف
   void _filterRooms(String query) {
     setState(() {
       currentSearchQuery = query.trim();
       isSearchActive = currentSearchQuery.isNotEmpty;
 
       if (currentSearchQuery.isEmpty) {
-        // إذا مفيش بحث، أظهر كل الغرف
         filteredRooms = originalRooms;
       } else {
-        // البحث في أسماء الغرف
         filteredRooms = originalRooms.where((room) {
           return room.name.toLowerCase().contains(
             currentSearchQuery.toLowerCase(),
@@ -52,12 +46,8 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
       }
     });
 
-    print(
-      '🔍 Local search for "$currentSearchQuery": ${filteredRooms.length} results',
-    );
   }
 
-  // مسح البحث
   void _clearSearch() {
     setState(() {
       currentSearchQuery = '';
@@ -66,12 +56,10 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
     });
   }
 
-  // تحديث الغرف عندما يتغير الـ state
   void _updateRoomsFromState(List<RoomModel> newRooms) {
     setState(() {
       originalRooms = newRooms;
 
-      // إذا كان في بحث نشط، طبق البحث على البيانات الجديدة
       if (isSearchActive && currentSearchQuery.isNotEmpty) {
         filteredRooms = originalRooms.where((room) {
           return room.name.toLowerCase().contains(
@@ -109,13 +97,11 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
       ),
       body: BlocConsumer<HotelCubit, HotelState>(
         listener: (context, state) {
-          // تحديث الغرف عندما يتغير الـ state
           if (state is HotelSuccess) {
             _updateRoomsFromState(state.availableRooms);
           }
         },
         builder: (context, state) {
-          print('🔄 Current state: ${state.runtimeType}');
 
           if (state is HotelLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -148,15 +134,7 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
           }
 
           if (state is HotelSuccess) {
-            print(
-              '✅ HotelSuccess state - Available rooms count: ${state.availableRooms.length}',
-            );
-            print('🔍 Filtered rooms count: ${filteredRooms.length}');
-            print(
-              '🔍 Search active: $isSearchActive, Query: "$currentSearchQuery"',
-            );
 
-            // تحديد العنوان بناءً على حالة البحث
             String roomsTitle = 'Available Rooms';
             if (isSearchActive && currentSearchQuery.isNotEmpty) {
               roomsTitle = 'Search Results for "$currentSearchQuery"';
@@ -171,7 +149,6 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // شريط البحث المحلي
                   LocalRoomSearchWidget(
                     hotelId: hotelId,
                     onSearchChanged: _filterRooms,
@@ -215,7 +192,6 @@ class _AvailableRoomsScreenBodyState extends State<AvailableRoomsScreenBody> {
                   ),
                   verticalSpace(16),
 
-                  // عرض الغرف المفلترة
                   if (filteredRooms.isEmpty) ...[
                     Center(
                       child: Padding(

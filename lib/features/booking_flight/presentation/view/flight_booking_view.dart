@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/common/widgets/elevated_button.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
 import 'package:safarni/features/booking_flight/presentation/view/widgets/passengers_drop_down_menu_form_field.dart';
 import 'package:safarni/features/booking_flight/presentation/view/widgets/section_title.dart';
 import 'package:safarni/features/booking_flight/presentation/view/widgets/top_section.dart';

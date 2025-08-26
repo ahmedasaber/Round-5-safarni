@@ -40,7 +40,7 @@ class SearchRemoteDataSourceImpl extends SearchRemoteDataSource {
       } else {
         throw Exception('Failed to load the Searched Tours');
       }
-    } on Exception catch (e) {
+    } on Exception {
       throw Exception('Response Failed');
     }
   }

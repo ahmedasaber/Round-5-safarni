@@ -16,7 +16,7 @@ class CategoriesRemoteDataSourceImpl implements CategoriesRemoteDataSource{
       }else{
         throw Exception('Failed to load the Categories');
       }
-    } on Exception catch (e) {
+    } on Exception {
       throw Exception('Response Failed');
     }
   }

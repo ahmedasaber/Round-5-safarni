@@ -3,7 +3,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../data/models/onboarding_model.dart';
 
 class OnboardingPageWidget extends StatelessWidget {
-  final OnbordingModel model;
+  final OnboardingModel model;
   final int currentIndex;
   final int pagesCount;
   final int pageIndex;
@@ -19,9 +19,7 @@ class OnboardingPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-
       children: [
-
         const SizedBox(height: 20),
 
         Expanded(
@@ -41,15 +39,13 @@ class OnboardingPageWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             pagesCount,
-                (index) => AnimatedContainer(
+            (index) => AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               margin: const EdgeInsets.all(4),
               width: currentIndex == index ? 30 : 8,
               height: 10,
               decoration: BoxDecoration(
-                color: currentIndex == index
-                    ? AppColors.primary
-                    : Colors.grey,
+                color: currentIndex == index ? AppColors.primary : Colors.grey,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -62,10 +58,7 @@ class OnboardingPageWidget extends StatelessWidget {
           child: Text(
             model.desc,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
           ),
         ),
       ],

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
-import '../../../../core/utils/app_colors.dart';
 import '../widget/button.dart';
 import '../widget/custom_text_field.dart';
-import '../../../home/presentation/views/pages/home_view.dart';
-import '../../presentaion/pages/sign_in.dart';
+import 'sign_in.dart';
 import '../widget/social_media_button.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -110,7 +107,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     SizedBox(height: height * 0.02),
                     CustomTextField(
-                      hint: "Confirm Password", // ✨ جديد
+                      hint: "Confirm Password", 
                       controller: confirmPasswordController,
                       obscureText: true,
                     ),
@@ -163,8 +160,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           );
                           return;
                         }
-
-                        // ✅ لو كله تمام
                         context.read<AuthCubit>().register(
                           name,
                           email,

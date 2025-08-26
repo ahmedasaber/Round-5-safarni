@@ -23,7 +23,6 @@ class HotelBookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Print room ID for debugging
-    print('🔘 HotelBookButton - Room ID: $roomId');
     
     return ElevatedButton(
       onPressed: () {
@@ -34,7 +33,7 @@ class HotelBookButton extends StatelessWidget {
           rating: rating ?? 4.5,
           reviewsCount: reviewsCount ?? 356,
           price: price,
-          roomId: roomId, // مرر الـ room ID
+          roomId: roomId, 
         );
       },
       style: ElevatedButton.styleFrom(

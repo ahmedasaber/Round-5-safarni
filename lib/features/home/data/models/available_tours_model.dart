@@ -15,7 +15,6 @@ class TourModel extends ToursEntity {
     super.isFav
   });
 
-  /// Create a Model from JSON (API response)
   factory TourModel.fromJson(Map<String, dynamic> json) {
     return TourModel(
       id: json['id'] as int,
@@ -32,7 +31,6 @@ class TourModel extends ToursEntity {
     );
   }
 
-  /// Create a Model from Entity (useful for caching, mapping back, etc.)
   factory TourModel.fromEntity(ToursEntity entity) {
     return TourModel(
       id: entity.id,

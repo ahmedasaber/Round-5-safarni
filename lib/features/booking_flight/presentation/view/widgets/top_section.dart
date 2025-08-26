@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 
 import '../../../../../core/utils/app_assets.dart';
 

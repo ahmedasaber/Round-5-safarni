@@ -44,8 +44,6 @@ class SafeNetworkImage extends StatelessWidget {
         );
       },
       errorBuilder: (context, error, stackTrace) {
-        print('❌ Failed to load image: $imageUrl');
-        print('❌ Error: $error');
         
         return errorWidget ?? Container(
           width: width,

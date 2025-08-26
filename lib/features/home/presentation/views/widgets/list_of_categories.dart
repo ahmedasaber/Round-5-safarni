@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 import 'package:safarni/core/utils/routes.dart';
 import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
 import 'package:safarni/features/home/domain/entities/category_entity.dart';

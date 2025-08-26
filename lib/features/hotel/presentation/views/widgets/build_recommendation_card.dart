@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_styles.dart';
-import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/available_rooms_screen.dart';
 
 class BuildRecommendationCard extends StatelessWidget {
-  final int hotelId; // ⭐ إضافة hotel ID
+  final int hotelId;
   final String name;
   final String location;
   final String discount;
@@ -14,7 +14,7 @@ class BuildRecommendationCard extends StatelessWidget {
 
   const BuildRecommendationCard({
     super.key,
-    required this.hotelId, // ⭐ إضافة hotel ID
+    required this.hotelId, 
     required this.name,
     required this.location,
     required this.discount,
@@ -26,12 +26,10 @@ class BuildRecommendationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('🎯 BuildNearbyHotelCard - Navigating with hotel ID: $hotelId');
-        // ⭐ التنقل إلى شاشة الغرف المتاحة مع تمرير hotel ID
         Navigator.pushNamed(
           context,
           AvailableRoomsScreen.routeName,
-          arguments: hotelId, // تمرير hotel ID
+          arguments: hotelId,
         );
       },
       child: Container(

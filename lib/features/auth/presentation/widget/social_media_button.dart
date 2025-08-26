@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
 import 'button.dart';
 
 class SocialAuthButtons extends StatelessWidget {

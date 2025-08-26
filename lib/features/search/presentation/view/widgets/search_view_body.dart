@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 import 'package:safarni/core/widgets/custom_app_bar.dart';
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
-import 'package:safarni/features/search/presentation/view/widgets/locatio_item.dart';
+import 'package:safarni/features/search/presentation/view/widgets/location_item.dart';
 import 'package:safarni/features/home/presentation/views/widgets/custom_search_text_field.dart';
 
+// ignore: must_be_immutable
 class SearchViewBody extends StatelessWidget {
    SearchViewBody({super.key});
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:safarni/core/common/widgets/circular_icon.dart';
 import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 import 'package:safarni/core/utils/app_assets.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/features/home/data/datasources/favorite_local_data_source.dart';

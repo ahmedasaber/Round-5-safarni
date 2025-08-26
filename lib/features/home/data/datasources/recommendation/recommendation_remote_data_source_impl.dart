@@ -16,7 +16,7 @@ class RecommendationRemoteDataSourceImpl extends RecommendationRemoteDataSource{
       }else{
         throw throw Exception('Failed to load the Recommendations');
       }
-    } on Exception catch (e) {
+    } on Exception {
       throw throw Exception('Response Failed');
     }
   }

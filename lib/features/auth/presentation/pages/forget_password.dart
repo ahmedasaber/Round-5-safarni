@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
 import '../widget/button.dart';
 import '../widget/custom_text_field.dart';
-import 'Verify Code.dart';
+import 'verify_code.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 

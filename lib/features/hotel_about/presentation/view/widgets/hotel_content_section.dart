@@ -60,7 +60,6 @@ class _HotelContentSectionState extends State<HotelContentSection> {
   @override
   Widget build(BuildContext context) {
     // Print room ID for debugging
-    print('🏨 HotelContentSection - Room ID: ${widget.roomDetail?.id}');
 
     return Container(
       width: double.infinity,

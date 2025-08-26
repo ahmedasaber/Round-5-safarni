@@ -4,7 +4,6 @@ import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import '../../../data/datasource/destination_remote_data_source.dart';
 import '../../../data/models/destination_model.dart';
 import '../widgets/best_time_to_visit.dart';
-import '../widgets/botton_bar.dart';
 import '../widgets/build_top_section.dart';
 import '../widgets/gallery.dart';
 import '../widgets/reviews.dart';

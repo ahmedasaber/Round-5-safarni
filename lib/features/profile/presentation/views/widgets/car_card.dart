@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safarni/core/utils/app_assets.dart';
 
 class CarCard extends StatelessWidget {
   const CarCard({super.key});
@@ -131,6 +130,8 @@ class CarCard extends StatelessWidget {
 
 // Alternative version with a different car image
 class CarCardAlternative extends StatelessWidget {
+  const CarCardAlternative({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +202,7 @@ class CarCardAlternative extends StatelessWidget {
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       // SVG-like car illustration as fallback
-                      return Container(
+                      return SizedBox(
                         height: 120,
                         width: double.infinity,
                         child: CustomPaint(painter: CarPainter()),

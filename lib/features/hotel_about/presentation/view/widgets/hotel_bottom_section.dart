@@ -23,19 +23,18 @@ class HotelBottomSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Print room ID for debugging
-    print('💰 HotelBottomSection - Room ID: $roomId');
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         HotelPriceInfo(price: price),
         HotelBookButton(
-          price: price, // إصلاح هنا - كان فيه '\$price' غلط
+          price: price,
           hotelName: hotelName,
           address: address,
           rating: rating,
           reviewsCount: reviewsCount,
-          roomId: roomId, // مرر الـ room ID
+          roomId: roomId, 
         ),
       ],
     );

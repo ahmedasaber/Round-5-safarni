@@ -37,17 +37,17 @@ class Tour {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['category_id'] = this.categoryId;
-    data['title'] = this.title;
-    data['location'] = this.location;
-    data['description'] = this.description;
-    data['price'] = this.price;
-    data['image'] = this.image;
-    data['views'] = this.views;
-    data['is_recommended'] = this.isRecommended;
-    data['rating'] = this.rating;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['category_id'] = categoryId;
+    data['title'] = title;
+    data['location'] = location;
+    data['description'] = description;
+    data['price'] = price;
+    data['image'] = image;
+    data['views'] = views;
+    data['is_recommended'] = isRecommended;
+    data['rating'] = rating;
     return data;
   }
 }

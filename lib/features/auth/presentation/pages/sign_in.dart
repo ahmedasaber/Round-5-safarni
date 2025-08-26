@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../widget/button.dart';
 import '../widget/custom_text_field.dart';
 import '../widget/social_media_button.dart';
 import '../../../home/presentation/views/pages/home_view.dart';
-import '../../presentaion/pages/forget_password.dart';
-import '../../presentaion/pages/sign_up.dart';
+import 'forget_password.dart';
+import 'sign_up.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -44,7 +43,7 @@ class _SignInPageState extends State<SignInPage> {
                 const SnackBar(content: Text("Loading...")),
               );
             } else if (state is AuthSuccess) {
-              // ✅ هنا لغيت SnackBar اللي بيظهر بعد تسجيل الدخول
+
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 HomeView.routeName,
@@ -118,19 +117,13 @@ class _SignInPageState extends State<SignInPage> {
                       );
                       return;
                     }
-
-                    /// استدعاء cubit.login
                     context.read<AuthCubit>().login(email, password);
                   },
                 ),
 
                 SizedBox(height: height * 0.03),
-
-                // Social Buttons
                 SocialAuthButtons(),
-
                 const Spacer(),
-
                 Center(
                   child: TextButton(
                     onPressed: () {

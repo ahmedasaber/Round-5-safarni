@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../../../../core/shared_widgets/custom_button.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../viewModel/view_model_onboarding.dart';
-import '../widgets/onboarding_bodyy.dart';
-import '../../../auth/presentaion/pages/get_start_page.dart';
+import '../widgets/onboarding_body.dart';
+import '../../../auth/presentation/pages/get_start_page.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -18,7 +18,8 @@ class OnboardingPage extends StatelessWidget {
       child: Consumer<OnboardingViewModel>(
         builder: (context, vm, child) {
           return Scaffold(
-            appBar: AppBar( automaticallyImplyLeading: false,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
               centerTitle: false,
               title: Text(
@@ -80,8 +81,10 @@ class OnboardingPage extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    child: CustommButton(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
+                    child: CustomButton(
                       text: vm.pages[vm.currentIndex].buttonText1,
                       onPressed: () {
                         if (vm.currentIndex == vm.pages.length - 1) {

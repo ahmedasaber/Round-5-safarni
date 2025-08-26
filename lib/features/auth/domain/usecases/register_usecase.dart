@@ -1,4 +1,4 @@
-import '../../data/models/register_reques.dart';
+import '../../data/models/register_request.dart';
 import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 

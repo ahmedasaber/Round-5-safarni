@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/shared_widgets/custom_button.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../widget/button.dart';
 import '../widget/custom_text_field.dart';
-import 'Password Reset Success.dart';
+import 'password_reset_success.dart';
 
 class ResetPasswordPage extends StatelessWidget {
   const ResetPasswordPage({super.key});

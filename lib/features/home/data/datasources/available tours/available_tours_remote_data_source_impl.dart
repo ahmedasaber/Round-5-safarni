@@ -25,7 +25,7 @@ class AvailableToursRemoteDataSourceImpl extends AvailableToursRemoteDataSource{
       }else{
         throw Exception('Failed to load the Available Tours');
       }
-    } on Exception catch (e) {
+    } on Exception {
       throw Exception('Response Failed');
     }
   }

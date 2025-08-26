@@ -8,7 +8,6 @@ class HotelCubit extends Cubit<HotelState> {
   final HotelRepository _repository;
 
   HotelCubit(this._repository) : super(HotelInitial());
-  int? _currentHotelId;
 
   Future<void> fetchAllHotelsData() async {
     emit(HotelLoading());
@@ -41,28 +40,18 @@ class HotelCubit extends Cubit<HotelState> {
   }
 
   Future<void> fetchAvailableRooms({int? hotelId}) async {
-    print('🎯 HotelCubit - fetchAvailableRooms called with hotelId: $hotelId');
     emit(HotelLoading());
 
     try {
-      _currentHotelId = hotelId;
 
-      print('📡 Calling repository.getAvailableRooms with hotelId: $hotelId');
       final roomsResponse = await _repository.getAvailableRooms(
         hotelId: hotelId,
       );
 
-      print('📊 Repository returned ${roomsResponse.data.length} rooms');
-      print(
-        '📋 Rooms data: ${roomsResponse.data.map((r) => 'ID:${r.id}, Name:${r.name}').toList()}',
-      );
 
       if (!isClosed) {
         if (state is HotelSuccess) {
           final currentState = state as HotelSuccess;
-          print(
-            '✅ Updating existing HotelSuccess state with ${roomsResponse.data.length} rooms',
-          );
           emit(
             HotelSuccess(
               recommendedHotels: currentState.recommendedHotels,
@@ -75,9 +64,6 @@ class HotelCubit extends Cubit<HotelState> {
             ),
           );
         } else {
-          print(
-            '✅ Creating new HotelSuccess state with ${roomsResponse.data.length} rooms',
-          );
           emit(
             HotelSuccess(
               recommendedHotels: [],
@@ -93,7 +79,6 @@ class HotelCubit extends Cubit<HotelState> {
       }
     } catch (e) {
       if (!isClosed) {
-        print('❌ Error in fetchAvailableRooms: $e');
         emit(HotelError(message: 'Failed to fetch rooms: ${e.toString()}'));
       }
     }
@@ -103,7 +88,6 @@ class HotelCubit extends Cubit<HotelState> {
   Future<void> searchRooms(String query, {int? hotelId}) async {
     if (query.trim().length < 2) return;
 
-    print('🔍 HotelCubit - searchRooms called with query: "$query", hotelId: $hotelId');
 
     // Preserve current state
     final currentState = state;
@@ -122,7 +106,6 @@ class HotelCubit extends Cubit<HotelState> {
     try {
       final roomsResponse = await _repository.searchRooms(query, hotelId: hotelId);
 
-      print('📊 Room search returned ${roomsResponse.data.length} rooms');
       
       if (!isClosed) {
         emit(
@@ -139,7 +122,6 @@ class HotelCubit extends Cubit<HotelState> {
         );
       }
     } catch (e) {
-      print('❌ Error in searchRooms: $e');
       if (!isClosed) {
         emit(HotelError(message: 'Failed to search rooms: ${e.toString()}'));
       }
@@ -166,9 +148,6 @@ class HotelCubit extends Cubit<HotelState> {
     try {
       final searchResponse = await _repository.searchHotels(query);
 
-      print(
-        '🔍 Search Results: ${searchResponse.data.length} hotels found for "$query"',
-      );
 
       if (!isClosed) {
         emit(
@@ -185,7 +164,6 @@ class HotelCubit extends Cubit<HotelState> {
         );
       }
     } catch (e) {
-      print('❌ Error in searchHotels: $e');
       if (!isClosed) {
         emit(HotelError(message: 'Failed to search hotels: ${e.toString()}'));
       }

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:safarni/core/helpers/extentions.dart';
+import 'package:safarni/core/helpers/extensions.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/core/widgets/custom_app_bar.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';

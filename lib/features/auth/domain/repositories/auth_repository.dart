@@ -1,6 +1,6 @@
 
 
-import '../../data/models/register_reques.dart';
+import '../../data/models/register_request.dart';
 import '../entities/auth_message_entity.dart';
 import '../entities/otp_entity.dart';
 import '../entities/user.dart';
