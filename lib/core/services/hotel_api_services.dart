@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:safarni/core/helpers/constants.dart';
+import 'package:safarni/core/helpers/token_manger.dart';
 import 'package:safarni/features/hotel/data/models/hotels_response_model.dart';
 import 'package:safarni/features/hotel/data/models/rooms_response_model.dart';
 import 'package:safarni/features/hotel_about/data/model/booking_data_model.dart';
@@ -46,15 +47,15 @@ class HotelApiService {
   Future<RoomsResponseModel> searchRooms(String query, {int? hotelId}) async {
     try {
       print('🔍 Searching rooms with query: $query, hotelId: $hotelId');
-      
+
       String endpoint = ApiConstants.searchRooms;
       Map<String, dynamic> queryParameters = {'key': query};
-      
+
       // If hotelId is provided, add it to query parameters
       if (hotelId != null) {
         queryParameters['hotel_id'] = hotelId;
       }
-      
+
       print('🚀 Room search URL: $endpoint');
       print('📋 Query parameters: $queryParameters');
 
@@ -177,9 +178,7 @@ class HotelApiService {
       final response = await _dio.get(endpoint);
 
       print('✅ Rooms Response status: ${response.statusCode}');
-      print(
-        '🌐 Actual request URL: ${response.requestOptions.uri}',
-      );
+      print('🌐 Actual request URL: ${response.requestOptions.uri}');
       print('📊 Raw response data: ${response.data}');
 
       if (response.data != null) {
@@ -213,9 +212,7 @@ class HotelApiService {
       );
       print('🔍 Error type: ${e.type}');
       print('📋 Error response: ${e.response?.data}');
-      print(
-        '🌐 Attempted URL: ${e.requestOptions.uri}',
-      );
+      print('🌐 Attempted URL: ${e.requestOptions.uri}');
       throw Exception('Network error: ${e.message}');
     } catch (e, stackTrace) {
       print('💥 General error in getAvailableRooms for hotel $hotelId: $e');
@@ -260,6 +257,13 @@ class HotelApiService {
       final response = await _dio.post(
         '${ApiConstants.baseUrl}booking/room',
         data: bookingRequest.toJson(),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${await TokenManager.getToken()}',
+          },
+        ),
       );
 
       print('✅ Booking response status: ${response.statusCode}');

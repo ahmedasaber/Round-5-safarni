@@ -30,28 +30,94 @@ class BookHotelModal extends StatefulWidget {
 class _BookHotelModalState extends State<BookHotelModal> {
   final TextEditingController _noteController = TextEditingController();
   String selectedCheckInDay = 'Today';
-  String selectedCheckOutDay = 'Sun';
+  String selectedCheckOutDay = '';
 
-  final List<Map<String, String>> checkInOptions = [
-    {'day': 'Today', 'date': '2025-08-23'},
-    {'day': 'Tue', 'date': '2025-08-24'},
-    {'day': 'Wed', 'date': '2025-08-25'},
-  ];
+  late final List<Map<String, String>> checkInOptions;
+  late final List<Map<String, String>> checkOutOptions;
 
-  final List<Map<String, String>> checkOutOptions = [
-    {'day': 'Sun', 'date': '2025-08-30'},
-    {'day': 'Mon', 'date': '2025-08-31'},
-    {'day': 'Wed', 'date': '2025-09-01'},
-  ];
-
-  String _selectedCheckInDate = '2025-08-23';
-  String _selectedCheckOutDate = '2025-08-30';
+  String _selectedCheckInDate = '';
+  String _selectedCheckOutDate = '';
 
   @override
   void initState() {
     super.initState();
-    // Print room ID for debugging
-    print('📝 BookHotelModal initialized with Room ID: ${widget.roomId}');
+    _initializeDates();
+    print('BookHotelModal initialized with Room ID: ${widget.roomId}');
+  }
+
+  void _initializeDates() {
+    final now = DateTime.now();
+
+    // Check-in options (today and next 2 days)
+    checkInOptions = [
+      {
+        'day': 'Today',
+        'date': _formatDate(now),
+        'display': _getDisplayDate(now),
+      },
+      {
+        'day': _getDayName(now.add(Duration(days: 1))),
+        'date': _formatDate(now.add(Duration(days: 1))),
+        'display': _getDisplayDate(now.add(Duration(days: 1))),
+      },
+      {
+        'day': _getDayName(now.add(Duration(days: 2))),
+        'date': _formatDate(now.add(Duration(days: 2))),
+        'display': _getDisplayDate(now.add(Duration(days: 2))),
+      },
+    ];
+
+    // Check-out options (3-7 days from now)
+    final checkOutStart = now.add(Duration(days: 3));
+    checkOutOptions = [
+      {
+        'day': _getDayName(checkOutStart),
+        'date': _formatDate(checkOutStart),
+        'display': _getDisplayDate(checkOutStart),
+      },
+      {
+        'day': _getDayName(checkOutStart.add(Duration(days: 1))),
+        'date': _formatDate(checkOutStart.add(Duration(days: 1))),
+        'display': _getDisplayDate(checkOutStart.add(Duration(days: 1))),
+      },
+      {
+        'day': _getDayName(checkOutStart.add(Duration(days: 2))),
+        'date': _formatDate(checkOutStart.add(Duration(days: 2))),
+        'display': _getDisplayDate(checkOutStart.add(Duration(days: 2))),
+      },
+    ];
+
+    // Set default selected dates
+    _selectedCheckInDate = checkInOptions[0]['date']!;
+    _selectedCheckOutDate = checkOutOptions[0]['date']!;
+    selectedCheckOutDay = checkOutOptions[0]['day']!;
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  String _getDayName(DateTime date) {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days[date.weekday - 1];
+  }
+
+  String _getDisplayDate(DateTime date) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return '${date.day} ${months[date.month - 1]}';
   }
 
   @override
@@ -73,9 +139,25 @@ class _BookHotelModalState extends State<BookHotelModal> {
       return;
     }
 
+    // Validate dates
+    final checkInDate = DateTime.parse(_selectedCheckInDate);
+    final checkOutDate = DateTime.parse(_selectedCheckOutDate);
+
+    if (checkOutDate.isBefore(checkInDate) ||
+        checkOutDate.isAtSameMomentAs(checkInDate)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Check-out date must be after check-in date.'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
     // Create booking data with room ID
     final bookingData = BookingData(
-      roomId: widget.roomId!, // تأكد من تمرير الـ room ID
+      roomId: widget.roomId!,
       checkInDate: _selectedCheckInDate,
       checkOutDate: _selectedCheckOutDate,
       note: _noteController.text.trim().isEmpty
@@ -84,7 +166,7 @@ class _BookHotelModalState extends State<BookHotelModal> {
     );
 
     // Print booking data for debugging
-    print('🚀 BookHotelModal - Creating BookingData:');
+    print('BookHotelModal - Creating BookingData:');
     print('  - Room ID: ${bookingData.roomId}');
     print('  - Check In: ${bookingData.checkInDate}');
     print('  - Check Out: ${bookingData.checkOutDate}');
@@ -95,21 +177,53 @@ class _BookHotelModalState extends State<BookHotelModal> {
     showGuestSelectionModal(context, bookingData);
   }
 
-  String _getDisplayDate(String day) {
-    switch (day) {
-      case 'Today':
-        return '4 Oct';
-      case 'Tue':
-        return '5 Oct';
-      case 'Wed':
-        return '6 Oct';
-      case 'Sun':
-        return '3 Nov';
-      case 'Mon':
-        return '4 Nov';
-      default:
-        return '5 Nov';
-    }
+  Widget _buildDateSelector({
+    required List<Map<String, String>> options,
+    required String selectedDay,
+    required Function(String day, String date) onSelected,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: options.map((option) {
+        final isSelected = selectedDay == option['day'];
+        return GestureDetector(
+          onTap: () {
+            onSelected(option['day']!, option['date']!);
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+            decoration: BoxDecoration(
+              color: isSelected ? Color(0xffEBF5FF) : Colors.white,
+              border: Border.all(
+                color: isSelected ? Colors.transparent : Colors.grey[300]!,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  option['day']!,
+                  style: TextStyle(
+                    color: isSelected ? AppColors.darkBlue : Colors.black87,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                verticalSpace(4),
+                Text(
+                  option['display']!,
+                  style: TextStyle(
+                    color: isSelected ? AppColors.darkBlue : Colors.black87,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
   }
 
   @override
@@ -215,139 +329,43 @@ class _BookHotelModalState extends State<BookHotelModal> {
                       ),
                     ),
                     verticalSpace(24),
+
+                    // Check In Section
                     Text('Check In', style: TextStyles.font16LightBlackNormal),
                     verticalSpace(12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: checkInOptions.map((option) {
-                        final isSelected = selectedCheckInDay == option['day'];
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedCheckInDay = option['day']!;
-                              _selectedCheckInDate = option['date']!;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 35,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Color(0xffEBF5FF)
-                                  : Colors.white,
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.transparent
-                                    : Colors.grey[300]!,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  option['day']!,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? AppColors.darkBlue
-                                        : Colors.black87,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                verticalSpace(4),
-                                Text(
-                                  _getDisplayDate(option['day']!),
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? AppColors.darkBlue
-                                        : Colors.black87,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                    _buildDateSelector(
+                      options: checkInOptions,
+                      selectedDay: selectedCheckInDay,
+                      onSelected: (day, date) {
+                        setState(() {
+                          selectedCheckInDay = day;
+                          _selectedCheckInDate = date;
+                        });
+                      },
                     ),
                     verticalSpace(24),
+
                     // Check Out Section
-                    Text(
-                      'Check Out',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
+                    Text('Check Out', style: TextStyles.font16LightBlackNormal),
                     verticalSpace(12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: checkOutOptions.map((option) {
-                        final isSelected = selectedCheckOutDay == option['day'];
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedCheckOutDay = option['day']!;
-                              _selectedCheckOutDate = option['date']!;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 35,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Color(0xffEBF5FF)
-                                  : Colors.white,
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.transparent
-                                    : Colors.grey[300]!,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  option['day']!,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? AppColors.darkBlue
-                                        : Colors.black87,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                verticalSpace(4),
-                                Text(
-                                  _getDisplayDate(option['day']!),
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? AppColors.darkBlue
-                                        : Colors.black87,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                    _buildDateSelector(
+                      options: checkOutOptions,
+                      selectedDay: selectedCheckOutDay,
+                      onSelected: (day, date) {
+                        setState(() {
+                          selectedCheckOutDay = day;
+                          _selectedCheckOutDate = date;
+                        });
+                      },
                     ),
                     verticalSpace(24),
+
                     // Note To Owner Section
                     Text(
                       'Note To Owner',
                       style: TextStyles.font17LightBlackNormal,
                     ),
                     verticalSpace(12),
-                    // Note Text Field
                     Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -414,8 +432,7 @@ void showBookHotelModal(
   required String price,
   int? roomId,
 }) {
-  // Print room ID for debugging
-  print('🏨 showBookHotelModal called with Room ID: $roomId');
+  print('showBookHotelModal called with Room ID: $roomId');
 
   showModalBottomSheet(
     context: context,
@@ -427,7 +444,7 @@ void showBookHotelModal(
       rating: rating,
       reviewsCount: reviewsCount,
       price: price,
-      roomId: roomId, // مرر الـ room ID
+      roomId: roomId,
     ),
   );
 }

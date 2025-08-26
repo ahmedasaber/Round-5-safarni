@@ -25,14 +25,16 @@ class ForgetPasswordPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: width * 0.04),
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
-              if (state is AuthLoading) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Loading...")),
-                );
-              } else if (state is AuthSuccess) {
+              if (state is AuthSuccess) {
+                // ✅ تمرير الإيميل للصفحة التالية
                 Navigator.pushNamed(
                   context,
                   VerifyCodePage.routeName,
+                  arguments: emailController.text.trim(), // مهم جداً
+                );
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("تم إرسال رمز التحقق")),
                 );
               } else if (state is AuthFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -74,7 +76,15 @@ class ForgetPasswordPage extends StatelessWidget {
                   CustomButton(
                     text: state is AuthLoading ? "Loading..." : "Reset Password",
                     onPressed: () {
-                      final email = emailController.text;
+                      final email = emailController.text.trim();
+                      
+                      if (email.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("يرجى إدخال البريد الإلكتروني")),
+                        );
+                        return;
+                      }
+                      
                       context.read<AuthCubit>().forgotPassword(email);
                     },
                   ),

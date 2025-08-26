@@ -6,6 +6,7 @@ import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/hotel_about/data/model/booking_data_model.dart';
 import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Guest Selection Modal Widget
 class GuestSelectionModal extends StatefulWidget {
@@ -93,6 +94,16 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
     );
   }
 
+  Future<int?> _getUserId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt('user_id') ?? 17; // Default to 17 if not found
+    } catch (e) {
+      print('Error getting user ID: $e');
+      return 17; // Default user ID
+    }
+  }
+
   Future<void> _completeBooking() async {
     if (isLoading) return;
 
@@ -106,10 +117,15 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
         throw Exception('Room ID is required for booking');
       }
 
-      // Create booking request
+      // Get user ID
+      final userId = await _getUserId();
+      if (userId == null) {
+        throw Exception('User not authenticated');
+      }
+
+      // Create booking request matching API format
       final bookingRequest = BookingRequest(
-        userId:
-            17, // Replace with actual user ID from SharedPreferences or auth state
+        userId: userId,
         roomId: widget.bookingData.roomId!,
         checkInDate: widget.bookingData.checkInDate,
         checkOutDate: widget.bookingData.checkOutDate,
@@ -120,7 +136,7 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
       );
 
       // Print booking request for debugging
-      print('🚀 Booking Request Data:');
+      print('Booking Request Data:');
       print('  - User ID: ${bookingRequest.userId}');
       print('  - Room ID: ${bookingRequest.roomId}');
       print('  - Check In: ${bookingRequest.checkInDate}');
@@ -134,9 +150,8 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
       // Call the booking API
       final response = await _hotelApiService.bookRoom(bookingRequest);
 
-      // Show success message
+      // Show success message and navigate
       if (mounted) {
-        Navigator.pushNamed(context, PaymentMethodView.routeName);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -146,29 +161,32 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
             duration: Duration(seconds: 3),
           ),
         );
+        
+        // Close the modal first
+        Navigator.pop(context);
+        
+        // Navigate to payment
+        Navigator.pushNamed(context, PaymentMethodView.routeName);
       }
     } catch (e) {
-      print('💥 Booking Error Details: $e');
+      print('Booking Error Details: $e');
 
-      // Show error message with more details
+      // Parse error message
       String errorMessage = 'Booking failed: Unknown error';
 
-      if (e.toString().contains('500')) {
-        errorMessage =
-            'Server error occurred. Please try again later or contact support.';
-      } else if (e.toString().contains('Network error')) {
-        errorMessage =
-            'Network connection problem. Please check your internet connection.';
-      } else if (e.toString().contains('Room ID is required')) {
+      final errorString = e.toString();
+      if (errorString.contains('This room is not available for the selected dates')) {
+        errorMessage = 'This room is not available for the selected dates. Please choose different dates.';
+      } else if (errorString.contains('500')) {
+        errorMessage = 'Server error occurred. Please try again later.';
+      } else if (errorString.contains('Network error')) {
+        errorMessage = 'Network connection problem. Please check your internet connection.';
+      } else if (errorString.contains('Room ID is required')) {
         errorMessage = 'Room information is missing. Please try again.';
+      } else if (errorString.contains('Exception: ')) {
+        errorMessage = errorString.split('Exception: ').last;
       } else {
-        // Extract meaningful error message
-        final errorString = e.toString();
-        if (errorString.contains('Exception: ')) {
-          errorMessage = errorString.split('Exception: ').last;
-        } else {
-          errorMessage = errorString;
-        }
+        errorMessage = errorString;
       }
 
       if (mounted) {
@@ -221,7 +239,7 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
                 children: [
                   verticalSpace(20),
 
-                  // Debug info (remove in production)
+                  // Debug info
                   if (widget.bookingData.roomId != null)
                     Container(
                       padding: EdgeInsets.all(8),
@@ -229,6 +247,7 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
                       decoration: BoxDecoration(
                         color: Colors.blue[50],
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.blue[200]!),
                       ),
                       child: Text(
                         'Room ID: ${widget.bookingData.roomId}\nCheck-in: ${widget.bookingData.checkInDate}\nCheck-out: ${widget.bookingData.checkOutDate}',
@@ -236,7 +255,7 @@ class _GuestSelectionModalState extends State<GuestSelectionModal> {
                       ),
                     ),
 
-                  // Adults Counter
+                  // Adults Counter (minimum 1)
                   _buildGuestCounter(
                     title: 'Adults',
                     subtitle: 'Ages 18 Or Above',
