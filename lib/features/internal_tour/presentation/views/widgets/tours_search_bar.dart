@@ -1,6 +1,8 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:safarni/features/internal_tour/presentation/cubit/tour_cubit.dart';
 
 class ToursSearchBar extends StatelessWidget {
   const ToursSearchBar({super.key});
@@ -24,6 +26,9 @@ class ToursSearchBar extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 8.h),
               child: SearchBar(
+                onChanged: (value) {
+                  context.read<TourCubit>().searchTours(value);
+                },
                 side: WidgetStateProperty.all(
                   const BorderSide(color: Color(0xff3F83F8)),
                 ),

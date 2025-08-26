@@ -45,6 +45,7 @@ class BookingNavBar extends StatelessWidget {
               ),
             ),
             CustomButton(
+              onPressed: () {},
               color: AppColors.blue,
               text: "Book Now",
               textStyle: TextStyles.font16WhiteSemiBold,
