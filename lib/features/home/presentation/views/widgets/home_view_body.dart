@@ -1,216 +1,180 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/core/helpers/extentions.dart';
-import 'package:safarni/core/utils/routes.dart';
-import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
-import 'package:safarni/features/hotel/presentation/views/screens/hotel_item_view.dart';
+import 'package:safarni/features/home/presentation/cubit/available%20tours/available_tours_cubit.dart';
+import 'package:safarni/features/home/presentation/cubit/categories/categories_cubit.dart';
+import 'package:safarni/features/home/presentation/cubit/recommendation/recommendations_cubit.dart';
+import 'package:safarni/features/home/presentation/views/widgets/available_tours_view_all.dart';
+import 'package:safarni/features/home/presentation/views/widgets/list_of_available_tours.dart';
+import 'package:safarni/features/home/presentation/views/widgets/list_of_categories.dart';
+import 'package:safarni/features/home/presentation/views/widgets/recommended_tours_view_all.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
 import 'package:safarni/features/home/presentation/views/widgets/home_app_bar.dart';
 import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
-import 'package:safarni/features/home/presentation/views/widgets/available_tours_card.dart';
-import 'package:safarni/features/home/presentation/views/widgets/cusrom_category_item.dart';
 import 'package:safarni/features/home/presentation/views/widgets/custom_filter_button.dart';
 import 'package:safarni/features/home/presentation/views/widgets/list_of_recommendations.dart';
-import 'package:safarni/features/home/presentation/views/widgets/card_recommendation_item.dart';
 import 'package:safarni/features/home/presentation/views/widgets/custom_search_text_field.dart';
 
 // ignore: must_be_immutable
-class HomeViewBody extends StatelessWidget {
-  HomeViewBody({super.key});
+class HomeViewBody extends StatefulWidget {
+  const HomeViewBody({super.key});
 
-  List<CardRecommendationItem> recomList = [
-    CardRecommendationItem(
-      image: 'assets/images/pyramids.jpg',
-      title: 'The Pyramids',
-      rate: '4.8',
-      location: 'Giza',
-    ),
-    CardRecommendationItem(
-      image: 'assets/images/Citadels-of-qaitbay.jpg',
-      title: 'The Citadel of Saladin',
-      rate: '4.8',
-      location: 'Cairo',
-    ),
-    CardRecommendationItem(
-      image: 'assets/images/karnk.jpg',
-      title: 'Karnak Temple',
-      rate: '4.8',
-      location: 'Luxor',
-    ),
-    CardRecommendationItem(
-      image: 'assets/images/libarary.jpg',
-      title: 'Library of Alexandria',
-      rate: '4.8',
-      location: 'Alexandria',
-    ),
-  ];
+  @override
+  State<HomeViewBody> createState() => _HomeViewBodyState();
+}
 
-  List<AvailableToursCardItem> toursList = [
-    AvailableToursCardItem(
-      image: 'assets/images/fayoum.jpg',
-      location: 'Fayoum',
-      price: '200',
-      rate: '4.2',
-    ),
-    AvailableToursCardItem(
-      image: 'assets/images/dahab.jpg',
-      location: 'Dahab',
-      price: '250',
-      rate: '4.5',
-    ),
-    AvailableToursCardItem(
-      image: 'assets/images/luxor.jpg',
-      location: 'Luxor',
-      price: '150',
-      rate: '4.3',
-    ),
-  ];
+class _HomeViewBodyState extends State<HomeViewBody> {
+
+  @override
+  void initState() {
+    context.read<CategoriesCubit>().loadCategories();
+    context.read<RecommendationsCubit>().loadRecommendations();
+    context.read<AvailableToursCubit>().loadAvailableTours();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: HomeAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CustomSearchTextField(
-                      onTap: () {
-                        context.pushNamed(SearchView.routeName);
-                      },
-                      readOnly: true,
+    return BlocBuilder<CategoriesCubit, CategoriesState>(
+      builder: (context, categoriesState) {
+        return BlocBuilder<RecommendationsCubit, RecommendationsState>(
+          builder: (context, recommendationsState) {
+            return BlocBuilder<AvailableToursCubit, AvailableToursState>(
+              builder: (context, availableToursState) {
+                if(categoriesState is CategoriesLoading ||
+                    recommendationsState is RecommendationsLoading ||
+                    availableToursState is AvailableToursLoading){
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return Scaffold(
+                  appBar: HomeAppBar(),
+                  body: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 16,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CustomSearchTextField(
+                                  onTap: () {
+                                    context.pushNamed(SearchView.routeName);
+                                  },
+                                  readOnly: true,
+                                )),
+                              SizedBox(width: 13),
+                              CustomFilterBt(
+                                onTap: () {
+                                  context.pushNamed(FilterView.routeName, arguments: ' ');
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 24,),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 221,
+                          width: double.infinity,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/travel-image.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 24,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            'Categories',
+                            style: TextStyles.medium17,
+                          ),
+                        ),
+                        SizedBox(height: 16,),
+                        ListOfCategories(categories:
+                        categoriesState is CategoriesSuccess
+                          ? categoriesState.categories
+                          : [],
+                        ),
+                        SizedBox(height: 16,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Recommendation', style: TextStyles.medium17),
+                              TextButton(
+                                onPressed: () {
+                                  context.pushNamed(
+                                    RecommendedToursViewAll.routeName,
+                                    arguments: recommendationsState is RecommendationsSuccess
+                                      ? recommendationsState.recommendations
+                                      : [],
+                                  );
+                                },
+                                child: Text(
+                                  'View all',
+                                  style: TextStyles.medium13.copyWith(
+                                    color: Color(0xff1E429F),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: ListOfRecommendations(
+                            recommendedList: recommendationsState is RecommendationsSuccess
+                            ? recommendationsState.recommendations
+                            : [],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Available Tours',
+                                  style: TextStyles.medium17),
+                              TextButton(
+                                onPressed: () {
+                                  context.pushNamed(
+                                    AvailableToursViewAll.routeName,
+                                    arguments: availableToursState is AvailableToursSuccess
+                                      ? availableToursState.availableTours
+                                      : [],
+                                  );
+                                },
+                                child: Text(
+                                  'View all',
+                                  style: TextStyles.medium13.copyWith(
+                                    color: Color(0xff1E429F),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ListOfAvailableTours(
+                          toursList: availableToursState is AvailableToursSuccess
+                          ? availableToursState.availableTours
+                          : [],
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 16),
-                  CustomFilterBt(
-                    onTap: () {
-                      context.pushNamed(FilterView.routeName);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 24),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 221,
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadiusGeometry.all(Radius.circular(8)),
-                child: Image.asset(
-                  'assets/images/travel-image.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text('Categories', style: TextStyles.medium17),
-            ),
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, FlightBookingView.routeName);
-                    },
-                    child: CustomCategoryItem(
-                      categoryImage: 'assets/images/flight-category.jpg',
-                      categoryTitle: 'Flight',
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.carBookingPage);
-                    },
-                    child: CustomCategoryItem(
-                      categoryImage: 'assets/images/car-category.jpg',
-                      categoryTitle: 'Cars',
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.internalTourPage);
-                    },
-                    child: CustomCategoryItem(
-                      categoryImage: 'assets/images/tours-category.jpg',
-                      categoryTitle: 'Tours',
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, HotelItemView.routeName);
-                    },
-                    child: CustomCategoryItem(
-                      categoryImage: 'assets/images/hotel-category.jpg',
-                      categoryTitle: 'Hotels',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Recommendation', style: TextStyles.medium17),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'View all',
-                      style: TextStyles.medium13.copyWith(
-                        color: Color(0xff1E429F),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: ListOfRecommendations(list: recomList),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Available Tours', style: TextStyles.medium17),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'View all',
-                      style: TextStyles.medium13.copyWith(
-                        color: Color(0xff1E429F),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: toursList.length,
-              itemBuilder: (context, i) {
-                return toursList[i];
+                );
               },
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 }

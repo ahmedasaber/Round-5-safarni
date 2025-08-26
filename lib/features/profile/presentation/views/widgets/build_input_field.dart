@@ -1,16 +1,33 @@
+// presentation/views/widgets/build_input_field.dart
 import 'package:flutter/material.dart';
-import 'package:safarni/core/helpers/spacing.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 
 class BuildInputField extends StatelessWidget {
   final String label;
   final String icon;
-  final String placeholder;
+  final String? placeholder;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+  final bool enabled;
+  final bool obscureText;
+  final VoidCallback? onTap;
+  final Widget? suffixIcon;
+  final int? maxLines;
+
   const BuildInputField({
     super.key,
     required this.label,
     required this.icon,
-    required this.placeholder,
+    this.placeholder,
+    this.controller,
+    this.validator,
+    this.keyboardType,
+    this.enabled = true,
+    this.obscureText = false,
+    this.onTap,
+    this.suffixIcon,
+    this.maxLines = 1,
   });
 
   @override
@@ -18,28 +35,60 @@ class BuildInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyles.font14DarkBlackNormal),
-        verticalSpace(6),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: Colors.grey[300]!, width: 1),
-          ),
-          child: TextField(
-            style: const TextStyle(fontSize: 16, color: Colors.black87),
-            decoration: InputDecoration(
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Image.asset(icon, height: 18, width: 18),
+        Text(
+          label,
+          style: TextStyles.font14DarkBlackNormal,
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          validator: validator,
+          keyboardType: keyboardType,
+          enabled: enabled,
+          obscureText: obscureText,
+          onTap: onTap,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            hintText: placeholder,
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Image.asset(
+                icon,
+                width: 20,
+                height: 20,
+                color: Colors.grey[600],
               ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              hintText: placeholder,
-              hintStyle: TextStyles.font14DarkGrayNormal,
+            ),
+            suffixIcon: suffixIcon,
+            filled: true,
+            fillColor: Colors.grey[50],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
             ),
           ),
         ),

@@ -1,18 +1,17 @@
-import 'package:dartz/dartz.dart' as roomDetail;
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 import 'package:safarni/features/hotel_about/presentation/view/widgets/safe_network_image.dart';
 
 class BuildRoomCard extends StatelessWidget {
-  final int roomId; // Add roomId parameter
+  final int roomId;
   final String roomName;
   final String price;
   final String imageUrl;
 
   const BuildRoomCard({
     super.key,
-    required this.roomId, // Make roomId required
+    required this.roomId,
     required this.roomName,
     required this.price,
     required this.imageUrl,
@@ -22,18 +21,17 @@ class BuildRoomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to HotelAboutPage with roomId
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => HotelAboutPage(
-              roomId: roomId, // Pass the room ID to fetch details
+              roomId: roomId,
               roomName: roomName,
               price: price.replaceAll('\$', ''),
               imageUrl: imageUrl,
-              address: '1012 Ocean Avenue, New York, USA', // Default address
-              rating: 0, // Will be updated from API
-              reviewsCount: 0, // Will be updated from API
+              address: '1012 Ocean Avenue, New York, USA',
+              rating: 0,
+              reviewsCount: 0,
             ),
           ),
         );
@@ -73,8 +71,9 @@ class BuildRoomCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Fixed: Use roomName if available, otherwise use Room_ID format
                     Text(
-                      "Room_${roomDetail.id}",
+                      roomName.isNotEmpty ? roomName : "Room_$roomId",
                       style: TextStyles.font13LightBlackNormal,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -104,21 +103,22 @@ class BuildRoomCard extends StatelessWidget {
       return SafeNetworkImage(
         imageUrl: imageUrl,
         width: double.infinity,
-        height: 24,
+        height: double.infinity, // Fixed: was 24, should be double.infinity
       );
     } else {
       return Image.asset(
         imageUrl,
         height: double.infinity,
-        width: 24,
+        width: double.infinity, // Fixed: was 24, should be double.infinity
+        fit: BoxFit.cover, // Added: to ensure proper image scaling
         errorBuilder: (context, error, stackTrace) {
           return Container(
-            width: 24,
-            height: 24,
+            width: double.infinity,
+            height: double.infinity,
             color: Colors.grey[200],
             child: Icon(
               Icons.image_not_supported,
-              size: 16,
+              size: 32, // Increased size for better visibility
               color: Colors.grey[400],
             ),
           );

@@ -3,8 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 
 class AdventureStyleFilterGroup extends StatefulWidget {
-   const AdventureStyleFilterGroup({super.key});
+   const AdventureStyleFilterGroup({super.key, required this.selectedStyles});
 
+   final List selectedStyles;
   @override
   State<AdventureStyleFilterGroup> createState() => _AdventureStyleFilterGroupState();
 }
@@ -17,14 +18,12 @@ class _AdventureStyleFilterGroupState extends State<AdventureStyleFilterGroup> {
     { 'icon':'assets/icons/road-trips.svg', 'label':'Road Trips',
     }];
 
-   List selectedStyles = [];
-
   @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 8,
       children: adventureStyles.map((style){
-        bool isSelected = selectedStyles.contains(style['label']);
+        bool isSelected = widget.selectedStyles.contains(style['label']);
         return FilterChip(
             label: Text(style['label'], style: TextStyles.medium12.copyWith(
               color: isSelected ? Color(0xff1e429f) : Colors.grey[500],
@@ -43,7 +42,7 @@ class _AdventureStyleFilterGroupState extends State<AdventureStyleFilterGroup> {
             ),
             avatarBorder: const CircleBorder(side: BorderSide(color: Colors.transparent)),
             onSelected: (value){
-              value? selectedStyles.add(style['label']) : selectedStyles.remove(style['label']);
+              value? widget.selectedStyles.add(style['label']) : widget.selectedStyles.remove(style['label']);
               setState(() {});
             }
         );

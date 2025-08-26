@@ -3,23 +3,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 
-class FavoriteItem extends StatefulWidget {
+class FavoriteItem extends StatelessWidget {
    FavoriteItem({
     super.key,
     required this.image,
     required this.location,
     required this.price,
     required this.isFavorite,
+    required this.onPressed,
   });
 
   final String image, location, price;
-  bool isFavorite = false;
+  bool isFavorite;
+  final VoidCallback onPressed;
 
-  @override
-  State<FavoriteItem> createState() => _FavoriteItemState();
-}
-
-class _FavoriteItemState extends State<FavoriteItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,11 +43,19 @@ class _FavoriteItemState extends State<FavoriteItem> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    child: Image.asset(
-                      widget.image,
+                    child: Image.network(
+                      image,
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/placeholder.png',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -73,7 +78,7 @@ class _FavoriteItemState extends State<FavoriteItem> {
                           ],
                         ),
                         const SizedBox(height: 4.0),
-                        Text(widget.location, style: TextStyles.medium16),
+                        Text(location, style: TextStyles.medium16),
                         const SizedBox(height: 4.0),
                         Text.rich(
                           TextSpan(
@@ -81,7 +86,7 @@ class _FavoriteItemState extends State<FavoriteItem> {
                             children: [
                               TextSpan(text: 'From '),
                               TextSpan(
-                                text: '${widget.price}\$',
+                                text: '$price\$',
                                 style: TextStyle(color: Color(0xff1c64f2)),
                               ),
                               TextSpan(text: ' Per Person'),
@@ -98,11 +103,8 @@ class _FavoriteItemState extends State<FavoriteItem> {
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
-              onPressed: () {
-                widget.isFavorite = !widget.isFavorite;
-                setState(() {});
-              },
-              icon: widget.isFavorite
+              onPressed: onPressed,
+              icon: isFavorite
                   ? SvgPicture.asset('assets/icons/heart.svg')
                   : SvgPicture.asset('assets/icons/favorite.svg',),
             ),

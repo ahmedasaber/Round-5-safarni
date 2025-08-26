@@ -25,7 +25,20 @@ class CardRecommendationItem extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(8)),
-                  child: Image.asset(image, fit: BoxFit.cover, height: 199, width: double.infinity,),
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    height: 199,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace){
+                      return Image.asset(
+                        'assets/images/placeholder.png',
+                        fit: BoxFit.cover,
+                        height: 199,
+                        width: double.infinity,
+                      );
+                    },
+                  ),
                 ),
               ),
               Padding(
@@ -51,7 +64,7 @@ class CardRecommendationItem extends StatelessWidget {
                   children: [
                     SvgPicture.asset('assets/icons/Location.svg'),
                     SizedBox(width: 8,),
-                    Text(location, style: TextStyles.regular15.copyWith(color: AppColors.grayColor),),
+                    Expanded(child: Text(location, style: TextStyles.regular15.copyWith(color: AppColors.grayColor),overflow: TextOverflow.ellipsis,maxLines: 1,)),
                   ],
                 ),
               ),

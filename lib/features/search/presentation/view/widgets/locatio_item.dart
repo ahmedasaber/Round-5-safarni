@@ -29,6 +29,14 @@ class LocationItem extends StatelessWidget {
                 width: 40,
                 height: 40,
                 fit: BoxFit.cover,
+                errorBuilder: (_,_,_){
+                  return SvgPicture.asset(
+                      'assets/images/placeholder.png',
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                  );
+                },
               ),
             ),
           ),

@@ -33,7 +33,7 @@ class BuildFilterBottomBar extends StatelessWidget {
                 fontFamily: 'Poppins',
               ),
             ),
-            child: Text('56 Tours Found'),
+            child: Text('Tours Found'),
           ),
         ],
       ),
