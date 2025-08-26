@@ -1,42 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/routes.dart';
 import 'package:safarni/core/utils/app_assets.dart';
-import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
-import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
-import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
-// Add this import for SystemNavigator
+import '../../features/auth/presentaion/pages/sign_in.dart';
+import '../../features/auth/presentaion/pages/sign_up.dart';
+import '../../features/auth/presentaion/pages/Verify Code.dart';
+import '../../features/splash/presentaion/pages/splash_page.dart';
+import '../../features/auth/presentaion/pages/Reset Password.dart';
+import '../../features/auth/presentaion/pages/get_start_page.dart';
+import '../../features/auth/presentaion/pages/forget_password.dart';
+import '../../features/auth/presentaion/pages/Password Reset Success.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:safarni/features/home/data/models/available_tours_model.dart';
 import 'package:safarni/features/home/presentation/views/pages/home_view.dart';
-import 'package:safarni/features/home/presentation/views/widgets/available_tours_view_all.dart';
-import 'package:safarni/features/home/presentation/views/widgets/recommended_tours_view_all.dart';
-import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
-import 'package:safarni/features/hotel/presentation/views/screens/hotel_item_view.dart';
-import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
-import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/result_view.dart';
 import 'package:safarni/features/search/presentation/view/pages/search_view.dart';
+import '../../features/payment/presentation/views/pages/payment_method_view.dart';
+import '../../features/payment/presentation/views/pages/success_payment_view.dart';
+import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
+import 'package:safarni/features/filteration/presentation/view/pages/filter_view.dart';
 import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/profile_view.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/hotel_item_view.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/hotel_item_view.dart';
 import 'package:safarni/features/car_booking/presentation/views/pages/car_details.dart';
+import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/choose_seat_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/boarding_pass_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/select_flight_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
+import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
+import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+import 'package:safarni/features/booking_flight/presentation/view/flight_booking_view.dart';
+import 'package:safarni/features/destination/presentation/views/pages/detination_page.dart';
+import 'package:safarni/features/payment/presentation/views/pages/payment_method_view.dart';
+import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
+import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
+import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
+import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
+import 'package:safarni/features/payment/presentation/views/pages/success_payment_view.dart';
 import 'package:safarni/features/car_booking/presentation/views/pages/car_booking_page.dart';
+import 'package:safarni/features/hotel/presentation/views/screens/avilable_rooms_screen.dart';
+import 'package:safarni/features/hotel/presentation/views/widgets/avilable_rooms_screen.dart';
 import 'package:safarni/features/internal_tour/presentation/views/pages/destination_page.dart';
+import 'package:safarni/features/home/presentation/views/widgets/available_tours_view_all.dart';
 import 'package:safarni/features/internal_tour/presentation/views/pages/internal_tour_page.dart';
+import 'package:safarni/features/home/presentation/views/widgets/recommended_tours_view_all.dart';
 import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
-import '../../features/auth/presentaion/pages/Password Reset Success.dart';
-import '../../features/auth/presentaion/pages/Reset Password.dart';
-import '../../features/auth/presentaion/pages/Verify Code.dart';
-import '../../features/auth/presentaion/pages/forget_password.dart';
-import '../../features/auth/presentaion/pages/get_start_page.dart';
-import '../../features/auth/presentaion/pages/sign_in.dart';
-import '../../features/auth/presentaion/pages/sign_up.dart';
-import '../../features/onboarding/presentation/pages/onboarding_page.dart';
-import '../../features/splash/presentaion/pages/splash_page.dart';
+// Add this import for SystemNavigator
 
-import 'package:safarni/features/profile/presentation/views/screens/my_booking_screen.dart';
+
+
 
 
 Route<dynamic> onGenerateRoute(RouteSettings settings){
@@ -47,29 +71,30 @@ Route<dynamic> onGenerateRoute(RouteSettings settings){
       return MaterialPageRoute(builder: (_) => const DestinationPage());
     case Routes.carBookingPage:
       return MaterialPageRoute(builder: (_) => const CarBookingPage());
- case Routes.carDetailsPage:
-      return MaterialPageRoute(builder: (_) => const CarDetailsPage());
+    case Routes.carDetailsPage:
+      final id = settings.arguments as int;
+      return MaterialPageRoute(builder: (_) => CarDetailsPage(carId: id));
     case HomeView.routeName:
       return MaterialPageRoute(builder: (_) => const HomeView());
-      case GetStartedPage.routeName:
+    case GetStartedPage.routeName:
       return MaterialPageRoute(builder: (_) => const GetStartedPage());
 
-      case VerifyCodePage.routeName:
+    case VerifyCodePage.routeName:
       return MaterialPageRoute(builder: (_) => const VerifyCodePage());
 
-      case SuccessPage.routeName:
+    case SuccessPage.routeName:
       return MaterialPageRoute(builder: (_) => const SuccessPage());
 
-      case ResetPasswordPage.routeName:
+    case ResetPasswordPage.routeName:
       return MaterialPageRoute(builder: (_) => const ResetPasswordPage());
 
-      case ForgetPasswordPage.routeName:
+    case ForgetPasswordPage.routeName:
       return MaterialPageRoute(builder: (_) => const ForgetPasswordPage());
 
-      case SignUpPage.routeName:
+    case SignUpPage.routeName:
       return MaterialPageRoute(builder: (_) => const SignUpPage());
 
-      case SignInPage.routeName:
+    case SignInPage.routeName:
       return MaterialPageRoute(builder: (_) => const SignInPage());
 
     case HotelItemView.routeName:

@@ -1,26 +1,25 @@
 import 'dart:async';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+import 'core/services/dio_factory.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/auth/domain/usecases/login_user.dart';
 import 'package:safarni/core/helpers/token_manger.dart';
+import 'features/auth/presentaion/cubit/auth_cubit.dart';
 import 'package:safarni/core/services/bloc_observer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:safarni/core/utils/on_generate_routes.dart';
-import 'package:safarni/features/auth/presentaion/pages/get_start_page.dart';
-import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
-import 'core/services/dio_factory.dart';
-import 'features/auth/data/datasources/auth_remote_data_source.dart';
+import 'features/auth/domain/usecases/register_usecase.dart';
+import 'features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'features/home/presentation/views/pages/home_view.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/usecases/forgot_password_usecase.dart';
-import 'features/auth/domain/usecases/login_user.dart';
-import 'features/auth/domain/usecases/register_usecase.dart';
 import 'features/auth/domain/usecases/update_password_usecase.dart';
-import 'features/auth/domain/usecases/verify_otp_usecase.dart';
-import 'features/auth/presentaion/cubit/auth_cubit.dart';
-import 'features/home/presentation/views/pages/home_view.dart';
+import 'package:safarni/core/dependency%20_%20injection/get_it.dart';
+import 'features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:safarni/features/splash/presentaion/pages/splash_page.dart';
+import 'package:safarni/features/auth/presentaion/pages/get_start_page.dart';
+
 
 Future<void> main() async {
   runZonedGuarded(

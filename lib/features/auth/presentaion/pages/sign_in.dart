@@ -11,18 +11,28 @@ import '../../presentaion/pages/sign_up.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
   static const routeName = '/signIn-screen';
 
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
-
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
 
     return Scaffold(
       body: Padding(
