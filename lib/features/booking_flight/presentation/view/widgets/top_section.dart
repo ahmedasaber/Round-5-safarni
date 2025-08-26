@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safarni/core/helpers/extentions.dart';
 
 import '../../../../../core/utils/app_assets.dart';
 
@@ -21,7 +22,7 @@ class TopSection extends StatelessWidget {
           left: 30,
           child: Row(
             children: [
-              const Icon(Icons.arrow_back_ios, color: Colors.white),
+               IconButton(icon: Icon(Icons.arrow_back_ios), color: Colors.white, onPressed: () => context.pop() ,),
               const SizedBox(width: 8),
               Text(
                 "           Book Your Flight",
