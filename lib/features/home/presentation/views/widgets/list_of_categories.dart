@@ -16,32 +16,28 @@ class ListOfCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 97,
-      child: ListView.builder(
-        padding: EdgeInsets.only(left: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: 4,
-        itemBuilder: (context, i){
-          return Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: (){
-                if(i == 3){
-                  context.pushNamed(HotelItemView.routeName);
-                }else if(i == 2){
-                  context.pushNamed(Routes.internalTourPage);
-                } else if(i == 1){
-                  context.pushNamed(Routes.carBookingPage);
-                } else if(i == 0){
-                  context.pushNamed(FlightBookingView.routeName);
-                }
-              },
-              child: CustomCategoryItem(
-                categoryImage: categories[i].image,
-                categoryTitle: categories[i].title.split(' ').first,
-              ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(4, (i) {
+          return GestureDetector(
+            onTap: (){
+              if(i == 3){
+                context.pushNamed(HotelItemView.routeName);
+              }else if(i == 2){
+                context.pushNamed(Routes.internalTourPage);
+              } else if(i == 1){
+                context.pushNamed(Routes.carBookingPage);
+              } else if(i == 0){
+                context.pushNamed(FlightBookingView.routeName);
+              }
+            },
+            child: CustomCategoryItem(
+              categoryImage: categories[i].image,
+              categoryTitle: categories[i].title.split(' ').first,
             ),
           );
         }
+        ),
       ),
     );
   }
