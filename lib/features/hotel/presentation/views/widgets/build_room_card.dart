@@ -103,14 +103,14 @@ class BuildRoomCard extends StatelessWidget {
       return SafeNetworkImage(
         imageUrl: imageUrl,
         width: double.infinity,
-        height: double.infinity, // Fixed: was 24, should be double.infinity
+        height: double.infinity, 
       );
     } else {
       return Image.asset(
         imageUrl,
         height: double.infinity,
-        width: double.infinity, // Fixed: was 24, should be double.infinity
-        fit: BoxFit.cover, // Added: to ensure proper image scaling
+        width: double.infinity,
+        fit: BoxFit.cover, 
         errorBuilder: (context, error, stackTrace) {
           return Container(
             width: double.infinity,
@@ -118,7 +118,7 @@ class BuildRoomCard extends StatelessWidget {
             color: Colors.grey[200],
             child: Icon(
               Icons.image_not_supported,
-              size: 32, // Increased size for better visibility
+              size: 32, 
               color: Colors.grey[400],
             ),
           );
