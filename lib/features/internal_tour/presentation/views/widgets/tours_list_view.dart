@@ -9,27 +9,25 @@ class ToursListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: BlocBuilder<TourCubit, TourState>(
-        builder: (context, state) {
-          if (state is TourLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is TourSuccess) {
-            final toursList = state.tours;
-
-            return ListView.builder(
-              itemCount: toursList.length,
-              itemBuilder: (context, index) {
-                return ToursListViewItem(tour: toursList[index]);
-              },
-            );
-          } else if (state is TourFailure) {
-            return Center(child: Text(state.error));
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
+    return BlocBuilder<TourCubit, TourState>(
+      builder: (context, state) {
+        if (state is TourLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is TourSuccess) {
+          final toursList = state.tours;
+    
+          return ListView.builder(
+            itemCount: toursList.length,
+            itemBuilder: (context, index) {
+              return ToursListViewItem(tour: toursList[index]);
+            },
+          );
+        } else if (state is TourFailure) {
+          return Center(child: Text(state.error));
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }

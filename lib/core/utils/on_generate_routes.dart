@@ -35,11 +35,6 @@ import 'package:safarni/features/home/presentation/views/widgets/recommended_tou
 import 'package:safarni/features/profile/presentation/views/screens/account_security_screen.dart';
 import 'package:safarni/features/hotel_about/presentation/view/screens/hotel_about_view_body.dart';
 import 'package:safarni/features/profile/presentation/views/screens/personal_information_view.dart';
-// Add this import for SystemNavigator
-
-
-
-
 
 Route<dynamic> onGenerateRoute(RouteSettings settings){
   switch(settings.name){

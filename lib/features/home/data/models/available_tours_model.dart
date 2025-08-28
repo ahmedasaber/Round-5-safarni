@@ -17,17 +17,17 @@ class TourModel extends ToursEntity {
 
   factory TourModel.fromJson(Map<String, dynamic> json) {
     return TourModel(
-      id: json['id'] as int,
-      categoryId: json['category_id'] as int,
-      title: json['title'] as String,
-      location: json['location'] as String,
-      description: json['description'] as String,
-      price: double.tryParse(json['price'].toString()) ?? 0.0,
-      image: json['image'] as String,
-      views: json['views'] as int,
-      isRecommended: json['is_recommended'] as bool,
-      rating: (json['rating'] as num).toDouble(),
-      isFav: json['isFavorite']?? false,
+      id: json['id'] as int? ?? 0, 
+      categoryId: json['category_id'] as int? ?? 0,
+      title: json['title'] as String? ?? '', 
+      location: json['location'] as String? ?? '', 
+      description: json['description'] as String? ?? '', 
+      price: double.tryParse(json['price']?.toString() ?? '0') ?? 0.0,
+      image: json['image'] as String? ?? '', 
+      views: json['views'] as int? ?? 0,
+      isRecommended: json['is_recommended'] as bool? ?? false, 
+      rating: double.tryParse(json['rating']?.toString() ?? '0') ?? 0.0, 
+      isFav: json['isFavorite'] as bool? ?? false,
     );
   }
 

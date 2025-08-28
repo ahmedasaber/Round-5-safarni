@@ -8,7 +8,7 @@ class DioFactory {
   static Dio? dio;
 
   static Dio getDio() {
-    Duration timeOut = const Duration(milliseconds: 2000);
+    Duration timeOut = const Duration(milliseconds: 1000);
 
     if (dio == null) {
       dio = Dio();

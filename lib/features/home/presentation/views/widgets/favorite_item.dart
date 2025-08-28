@@ -4,7 +4,7 @@ import 'package:safarni/core/utils/app_colors.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 
 class FavoriteItem extends StatelessWidget {
-   FavoriteItem({
+  const FavoriteItem({
     super.key,
     required this.image,
     required this.location,
@@ -14,7 +14,7 @@ class FavoriteItem extends StatelessWidget {
   });
 
   final String image, location, price;
-  bool isFavorite;
+  final bool isFavorite;
   final VoidCallback onPressed;
 
   @override
@@ -49,11 +49,18 @@ class FavoriteItem extends StatelessWidget {
                       height: 80,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'assets/images/placeholder.png',
+                        return Container(
                           width: 80,
                           height: 80,
-                          fit: BoxFit.cover,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey[600],
+                            size: 30,
+                          ),
                         );
                       },
                     ),
@@ -100,13 +107,14 @@ class FavoriteItem extends StatelessWidget {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.topRight,
+          Positioned(
+            top: 0,
+            right: 0,
             child: IconButton(
               onPressed: onPressed,
               icon: isFavorite
                   ? SvgPicture.asset('assets/icons/heart.svg')
-                  : SvgPicture.asset('assets/icons/favorite.svg',),
+                  : SvgPicture.asset('assets/icons/favorite.svg'),
             ),
           ),
         ],
