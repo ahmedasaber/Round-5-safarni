@@ -24,12 +24,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   }
 
   void _onSearchChanged(String query) {
-    // Cancel previous timer
     _debounceTimer?.cancel();
-
-    // Start new timer with longer delay for better UX
     _debounceTimer = Timer(const Duration(milliseconds: 1000), () {
-      // Search only if query has at least 2 characters
       if (query.trim().length >= 2) {
         context.read<HotelCubit>().searchHotels(query);
       } else if (query.trim().isEmpty) {

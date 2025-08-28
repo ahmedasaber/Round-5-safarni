@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:safarni/core/utils/app_styles.dart';
 
 class LocalRoomSearchWidget extends StatefulWidget {
-  final Function(String) onSearchChanged; // Callback للبحث
-  final Function() onClearSearch; // Callback لمسح البحث
+  final Function(String) onSearchChanged;
+  final Function() onClearSearch;
   final int? hotelId;
-  
+
   const LocalRoomSearchWidget({
     super.key,
     required this.onSearchChanged,
@@ -31,12 +31,8 @@ class _LocalRoomSearchWidgetState extends State<LocalRoomSearchWidget> {
   }
 
   void _onSearchChanged(String query) {
-    // Cancel previous timer
     _debounceTimer?.cancel();
-
-    // Start new timer - بانتظار المستخدم ينتهي من الكتابة
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      // استدعاء الـ callback مع النص
       widget.onSearchChanged(query);
     });
   }
@@ -59,8 +55,8 @@ class _LocalRoomSearchWidgetState extends State<LocalRoomSearchWidget> {
         controller: _searchController,
         onChanged: _onSearchChanged,
         decoration: InputDecoration(
-          hintText: widget.hotelId != null 
-              ? 'Search rooms in this hotel...' 
+          hintText: widget.hotelId != null
+              ? 'Search rooms in this hotel...'
               : 'Search available rooms...',
           hintStyle: TextStyles.font15LightGrayNormal,
           border: InputBorder.none,
